@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HackaHub — Event</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* ==== Light Retro Theme (matches index.html) ==== */
+    :root{
+      --cyan: #b2fefa;
+      --sky:  #cfe9ff;
+      --pink: #ff8bd1;
+      --ink:  #08323a;
+      --mint: #e6fff8;
+    }
+    body{
+      background: linear-gradient(180deg, var(--mint) 0%, var(--sky) 100%);
+      font-family: "Courier New", monospace;
+      color: var(--ink);
+    }
+    .topband{
+      background: linear-gradient(90deg, var(--cyan), #f7d7ff);
+      border-bottom: 3px solid var(--pink);
+      padding:.8rem 1rem;
+      position: sticky;
+      top:0;
+      z-index: 1020;
+    }
+    .brand{ font-weight:800; letter-spacing:2px; font-size:1.4rem; }
+    .nav-min a{
+      font-weight:800; color:var(--ink)!important; text-decoration:none; margin-left:1rem;
+    }
+    .nav-min a:hover{ text-decoration:underline; }
+
+    .wrap{ max-width:1100px; margin:24px auto 40px; }
+
+    .status-badge{
+      font-weight: 800;
+      border:2px solid var(--ink);
+      background: var(--cyan);
+      color: var(--ink);
+    }
+    .status-sold{ background:#ffd1dc; border-color:#cc3e74; color:#7a0c3a; }
+    .status-cancel{ background:#ffe2e2; border-color:#e74c3c; color:#8b1a10; }
+
+    .info-card{
+      background:#ffffffd9;
+      border:2px dashed var(--pink);
+      border-radius:12px;
+      padding:16px 18px;
+    }
+    .section-title{ font-weight:800; border-left:6px solid var(--pink); padding-left:10px; }
+
+    .btn-neo{
+      background: var(--cyan);
+      border:2px solid var(--pink);
+      color: var(--ink);
+      font-weight:800;
+    }
+    .btn-neo:hover{ filter:brightness(0.95); }
+
+    footer{
+      background:#e9fbff;
+      border-top:2px dashed var(--pink);
+      color:var(--ink);
+      text-align:center;
+      padding:16px;
+      font-weight:700;
+      margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header class="topband">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="brand">HACKAHUB</div>
+      <nav class="nav-min d-flex">
+        <a href="index.html">Home</a>
+        <a href="create.html">Create</a>
+        <a href="event.html">Events</a>
+        <a href="bookings.html">Bookings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Title row -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+      <h1 class="fw-bold m-0">AI & Robotics Challenge</h1>
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge status-badge" id="statusBadge">Open</span>
+        <span class="badge text-bg-secondary fw-bold" title="Skill level">Advanced</span>
+      </div>
+    </div>
+
+    <!-- Event content -->
+    <div class="row g-4">
+      <!-- Gallery / image -->
+      <div class="col-lg-6">
+        <div id="eventCarousel" class="carousel slide">
+          <div class="carousel-inner rounded-3 border border-2 border-info">
+            <div class="carousel-item active">
+              <img src="static/img/robot.jpg" class="d-block w-100" alt="Robot">
+            </div>
+            <div class="carousel-item">
+              <img src="static/img/web-design.jpg" class="d-block w-100" alt="Dashboard">
+            </div>
+            <div class="carousel-item">
+              <img src="static/img/background-circuit.jpg" class="d-block w-100" alt="Circuit">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Details + booking -->
+      <div class="col-lg-6">
+        <div class="info-card mb-3">
+          <h5 class="section-title mb-3">Event Details</h5>
+          <div class="row">
+            <div class="col-6">
+              <p class="mb-2"><strong>Date:</strong> Sat 26 Oct 2025</p>
+              <p class="mb-2"><strong>Time:</strong> 10:00 – 17:00</p>
+              <p class="mb-2"><strong>Venue:</strong> QUT Gardens Point, Room Z-406</p>
+            </div>
+            <div class="col-6">
+              <p class="mb-2"><strong>Category:</strong> AI/Robotics</p>
+              <p class="mb-2"><strong>Skill:</strong> Advanced</p>
+              <p class="mb-2"><strong>Prerequisites:</strong> Python, basic ML</p>
+            </div>
+          </div>
+          <p class="mt-2 mb-0">
+            Build and demo autonomous bots using computer vision & microcontrollers. Teams of 3–4 recommended.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <h5 class="section-title mb-3">Book Tickets</h5>
+          <div class="d-flex flex-wrap align-items-end gap-3">
+            <div>
+              <label for="qty" class="form-label fw-bold">Quantity</label>
+              <input id="qty" type="number" min="1" max="10" step="1" value="1" class="form-control" style="width:110px;">
+            </div>
+            <div>
+              <p class="mb-1 fw-bold">Tickets Available: <span id="ticketsLeft">42</span></p>
+              <small class="text-muted">Capacity: 120 • Status updates automatically when sold out.</small>
+            </div>
+            <div class="ms-auto">
+              <button id="bookBtn" class="btn btn-neo">Book Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <section class="info-card mt-4">
+      <h5 class="section-title mb-3">About this event</h5>
+      <p class="mb-0">
+        You’ll prototype an AI-driven robot that completes a set of challenges. We’ll provide hardware kits,
+        datasets, and mentors. Judging criteria: innovation, robustness, and presentation.
+      </p>
+    </section>
+
+    <!-- Comments -->
+    <section class="mt-4">
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="info-card h-100">
+            <h5 class="section-title mb-3">Comments</h5>
+            <ul class="list-group" id="commentList">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Ava</strong><br>
+                  Is there a loaner laptop option?
+                </div>
+                <small class="text-muted">2 days ago</small>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                  <strong>Leo</strong><br>
+                  Can we bring our own Jetson Nano boards?
+                </div>
+                <small class="text-muted">1 day ago</small>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="info-card h-100">
+            <h5 class="section-title mb-3">Post a comment</h5>
+            <form id="commentForm" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label class="form-label fw-bold" for="cname">Name</label>
+                <input id="cname" type="text" class="form-control" required>
+                <div class="invalid-feedback">Please enter your name.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold" for="ctext">Comment</label>
+                <textarea id="ctext" class="form-control" rows="3" required></textarea>
+                <div class="invalid-feedback">Please write a comment.</div>
+              </div>
+              <button class="btn btn-neo" type="submit">Submit Comment</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 HackaHub — IAB207 Front-End Prototype
+  </footer>
+
+  <!-- Booking confirmation modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Booking Confirmed</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-2"><strong>Order ID:</strong> <span id="orderId"></span></p>
+          <p class="mb-2"><strong>Event:</strong> AI & Robotics Challenge</p>
+          <p class="mb-0"><strong>Quantity:</strong> <span id="orderQty"></span></p>
+        </div>
+        <div class="modal-footer">
+          <a href="bookings.html" class="btn btn-neo">Go to Bookings</a>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ---- Booking (front-end only) ----
+    const qtyInput = document.getElementById('qty');
+    const ticketsLeftEl = document.getElementById('ticketsLeft');
+    const statusBadge = document.getElementById('statusBadge');
+    const bookBtn = document.getElementById('bookBtn');
+
+    const confirmModal = new bootstrap.Modal('#confirmModal');
+    const orderIdEl = document.getElementById('orderId');
+    const orderQtyEl = document.getElementById('orderQty');
+
+    let ticketsLeft = 42; // demo value
+
+    bookBtn.addEventListener('click', () => {
+      const q = parseInt(qtyInput.value || '0', 10);
+      if (q <= 0) return alert('Please select at least 1 ticket.');
+      if (q > ticketsLeft) return alert('Order cannot be placed: exceeds available tickets.');
+
+      // update count locally
+      ticketsLeft -= q;
+      ticketsLeftEl.textContent = ticketsLeft;
+
+      // if sold out, update badge
+      if (ticketsLeft === 0) {
+        statusBadge.classList.remove('status-badge');
+        statusBadge.classList.add('status-sold');
+        statusBadge.textContent = 'Sold Out';
+      }
+
+      // fake order id
+      const oid = 'ORD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      orderIdEl.textContent = oid;
+      orderQtyEl.textContent = q;
+
+      confirmModal.show();
+    });
+
+    // ---- Comments (client-side append) ----
+    (function(){
+      const form = document.getElementById('commentForm');
+      const list = document.getElementById('commentList');
+
+      // bootstrap validation
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if (!form.checkValidity()){
+          form.classList.add('was-validated');
+          return;
+        }
+        const name = document.getElementById('cname').value.trim();
+        const text = document.getElementById('ctext').value.trim();
+        if(!name || !text) return;
+
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-start';
+        li.innerHTML = `<div><strong>${name}</strong><br>${text}</div><small class="text-muted">just now</small>`;
+        list.prepend(li);
+
+        form.reset();
+        form.classList.remove('was-validated');
+      });
+    })();
+  </script>
+</body>
+</html>
