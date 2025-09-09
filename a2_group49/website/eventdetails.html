@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Boostrap and custom styles -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="./static/styles/styles.css" />
+        <meta charset="utf-8" />
+        <meta name="description" content="Cl: center95" />
+        <meta name="author" content="Nathan Pithie" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Club95</title>
+    </head>
+
+    <body>
+        <header>
+            <!-- Navbar -->
+            <!-- Collapse on viewports smaller than large -->
+            <nav class="navbar navbar-expand-lg">
+                <div
+                    class="container-fluid d-flex justify-content-between position-relative"
+                >
+                    <!-- Website Icon (Placeholder) -->
+                    <a
+                        class="navbar-brand position-relative"
+                        href="./index.html"
+                    >
+                        <img
+                            src="./static/img/cassette.png"
+                            alt="Logo"
+                            width="50"
+                            height="50"
+                        />
+                    </a>
+                    <!-- Title -->
+                    <div
+                        class="navbar-title position-absolute start-50 translate-middle-x"
+                    >
+                        <a class="navbar-brand" href="#!">Club95</a>
+                    </div>
+                    <!-- Toggle button to show/hide navbar on smaller viewports -->
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbar-nav"
+                        aria-controls="navbar-nav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!-- Collapsible part of the navbar -->
+                    <!-- (elements are hidden are smaller viewports) -->
+                    <div class="collapse navbar-collapse" id="navbar-nav">
+                        <!-- Left side elements of navbar -->
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <!-- Home page link -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="./index.html">Home</a>
+                            </li>
+                            <!-- Account page link -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Account</a>
+                            </li>
+                            <!-- Help menu -->
+                            <li class="nav-item dropdown">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Help
+                                </a>
+                                <ul class="dropdown-menu" id="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >FAQ</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >Contact Us</a
+                                        >
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >Privacy Policy</a
+                                        >
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- Right side elements of navbar -->
+                        <ul class="navbar-nav me-2 mb-auto mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="./createevent.html"
+                                    >Create Event</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">My Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./mytickets.html"
+                                    >My Tickets</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Sign Out</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar ends -->
+        </header>
+
+        <main>
+            <div class="main-window">
+                <!-- Event Details page -->
+                <!-- The full details of the selected event are listed.
+                 Different 'sections' of details are split into separate windows. -->
+                <section class="event-details-page">
+                    <!-- Event Details Page Container -->
+                    <div class="container" id="event-details-page-container">
+                        <div class="row align-items-center">
+                            <!-- Event Poster Window -->
+                            <div class="col-12">
+                                <div class="window" id="event-poster-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Crescent City Players</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <img
+                                            src="./static/img/crescent-city-players-poster-horizontal.jpg"
+                                            class="window-img-top img-fit"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <!-- Event Description Window -->
+                            <!-- Holds the description, genres, artist lineup and set times (if given) -->
+                            <div class="col-sm-12 col-md-6">
+                                <div
+                                    class="window"
+                                    id="event-description-window"
+                                >
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Description</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            An intimate evening of smooth jazz
+                                            and improvisation, featuring local
+                                            hit talent, Crescent City Players,
+                                            joined by The Walters and Mojo Webb.
+                                            Enjoy classic standards and modern
+                                            tunes in a cozy, relaxed setting.
+                                            <br />
+                                            <br />
+                                            <strong>> ARTIST LINEUP:</strong>
+                                            Crescent City Players, The Walters
+                                            and Mojo Webb
+                                            <br />
+                                            <strong>> GENRES:</strong>
+                                            <a href="#!">Jazz</a>,
+                                            <a href="#!">Swing</a>,
+                                            <a href="#!">Fusion</a>,
+                                            <br />
+                                            <strong>> SET TIMES:</strong>
+                                            <br />
+                                            1pm-1:30pm: The Walters and Mojo
+                                            Webb
+                                            <br />
+                                            1:30pm-3pm: Crescent City Players
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Venue, Date, & Time Window -->
+                            <div class="col-sm-12 col-md-6">
+                                <div
+                                    class="window"
+                                    id="event-venue-date-time-window"
+                                >
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Venue/Date/Time</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>> VENUE:</strong>
+                                            Royal Mail Hotel (92 Brisbane
+                                            Terrace Goodna, QLD)
+                                            <br />
+                                            <strong>> DATE:</strong>
+                                            Sept 30, 2025
+                                            <br />
+                                            <strong>> TIME:</strong>
+                                            1pm-3pm
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <!-- Event Tags Window -->
+                            <div class="col-12 col-md-6">
+                                <div class="window" id="event-tags-window">
+                                    <div class="title-bar">
+                                        <span class="window-title">Status</span>
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <section class="window-tags">
+                                            <span class="badge" id="event-type"
+                                                >Live Concert</span
+                                            >
+                                            <span
+                                                class="badge"
+                                                id="event-status-open"
+                                                >OPEN</span
+                                            >
+                                        </section>
+                                    </div>
+                                </div>
+
+                                <div class="row align-items-start">
+                                    <!-- Ticket Tiers Window -->
+                                    <div class="col-12">
+                                        <div
+                                            class="window"
+                                            id="ticket-tiers-window"
+                                        >
+                                            <div class="title-bar">
+                                                <span class="window-title"
+                                                    >Ticket Tiers</span
+                                                >
+                                                <div class="window-controls">
+                                                    <button class="btn">
+                                                        _
+                                                    </button>
+                                                    <button class="btn">
+                                                        ☐
+                                                    </button>
+                                                    <button
+                                                        class="btn"
+                                                        id="closebtn"
+                                                    >
+                                                        X
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- window content -->
+                                            <div class="sub-window">
+                                                <p class="sub-window-content">
+                                                    <strong>> TIER 1:</strong>
+                                                    Free Entry
+                                                    <br />
+                                                    <strong>> TIER 2:</strong>
+                                                    $7.99 + 1 drink of choice
+                                                    <br />
+                                                    <strong>> TIER 3:</strong>
+                                                    $14.99 + 2 drinks of choice
+                                                    <br />
+                                                    <strong>> TIER 4:</strong>
+                                                    $24.99 + 2 drinks of choice
+                                                    + priority seating
+                                                    <br />
+                                                    <strong>> TIER 5:</strong>
+                                                    $49.99 VIP (unlimited
+                                                    drinks, meet and greet)
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Purchase Tickets Button -->
+                                        <div class="col-12">
+                                            <div
+                                                class="btn-group"
+                                                id="purchase-tickets-btn-group"
+                                            >
+                                                <!-- Button trigger modal -->
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-primary"
+                                                    id="purchase-tickets-btn"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#purchase-tickets-modal"
+                                                >
+                                                    Purchase Tickets
+                                                </button>
+                                            </div>
+
+                                            <!-- Modal -->
+                                            <div
+                                                class="modal fade"
+                                                id="purchase-tickets-modal"
+                                                tabindex="-1"
+                                                aria-labelledby="purchase-tickets"
+                                                aria-hidden="true"
+                                            >
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div
+                                                            class="modal-header"
+                                                        >
+                                                            <h1
+                                                                class="modal-title fs-5"
+                                                                id="purchase-tickets-title"
+                                                            >
+                                                                Purchase Tickets
+                                                            </h1>
+                                                            <button
+                                                                type="button"
+                                                                class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"
+                                                            ></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p></p>
+                                                            <div
+                                                                class="label"
+                                                                id="ticket-tier-label"
+                                                            >
+                                                                Tier 1
+                                                            </div>
+                                                            <p></p>
+                                                            <div
+                                                                class="label"
+                                                                id="ticket-tier-label"
+                                                            >
+                                                                Tier 2
+                                                            </div>
+                                                            <p></p>
+                                                            <div
+                                                                class="label"
+                                                                id="ticket-tier-label"
+                                                            >
+                                                                Tier 3
+                                                            </div>
+                                                            <p></p>
+                                                            <div
+                                                                class="label"
+                                                                id="ticket-tier-label"
+                                                            >
+                                                                Tier 4
+                                                            </div>
+                                                            <p></p>
+                                                            <div
+                                                                class="label"
+                                                                id="ticket-tier-label"
+                                                            >
+                                                                Tier 5
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="modal-footer"
+                                                        >
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-secondary"
+                                                                data-bs-dismiss="modal"
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                class="btn btn-primary"
+                                                            >
+                                                                Confirm
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End of Purchase Tickets Button -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Venue Map Window -->
+                            <div class="col-sm-12 col-md-6">
+                                <div class="window" id="venue-map-window">
+                                    <div class="title-bar">
+                                        <span class="window-title">Map</span>
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4557.585727553991!2d152.90289687637085!3d-27.60649677624054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b914c092af2ac3d%3A0xdca2f583d78471c7!2sRoyal%20Mail%20Hotel!5e1!3m2!1sen!2sau!4v1757136725190!5m2!1sen!2sau"
+                                            width="100%"
+                                            height="100%"
+                                            style="border: 0"
+                                            allowfullscreen=""
+                                            loading="lazy"
+                                            referrerpolicy="no-referrer-when-downgrade"
+                                        ></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <!-- Media Window -->
+                            <!-- Holds images related to the currently selected event -->
+                            <!-- (Current images are placeholders) -->
+                            <div class="col-12">
+                                <div class="window" id="event-media-window">
+                                    <div class="title-bar">
+                                        <span class="window-title">Media</span>
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <!-- Use a carousel to hold as many images as needed -->
+                                    <div class="sub-window">
+                                        <div
+                                            id="event-media-carousel"
+                                            class="carousel slide"
+                                        >
+                                            <div class="carousel-indicators">
+                                                <button
+                                                    type="button"
+                                                    data-bs-target="#event-media-carousel"
+                                                    data-bs-slide-to="0"
+                                                    class="active"
+                                                    aria-current="true"
+                                                    aria-label="Slide 1"
+                                                ></button>
+                                                <button
+                                                    type="button"
+                                                    data-bs-target="#event-media-carousel"
+                                                    data-bs-slide-to="1"
+                                                    aria-label="Slide 2"
+                                                ></button>
+                                                <button
+                                                    type="button"
+                                                    data-bs-target="#event-media-carousel"
+                                                    data-bs-slide-to="2"
+                                                    aria-label="Slide 3"
+                                                ></button>
+                                            </div>
+                                            <div class="carousel-inner">
+                                                <div
+                                                    class="carousel-item active"
+                                                >
+                                                    <img
+                                                        src="./static/img/jazzband1.jpg"
+                                                        class="d-block w-100 img-fit"
+                                                        alt="A saxaphone player in a jazz band performance."
+                                                    />
+                                                </div>
+                                                <div class="carousel-item">
+                                                    <img
+                                                        src="./static/img/jazzband2.jpg"
+                                                        class="d-block w-100 img-fit"
+                                                        alt="The instruments of a band."
+                                                    />
+                                                </div>
+                                                <div class="carousel-item">
+                                                    <img
+                                                        src="./static/img/bluesbrothers.jpg"
+                                                        class="d-block w-100 img-fit"
+                                                        alt="Legendary blues performers, immortalised into statues."
+                                                    />
+                                                </div>
+                                            </div>
+                                            <button
+                                                class="carousel-control-prev"
+                                                type="button"
+                                                data-bs-target="#event-media-carousel"
+                                                data-bs-slide="prev"
+                                            >
+                                                <span
+                                                    class="carousel-control-prev-icon"
+                                                    aria-hidden="true"
+                                                ></span>
+                                                <span class="visually-hidden"
+                                                    >Previous</span
+                                                >
+                                            </button>
+                                            <button
+                                                class="carousel-control-next"
+                                                type="button"
+                                                data-bs-target="#event-media-carousel"
+                                                data-bs-slide="next"
+                                            >
+                                                <span
+                                                    class="carousel-control-next-icon"
+                                                    aria-hidden="true"
+                                                ></span>
+                                                <span class="visually-hidden"
+                                                    >Next</span
+                                                >
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <!-- Add column padding -->
+                            <div class="col-3"></div>
+                            <!-- Post Comment Window -->
+                            <div class="col-sm-12 col-md-6">
+                                <div class="window" id="post-comment-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Post a Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <div
+                                            class="mb-3"
+                                            id="post-comment-form"
+                                        >
+                                            <label
+                                                for="exampleFormControlTextarea1"
+                                                class="enter-comment"
+                                                >Enter comment:</label
+                                            >
+                                            <textarea
+                                                class="form-control"
+                                                id="comment-text"
+                                                rows="3"
+                                            ></textarea>
+                                        </div>
+                                        <a
+                                            class="btn"
+                                            id="post-comment-btn"
+                                            href="#!"
+                                        >
+                                            Post
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add column padding -->
+                            <div class="col-3"></div>
+                        </div>
+
+                        <div class="row align-items-start">
+                            <!-- Event Comments Windows -->
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="window" id="event-comments-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>Poster:</strong> Anonymous
+                                            <br />
+                                            <strong>DateTime:</strong> 02/09/25
+                                            <br />
+                                            <strong>Comment:</strong>
+                                            Crescent City Players played a night
+                                            I will never forget!
+                                        </p>
+                                        <a
+                                            class="btn"
+                                            id="reply-to-comment-btn"
+                                            href="#!"
+                                        >
+                                            Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="window" id="event-comments-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>Poster:</strong> Gilbert
+                                            <br />
+                                            <strong>DateTime:</strong> 22/05/25
+                                            <br />
+                                            <strong>Comment:</strong>
+                                            The drinks were definitely worth the
+                                            trip :))))
+                                        </p>
+                                        <a
+                                            class="btn"
+                                            id="reply-to-comment-btn"
+                                            href="#!"
+                                        >
+                                            Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="window" id="event-comments-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>Poster:</strong> Steve from
+                                            accounting
+                                            <br />
+                                            <strong>DateTime:</strong> 24/12/24
+                                            <br />
+                                            <strong>Comment:</strong>
+                                            Saw these guys for our Christmas Eve
+                                            office party. 10/10 would headbang
+                                            to a trumpet solo again.
+                                        </p>
+                                        <a
+                                            class="btn"
+                                            id="reply-to-comment-btn"
+                                            href="#!"
+                                        >
+                                            Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="window" id="event-comments-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>Poster:</strong> Karen Smith
+                                            <br />
+                                            <strong>DateTime:</strong> 13/06/23
+                                            <br />
+                                            <strong>Comment:</strong>
+                                            I've never been a fan of jazz, until
+                                            I saw these guys at my local bar.
+                                        </p>
+                                        <a
+                                            class="btn"
+                                            id="reply-to-comment-btn"
+                                            href="#!"
+                                        >
+                                            Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="window" id="event-comments-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>Poster:</strong> Dan
+                                            <br />
+                                            <strong>DateTime:</strong> 04/02/23
+                                            <br />
+                                            <strong>Comment:</strong>
+                                            Loved the venue. The band...not so
+                                            much.
+                                        </p>
+                                        <a
+                                            class="btn"
+                                            id="reply-to-comment-btn"
+                                            href="#!"
+                                        >
+                                            Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="window" id="event-comments-window">
+                                    <div class="title-bar">
+                                        <span class="window-title"
+                                            >Comment</span
+                                        >
+                                        <div class="window-controls">
+                                            <button class="btn">_</button>
+                                            <button class="btn">☐</button>
+                                            <button class="btn" id="closebtn">
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- window content -->
+                                    <div class="sub-window">
+                                        <p class="sub-window-content">
+                                            <strong>Poster:</strong>
+                                            CrescentCityPlayersFan49
+                                            <br />
+                                            <strong>DateTime:</strong> 19/08/22
+                                            <br />
+                                            <strong>Comment:</strong>
+                                            I've been following these guys since
+                                            their OG days when they used to play
+                                            doom jazz. Wish they'd go back to
+                                            their roots and do another collab
+                                            with Optimistic Yeti.
+                                        </p>
+                                        <a
+                                            class="btn"
+                                            id="reply-to-comment-btn"
+                                            href="#!"
+                                        >
+                                            Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of comments -->
+                    </div>
+                    <!-- End of Events Details Container -->
+                </section>
+                <!-- End of Events Details Section -->
+            </div>
+        </main>
+
+        <footer>
+            <!-- Social media buttons -->
+            <div
+                class="container-fluid"
+                id="social-container"
+                style="margin-top: 3rem"
+            >
+                <!-- Facebook -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="./static/img/facebook.png"
+                        alt="Facebook logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+
+                <!-- Youtube -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="./static/img/youtube.png"
+                        alt="Youtube logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+
+                <!-- Github -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="./static/img/github.svg"
+                        alt="Github logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="container-fluid" id="copyright-bar">
+                <div class="p-2">
+                    © 2025 Copyright: Nathan Pithie
+                    <a href="#!">n12149691@qut.edu.au</a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Boostrap JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Boostrap and custom styles -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="./static/styles/styles.css" />
+        <meta charset="utf-8" />
+        <meta name="description" content="Cl: center95" />
+        <meta name="author" content="Nathan Pithie" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Club95</title>
+    </head>
+
+    <body>
+        <header>
+            <!-- Navbar -->
+            <!-- Collapse on viewports smaller than large -->
+            <nav class="navbar navbar-expand-lg">
+                <div
+                    class="container-fluid d-flex justify-content-between position-relative"
+                >
+                    <!-- Website Icon (Placeholder) -->
+                    <a
+                        class="navbar-brand position-relative"
+                        href="./index.html"
+                    >
+                        <img
+                            src="./static/img/cassette.png"
+                            alt="Logo"
+                            width="50"
+                            height="50"
+                        />
+                    </a>
+                    <!-- Title -->
+                    <div
+                        class="navbar-title position-absolute start-50 translate-middle-x"
+                    >
+                        <a class="navbar-brand" href="#!">Club95</a>
+                    </div>
+                    <!-- Toggle button to show/hide navbar on smaller viewports -->
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbar-nav"
+                        aria-controls="navbar-nav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!-- Collapsible part of the navbar -->
+                    <!-- (elements are hidden are smaller viewports) -->
+                    <div class="collapse navbar-collapse" id="navbar-nav">
+                        <!-- Left side elements of navbar -->
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <!-- Home page link -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="./index.html">Home</a>
+                            </li>
+                            <!-- Account page link -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Account</a>
+                            </li>
+                            <!-- Help menu -->
+                            <li class="nav-item dropdown">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Help
+                                </a>
+                                <ul class="dropdown-menu" id="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >FAQ</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >Contact Us</a
+                                        >
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >Privacy Policy</a
+                                        >
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- Right side elements of navbar -->
+                        <ul class="navbar-nav me-2 mb-auto mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Create Event</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">My Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./mytickets.html"
+                                    >My Tickets</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Sign Out</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar ends -->
+        </header>
+
+        <main>
+            <div class="main-window">
+                <!-- Create Event Section -->
+                <section class="create-event-page">
+                    <div class="container" id="create-event-page-container">
+                        <!-- Enter Event Name Section -->
+                        <section class="enter-event-name-section">
+                            <!-- Row -->
+                            <div class="row align-items-center">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Enter Event Name Window -->
+                                <div class="col-6">
+                                    <div
+                                        class="window"
+                                        id="enter-event-name-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Event Name</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control form-control-lg"
+                                                type="text"
+                                                placeholder="Enter the name of the event"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of row -->
+
+                            <!-- Padding -->
+                            <div class="col-3"></div>
+                        </section>
+                        <!-- End of Enter Event Name Section -->
+
+                        <!-- Enter Event Description Section -->
+                        <section class="enter-event-description-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Enter Event Description Window -->
+                                <div class="col-6">
+                                    <div
+                                        class="window"
+                                        id="enter-event-description-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Description</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <div
+                                                class="mb-3"
+                                                id="post-comment-form"
+                                            >
+                                                <label
+                                                    for="exampleFormControlTextarea1"
+                                                    class="enter-comment"
+                                                    >Enter description:</label
+                                                >
+                                                <textarea
+                                                    class="form-control"
+                                                    id="description-text"
+                                                    rows="6"
+                                                ></textarea>
+                                            </div>
+                                            <div
+                                                id="description-help"
+                                                class="form-text"
+                                            >
+                                                Your description must be at
+                                                least 20 words long.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Enter Event Description Section -->
+
+                        <!-- Upload Event Poster Section -->
+                        <section class="upload-event-poster-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Upload Event Poster Form -->
+                                <div class="col-6">
+                                    <div
+                                        class="window"
+                                        id="upload-event-poster-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Event Poster</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <label
+                                                for="formFile"
+                                                class="form-label"
+                                                >Upload a poster for your event.
+                                            </label>
+                                            <input
+                                                class="form-control"
+                                                type="file"
+                                                id="formFile"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End of Upload Event Poster Form -->
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                                <!-- End of row -->
+                            </div>
+                        </section>
+                        <!-- End of Upload Event Poster Section -->
+
+                        <!-- Enter Event Location Section -->
+                        <section class="enter-event-location-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Enter Event Location Window -->
+                                <!-- * to implement: as the user begins typing 
+                                 a location, suggestions are given for auto complete -->
+                                <div class="col-6">
+                                    <div
+                                        class="window"
+                                        id="enter-event-location-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Location</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter the location of the event"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Enter Event Location Section -->
+
+                        <section class="enter-event-date-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Enter Event Date Window -->
+                                <div class="col-6">
+                                    <div
+                                        class="window"
+                                        id="enter-event-date-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Date</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter date in dd/mm/yyyy"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Enter Event Date Section -->
+
+                        <!-- Enter Event Start End Time Section -->
+                        <section class="enter-event-start-end-time-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Event Start Time -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-event-start-time-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Event Start Time</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter event start time in 24hr time (hh:mm)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Event End Time -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-event-end-time-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Event End Time</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter event end time in 24hr time (hh:mm)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Event Enter Start End Time Section -->
+
+                        <!-- Enter Event Genres section -->
+                        <section class="enter-event-genres-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Enter Event Genres Button -->
+                                <div class="col-6">
+                                    <div
+                                        class="btn-group"
+                                        id="enter-event-genres-btn-group"
+                                    >
+                                        <button
+                                            class="btn dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            type="submit"
+                                            id="enter-event-genres-btn"
+                                        >
+                                            Select Genres For Event
+                                        </button>
+                                        <ul
+                                            class="dropdown-menu dropdown-menu-end"
+                                            id="dropdown-menu"
+                                        >
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Alternative
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Blues
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Classical
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Contemporary Orchestral
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Electronic
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Experimental
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Funk
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Fusion
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Indie
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Jazz
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Metal
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Pop
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Punk
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Rock
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Swing
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Synthwave
+                                                </span>
+                                            </li>
+                                            <li
+                                                class="d-flex align-items-center"
+                                            >
+                                                <input
+                                                    class="form-check-input mt-0 ms-2"
+                                                    type="checkbox"
+                                                    id="event-checkbox"
+                                                    value=""
+                                                />
+                                                <span class="dropdown-text">
+                                                    Techno
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Enter Event Genres section -->
+
+                        <!-- Enter Event Artist Lineup Section -->
+                        <section class="artist-lineup-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Event Artist Name -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-artist-name-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Artist Name</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter artist name"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Event Arist Set Time -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-artist-set-time-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Set Time</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter set start time in 24hr (hh:mm)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Event Artist Name -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-artist-name-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Artist Name</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter artist name"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Event Arist Set Time -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-artist-set-time-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Set Time</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter set start time in 24hr (hh:mm)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Event Artist Name -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-artist-name-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Artist Name</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter artist name"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Event Arist Set Time -->
+                                <div class="col-3">
+                                    <div
+                                        class="window"
+                                        id="enter-artist-set-time-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Set Time</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter set start time in 24hr (hh:mm)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Artist Lineup Section -->
+
+                        <!-- Add More Artists Section -->
+                        <!-- * future implementation: pressing this button would add x more rows
+                          of 'artist name' and 'set time' windows to fill out -->
+                        <section class="add-more-artists-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <div class="col-6">
+                                    <!-- Add More Artists Button -->
+                                    <div
+                                        class="btn-group"
+                                        id="add-more-artists-btn-group"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            id="add-more-artists-btn"
+                                        >
+                                            Add more artists...
+                                        </button>
+                                    </div>
+                                    <!-- End of Add More Artists Button -->
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Add More Artists Section -->
+
+                        <!-- Enter Ticket Tiers Section -->
+                        <section class="ticket-tiers-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Ticket Tier -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-tier-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Ticket Tier</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Tier"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Price -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-price-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Price</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Price ($)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Quantity -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-quantity-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Quantity</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Quantity"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Ticket Tier -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-tier-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Ticket Tier</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Tier"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Price -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-price-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Price</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Price ($)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Quantity -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-quantity-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Quantity</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Quantity"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Ticket Tier -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-tier-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Ticket Tier</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Tier"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Price -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-price-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Price</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Price ($)"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Quantity -->
+                                <div class="col-2">
+                                    <div
+                                        class="window"
+                                        id="enter-ticket-quantity-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Quantity</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <input
+                                                class="form-control"
+                                                type="text"
+                                                placeholder="Enter Ticket Quantity"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Ticket Tiers Section -->
+
+                        <!-- Add More Ticket Tiers Section -->
+                        <!-- A button to add more ticket tiers (& their prices/quantities) 
+                        TODO: future implementation: pressing this button would generate x amount
+                        of more rows of ticket tier (+ prices/quantities) windows for the user to enter. -->
+                        <section class="add-more-ticket-tiers-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <div class="col-6">
+                                    <!-- Add More Ticket Tiers Button -->
+                                    <div
+                                        class="btn-group"
+                                        id="add-more-ticket-tiers-btn-group"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            id="add-more-ticket-tiers-btn"
+                                        >
+                                            Add More Ticket Tiers...
+                                        </button>
+                                    </div>
+                                    <!-- End of Add More Ticket Tiers Button -->
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Add More Ticket Tiers Section -->
+
+                        <!-- Upload Additional Media Section -->
+                        <section class="upload-additional-media-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <!-- Upload Additional Media Form -->
+                                <div class="col-6">
+                                    <div
+                                        class="window"
+                                        id="upload-additional-media-window"
+                                    >
+                                        <div class="title-bar">
+                                            <span class="window-title"
+                                                >Additional Media</span
+                                            >
+                                            <div class="window-controls">
+                                                <button class="btn">_</button>
+                                                <button class="btn">☐</button>
+                                                <button
+                                                    class="btn"
+                                                    id="closebtn"
+                                                >
+                                                    X
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- window content -->
+                                        <div class="sub-window">
+                                            <label
+                                                for="formFile"
+                                                class="form-label"
+                                                >(Optional) Upload additional
+                                                media for your event.
+                                            </label>
+                                            <input
+                                                class="form-control"
+                                                type="file"
+                                                id="formFileMultiple"
+                                                multiple
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End of Upload Additional Media Form -->
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                                <!-- End of row -->
+                            </div>
+                        </section>
+                        <!-- End of Upload Additional Media Section -->
+
+                        <!-- Post Event Section -->
+                        <!-- Once the user has finalised all the details of the event,
+                          they can press this button to post it. -->
+                        <!-- * future implementation: the event will be posted to the events list,
+                           and viewable under 'My Events'. -->
+
+                        <section class="post-event-section">
+                            <!-- Row -->
+                            <div class="row align-items-start">
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+
+                                <div class="col-6">
+                                    <!-- Post Event Button -->
+                                    <!-- Certain fields will need to be completed
+                                    before the user is allowed to post the event (title, desc, poster, location,
+                                    date, start/end times, genres, at least one artist name, and ticket tiers 
+                                    and quantities). -->
+                                    <div
+                                        class="btn-group"
+                                        id="post-event-btn-group"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            id="post-event-btn"
+                                        >
+                                            Post Event
+                                        </button>
+                                    </div>
+                                    <!-- End of Post Event Button -->
+                                </div>
+
+                                <!-- Padding -->
+                                <div class="col-3"></div>
+                            </div>
+                            <!-- End of row -->
+                        </section>
+                        <!-- End of Post Event Section -->
+                    </div>
+                </section>
+                <!-- End of Create Event Section -->
+            </div>
+        </main>
+
+        <footer>
+            <!-- Social media buttons -->
+            <div
+                class="container-fluid"
+                id="social-container"
+                style="margin-top: 3rem"
+            >
+                <!-- Facebook -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="./static/img/facebook.png"
+                        alt="Facebook logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+
+                <!-- Youtube -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="./static/img/youtube.png"
+                        alt="Youtube logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+
+                <!-- Github -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="./static/img/github.svg"
+                        alt="Github logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+            </div>
+
+            <!-- Copyright -->
+            <div class="container-fluid" id="copyright-bar">
+                <div class="p-2">
+                    © 2025 Copyright: Nathan Pithie
+                    <a href="#!">n12149691@qut.edu.au</a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Boostrap JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>
