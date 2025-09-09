@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel = "stylesheet" href="../static/stylesheets/style.css">
+    <title>TableTop Events</title>
+<header>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light gradient-advanced w-100">
+        <div class="container-fluid">
+          <button id ="userportrait" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">:D</button>
+         
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="../index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./event_create.html">Create Events</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  User21
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Account</a></li>
+                  <li><a class="dropdown-item" href="./html/bookingHistory.html">History</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign-out</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <div class="dice-container ">
+                <div class="dice btn-outline-success bg-light">
+                  <div class="dice-dot"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </nav>
+    </header>
+  </head>
+
+<!--off canvas menu-->    
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">calendar</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <h2>Upcoming Events</h2>
+      <div class="tcg-card">
+    <img src="https://images.pexels.com/photos/20393802/pexels-photo-20393802.jpeg" 
+         class="card-img-top" alt="Event Image">
+    <div class="card-body">
+      <h5 class="card-title">DnD Night at the Club!</h5>
+      <p class="card-text">System: 5th Edition</p>
+      <p class="card-text"><small>Open!</small></p>
+      <p class="card-text"><small>Players: 3</small></p>
+      <p class="card-text"><small>Free Entry</small></p>
+      <a href="./event_details.html" class="btn btn-primary">View Event</a>
+    </div>
+  </div>
+  </div>
+  </div>
+<div class="container mt-5">
+  <h2 class="mb-4" style="color: whitesmoke;">Your Event History</h2>
+
+  <div class="card mb-3">
+    <img src="https://images.pexels.com/photos/20393802/pexels-photo-20393802.jpeg" class="card-img-top" style="height: 200px; object-fit: cover;">
+    <div class="card-body">
+      <h5 class="card-title-review">Crypt of the Mad Lich: Session 1</h5>
+      <p class="card-text-review">
+        <strong>Game:</strong> D&D 5e<br>
+        <strong>Date:</strong> Sep 08, 9:30 PM<br>
+        <strong>Location:</strong> Greg’s House – Lot 403<br>
+        <strong>Status:</strong> <span class="badge bg-success">Completed</span><br>
+        <strong>Players:</strong> 5 / 6<br>
+        <strong>Ticket:</strong> #0042 – Paid
+      </p>
+      <a href="./event_details.html" class="btn btn-outline-primary btn-sm">View Comments</a>
+      <a href="./event_create.html" class="btn btn btn-outline-success">Update</a>
+    </div>
+  </div>
+</div>
+
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>

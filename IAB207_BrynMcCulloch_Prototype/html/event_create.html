@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel = "stylesheet" href="../static/stylesheets/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+
+    <title>TableTop Events</title>
+<header>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light gradient-advanced w-100">
+        <div class="container-fluid">
+          <button id ="userportrait" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">:D</button>
+         
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="../index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="./event_create.html">Create Events</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  User21
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Account</a></li>
+                  <li><a class="dropdown-item" href="./bookingHistory.html">History</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign-out</a></li>
+                </ul>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <div class="dice-container ">
+                <div class="dice btn-outline-success bg-light">
+                  <div class="dice-dot"></div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </nav>
+    </header>
+  </head>
+
+<!--off canvas menu-->    
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">calendar</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <h2>Upcoming Events</h2>
+      <div class="tcg-card">
+    <img src="https://images.pexels.com/photos/20393802/pexels-photo-20393802.jpeg" 
+         class="card-img-top" alt="Event Image">
+    <div class="card-body">
+      <h5 class="card-title">DnD Night at the Club!</h5>
+      <p class="card-text">System: 5th Edition</p>
+      <p class="card-text"><small>Open!</small></p>
+      <p class="card-text"><small>Players: 3</small></p>
+      <p class="card-text"><small>Free Entry</small></p>
+      <a href="./event_details.html" class="btn btn-primary">View Event</a>
+    </div>
+  </div>
+  </div>
+  </div>
+<body>
+<main class="bg-light min-vh-100">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12">
+<div class="container mt-5">
+  <h2 class="mb-4">Create a New Event</h2>
+  <form action="/create-event" method="POST">
+    <div class="mb-3">
+      <label for="eventName" class="form-label">Event Name</label>
+      <input type="text" class="form-control" id="eventName" name="eventName" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="gameType" class="form-label">Game Type</label>
+      <select class="form-select" id="gameType" name="gameType" required>
+        <option value="">Select type</option>
+        <option>Board Game</option>
+        <option>Card Game</option>
+        <option>Role Playing Game</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="gameSystem" class="form-label">Game System</label>
+      <input type="text" class="form-control" id="gameSystem" name="gameSystem" placeholder="e.g. D&D 5e, Pathfinder 2e" required>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="playerCount" class="form-label">Required Player Count</label>
+        <input type="text" class="form-control" id="playerCount" name="playerCount" placeholder="e.g. 4–6 players" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="location" class="form-label">Venue</label>
+      <input type="text" class="form-control" id="location" name="location" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="amenities" class="form-label">Venue Amenities</label>
+      <input type="text" class="form-control" id="amenities" name="amenities" placeholder="e.g. Bathroom, Music, WiFi">
+    </div>
+
+    <div class="mb-3">
+      <label for="food" class="form-label">Food Availability</label>
+      <input type="text" class="form-control" id="food" name="food" placeholder="e.g. BYO, Snacks Provided, Full Menu">
+    </div>
+
+    <div class="mb-3">
+      <label for="parking" class="form-label">Parking Info</label>
+      <input type="text" class="form-control" id="parking" name="parking">
+    </div>
+
+    <div class="mb-3">
+      <label for="hostName" class="form-label">Host / Organizer Name</label>
+      <input type="text" class="form-control" id="hostName" name="hostName" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="itemsRequired" class="form-label">What to bring</label>
+      <input type="text" class="form-control" id="itemsRequired" name="itemsRequired" placeholder="e.g. Dice, Cards, Pencils">
+    </div>
+
+    <div class="mb-3">
+      <label for="experienceLevel" class="form-label">Experience Level</label>
+      <select class="form-select" id="experienceLevel" name="experienceLevel">
+        <option value="">Select level</option>
+        <option>Beginner Friendly</option>
+        <option>Intermediate</option>
+        <option>Veteran Only</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="entranceFee" class="form-label">Entrance Fee</label>
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input type="number" class="form-control" id="entranceFee" name="entranceFee" min="0" step="0.01" placeholder="0.00">
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="eventStatus" class="form-label">Event Status</label>
+      <select class="form-select" id="eventStatus" name="eventStatus">
+        <option>Open</option>
+        <option>Cancelled - PLACEHOLDER, process will be handled with JS or Py and a new form will be generated with a cancel button when editting</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="startTime" class="form-label">Start Time</label>
+        <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="endTime" class="form-label">End Time</label>
+        <input type="datetime-local" class="form-control" id="endTime" name="endTime" required>
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="isRecurring" name="isRecurring">
+        <label class="form-check-label" for="isRecurring">
+          Make this event recurring
+        </label>
+  </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Event</button>
+    <button type="submit" class="btn btn-primary">Upload Cover Image</button>
+  </form>
+</div>
+</body>
