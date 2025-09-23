@@ -1,16 +1,14 @@
-/* -------- FONTS -------- */
+/* FONTS */
 @font-face {
     font-family: "W95FA";
     src: url("../fonts/W95FA/w95fa.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
 }
-/* -------- END OF FONTS -------- */
 
-/* -------- GLOBAL VARIABLES -------- */
+/* GLOBAL VARIABLES */
 /* * it's best to declare and tweak any variables (i.e. colours) that will be used
 across multiple sections/pages here. This ensures proper consistency in styling and behaviour. */
-
 :root {
     /* Font variables */
     --font-family: "W95FA", Arial, Helvetica, sans-serif;
@@ -85,7 +83,7 @@ body {
     flex-direction: column;
 }
 
-/* -------- BUTTONS -------- */
+/* BUTTONS */
 /* Global styling & behaviour for all buttons */
 /* Individual behaviour is defined via id's or classes */
 
@@ -106,9 +104,8 @@ body {
     box-shadow: 1px 1px white; /* highlight on press */
     transform: translateY(2px); /* move on press */
 }
-/* -------- END OF BUTTONS -------- */
 
-/* -------- DROPDOWN MENUS -------- */
+/* DROPDOWN MENUS */
 /* Global styling for dropdown menus */
 
 /* Dropdown menu itself */
@@ -123,9 +120,8 @@ body {
     padding: 0.25rem 0.5rem;
     cursor: default;
 }
-/* -------- END OF DROPDOWN MENUS -------- */
 
-/* -------- NAVBAR -------- */
+/* NAVBAR */
 /* Base nav styling */
 nav {
     font-size: 18px;
@@ -257,9 +253,8 @@ nav {
         left: 2px;
     } /* visible and displaced right at end */
 }
-/* -------- END OF NAVBAR -------- */
 
-/* -------- FOOTER -------- */
+/* FOOTER */
 /* Base footer properties */
 footer {
     color: var(--font-colour-primary);
@@ -290,9 +285,8 @@ footer {
     text-align: center;
     background-color: var(--copyright-bg-colour);
 }
-/* -------- END OF FOOTER -------- */
 
-/* -------- SEARCH BAR -------- */
+/* SEARCH BAR */
 /* Holds the search bar, search button, and genre/type filters */
 /* * dropdown menu properties are defined in global properties */
 /* Override these if necessary:
@@ -334,9 +328,8 @@ footer {
         width: 7rem;
     }
 }
-/* -------- END OF SEARCH BAR -------- */
 
-/* -------- 'WINDOW' STYLING -------- */
+/* 'WINDOW' STYLING */
 /* * Global styling for all 'windows' */
 /* * this styling is made based on and intended initially for the home page, any
 further tweaking for other pages / sections should be done via unique ID's only */
@@ -529,9 +522,8 @@ further tweaking for other pages / sections should be done via unique ID's only 
         }
     }
 }
-/* -------- END OF 'WINDOW' STYLING -------- */
 
-/* -------- EVENT DETAILS PAGE -------- */
+/* EVENT DETAILS PAGE */
 /* The page where a user can view the full details of the event selected. */
 
 /* EVENT POSTER */
@@ -726,9 +718,8 @@ further tweaking for other pages / sections should be done via unique ID's only 
     background-color: var(--button-colour-4);
     margin: 5px;
 }
-/* -------- END OF EVENT DETAILS PAGE -------- */
 
-/* -------- CREATE EVENT PAGE -------- */
+/* CREATE EVENT PAGE */
 /* The page where a user can create an event by entering all the details. */
 
 /* EVENT NAME */
@@ -956,7 +947,7 @@ at least one artist name, and at least one ticket tier(s) and quantity(ies).
     background-color: var(--button-colour-3);
 }
 
-/* -------- MY TICKETS PAGE -------- */
+/* MY TICKETS PAGE */
 /* This page allows the user to view all their currently (and past) purchased tickets,
 as well as filter, search and sort them. */
 
@@ -970,7 +961,4 @@ as well as filter, search and sort them. */
     width: 100%;
 }
 
-/* -------- END OF MY TICKETS PAGE -------- */
-
-/* -------- END OF CREATE EVENT PAGE -------- */
 
