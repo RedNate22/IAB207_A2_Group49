@@ -8,7 +8,7 @@
             integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
             crossorigin="anonymous"
         />
-        <link rel="stylesheet" href="./static/styles/styles.css" />
+        <link rel="stylesheet" href="../static/styles/styles.css" />
         <meta charset="utf-8" />
         <meta name="description" content="Cl: center95" />
         <meta name="author" content="Nathan Pithie" />
@@ -30,7 +30,7 @@
                         href="./index.html"
                     >
                         <img
-                            src="./static/img/cassette.png"
+                            src="../static/img/cassette.png"
                             alt="Logo"
                             width="50"
                             height="50"
@@ -106,7 +106,7 @@
                         <!-- Right side elements of navbar -->
                         <ul class="navbar-nav me-2 mb-auto mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link" href="./createevent.html"
+                                <a class="nav-link" href="../createevent.html"
                                     >Create Event</a
                                 >
                             </li>
@@ -114,7 +114,7 @@
                                 <a class="nav-link" href="#!">My Events</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./mytickets.html"
+                                <a class="nav-link" href="../mytickets.html"
                                     >My Tickets</a
                                 >
                             </li>
@@ -525,7 +525,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/crescent-city-players-poster-horizontal.jpg"
+                                            src="../static/img/crescent-city-players-poster-horizontal.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -583,7 +583,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -621,7 +621,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/festival.jpg"
+                                            src="../static/img/festival.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -672,7 +672,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -710,7 +710,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/yeti.jpg"
+                                            src="../static/img/yeti.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -763,7 +763,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -793,7 +793,7 @@
                 <!-- Facebook -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="./static/img/facebook.png"
+                        src="../static/img/facebook.png"
                         alt="Facebook logo button"
                         height="35"
                         width="35"
@@ -803,7 +803,7 @@
                 <!-- Youtube -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="./static/img/youtube.png"
+                        src="../static/img/youtube.png"
                         alt="Youtube logo button"
                         height="35"
                         width="35"
@@ -813,7 +813,7 @@
                 <!-- Github -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="./static/img/github.svg"
+                        src="../static/img/github.svg"
                         alt="Github logo button"
                         height="35"
                         width="35"

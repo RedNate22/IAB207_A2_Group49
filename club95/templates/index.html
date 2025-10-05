@@ -27,10 +27,10 @@
                     <!-- Website Icon (Placeholder) -->
                     <a
                         class="navbar-brand position-relative"
-                        href="{{ url_for('main.index') }}"
+                        href="{{ url_for('main_bp.index') }}"
                     >
                         <img
-                            src="./static/img/cassette.png"
+                            src="../static/img/cassette.png"
                             alt="Logo"
                             width="50"
                             height="50"
@@ -42,7 +42,7 @@
                     >
                         <a
                             class="navbar-brand"
-                            href="{{ url_for('main.index') }}"
+                            href="{{ url_for('main_bp.index') }}"
                             >Club95</a
                         >
                     </div>
@@ -68,17 +68,13 @@
                                 <a
                                     class="nav-link active"
                                     aria-current="page"
-                                    href="{{ url_for('main.index') }}"
+                                    href="{{ url_for('main_bp.index') }}"
                                     >Home</a
                                 >
                             </li>
                             <!-- Account page link -->
                             <li class="nav-item">
-                                <a
-                                    class="nav-link"
-                                    href="{{ url_for('main.account') }}"
-                                    >Account</a
-                                >
+                                <a class="nav-link" href="#!">Account</a>
                             </li>
                             <!-- Help menu -->
                             <li class="nav-item dropdown">
@@ -113,10 +109,10 @@
                         </ul>
                         <!-- Right side elements of navbar -->
                         <ul class="navbar-nav me-2 mb-auto mb-lg-0">
-                            <li class="nav-item">
+                            <li class="nav-item" .createevent>
                                 <a
                                     class="nav-link"
-                                    href="{{ url_for('main.createevent') }}"
+                                    href="{{ url_for('events_bp.createevent') }}"
                                     >Create Event</a
                                 >
                             </li>
@@ -126,7 +122,7 @@
                             <li class="nav-item">
                                 <a
                                     class="nav-link"
-                                    href="{{ url_for('main.mytickets') }}"
+                                    href="{{ url_for('user_bp.mytickets') }}"
                                     >My Tickets</a
                                 >
                             </li>
@@ -535,7 +531,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/dj-1.jpg"
+                                            src="../static/img/dj-1.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -580,7 +576,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -607,7 +603,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/crescent-city-players-poster-horizontal.jpg"
+                                            src="../static/img/crescent-city-players-poster-horizontal.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -654,7 +650,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -681,7 +677,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/orchestra.jpg"
+                                            src="../static/img/orchestra.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -723,7 +719,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -752,7 +748,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/festival.jpg"
+                                            src="../static/img/festival.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -795,7 +791,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -822,7 +818,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/yeti.jpg"
+                                            src="../static/img/yeti.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -867,7 +863,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -895,7 +891,7 @@
                                     <!-- window content -->
                                     <div class="sub-window">
                                         <img
-                                            src="./static/img/indie-band.jpg"
+                                            src="../static/img/indie-band.jpg"
                                             class="window-img-top img-fit"
                                         />
                                         <section class="window-tags">
@@ -941,7 +937,7 @@
                                         <a
                                             class="btn"
                                             id="view-details-btn"
-                                            href="./eventdetails.html"
+                                            href="{{ url_for('events_bp.eventdetails') }}"
                                         >
                                             View details
                                         </a>
@@ -966,7 +962,7 @@
                 <!-- Facebook -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="./static/img/facebook.png"
+                        src="../static/img/facebook.png"
                         alt="Facebook logo button"
                         height="35"
                         width="35"
@@ -976,7 +972,7 @@
                 <!-- Youtube -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="./static/img/youtube.png"
+                        src="../static/img/youtube.png"
                         alt="Youtube logo button"
                         height="35"
                         width="35"
@@ -986,7 +982,7 @@
                 <!-- Github -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="./static/img/github.svg"
+                        src="../static/img/github.svg"
                         alt="Github logo button"
                         height="35"
                         width="35"
