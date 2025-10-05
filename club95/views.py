@@ -21,3 +21,9 @@ def createevent():
 @main_bp.route('/mytickets.html')
 def mytickets():
     return render_template('mytickets.html')
+
+# Account
+# ! Not implemented yet
+@main_bp.route('/account.html')
+def account():
+    return "Account page: Not implemented (yet)"

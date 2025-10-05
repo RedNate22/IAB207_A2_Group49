@@ -27,7 +27,7 @@
                     <!-- Website Icon (Placeholder) -->
                     <a
                         class="navbar-brand position-relative"
-                        href="./index.html"
+                        href="{{ url_for('main.index') }}"
                     >
                         <img
                             src="./static/img/cassette.png"
@@ -40,7 +40,11 @@
                     <div
                         class="navbar-title position-absolute start-50 translate-middle-x"
                     >
-                        <a class="navbar-brand" href="#!">Club95</a>
+                        <a
+                            class="navbar-brand"
+                            href="{{ url_for('main.index') }}"
+                            >Club95</a
+                        >
                     </div>
                     <!-- Toggle button to show/hide navbar on smaller viewports -->
                     <button
@@ -64,13 +68,17 @@
                                 <a
                                     class="nav-link active"
                                     aria-current="page"
-                                    href="./index.html"
+                                    href="{{ url_for('main.index') }}"
                                     >Home</a
                                 >
                             </li>
                             <!-- Account page link -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#!">Account</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('main.account') }}"
+                                    >Account</a
+                                >
                             </li>
                             <!-- Help menu -->
                             <li class="nav-item dropdown">
@@ -106,7 +114,9 @@
                         <!-- Right side elements of navbar -->
                         <ul class="navbar-nav me-2 mb-auto mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link" href="./createevent.html"
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('main.createevent') }}"
                                     >Create Event</a
                                 >
                             </li>
@@ -114,7 +124,9 @@
                                 <a class="nav-link" href="#!">My Events</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./mytickets.html"
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('main.mytickets') }}"
                                     >My Tickets</a
                                 >
                             </li>
