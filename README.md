@@ -31,17 +31,17 @@ running it normally, you may need to first point Flask towards the application:
 **Linux/MacOS**
 
 ```bash
-export FLASK_APP=main.py  # Linux/macOS
+export FLASK_APP=main.py
 ```
 
 **Windows (CMD)**
 
 ```cmd
-set FLASK_APP=main.py  :: windows cmd
+set FLASK_APP=main.py
 ```
 
 **Windows (Powershell)**
 
 ```powershell
-$env:FLASK_APP="main.py"  # windows powershell
+$env:FLASK_APP="main.py"
 ```
