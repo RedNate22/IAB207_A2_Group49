@@ -48,10 +48,10 @@ set FLASK_APP=main.py
 $env:FLASK_APP="main.py"
 ```
 
-#### Running via commandline
+#### Running Flask app
 
-Once setup, run the site by either pressing `F5` (vscode) to run, or:
+Once setup, run the Flask app by either pressing `F5` (vscode) to run, or:
 
 ```bash
-python -m flask run
+python -m flask run  # same command in any terminal
 ```
