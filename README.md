@@ -25,6 +25,8 @@ They are not to be redistributed or used commercially.
 
 ### Running the project
 
+#### Configuring Flask
+
 The included launch.json already configures the python debugger for running the flask application, however when
 running it normally, you may need to first point Flask towards the application:
 
@@ -44,4 +46,12 @@ set FLASK_APP=main.py
 
 ```powershell
 $env:FLASK_APP="main.py"
+```
+
+#### Running via commandline
+
+Once setup, run the site by either pressing `F5` (vscode) to run, or:
+
+```bash
+python -m flask run
 ```
