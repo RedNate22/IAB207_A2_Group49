@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template
-
-events_bp = Blueprint('events_bp', __name__, template_folder='templates')
+from flask import  render_template
+from . import events_bp
 
 # Event details page
 @events_bp.route('/events/eventdetails')
