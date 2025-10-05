@@ -41,10 +41,10 @@ def create_app():
    from . import views
    app.register_blueprint(views.main_bp)
 
-   from .user.user import user_bp
+   from user import user_bp
    app.register_blueprint(user_bp)
 
-   from .events.events import events_bp
+   from events import events_bp
    app.register_blueprint(events_bp)
 
    # ! not implemented yet 
