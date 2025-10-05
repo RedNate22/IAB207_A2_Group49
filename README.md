@@ -37,7 +37,7 @@ export FLASK_APP=main.py  # Linux/macOS
 **Windows (CMD)**
 
 ```cmd
-set FLASK_APP=main.py  # windows cmd
+set FLASK_APP=main.py  :: windows cmd
 ```
 
 **Windows (Powershell)**
