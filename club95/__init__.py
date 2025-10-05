@@ -38,13 +38,13 @@ def create_app():
    # def load_user(user_id):
    #    return db.session.scalar(db.select(User).where(User.id==user_id))
 
-   from . import views
-   app.register_blueprint(views.main_bp)
+   from .home import home_bp 
+   app.register_blueprint(home_bp)
 
-   from user import user_bp
+   from .user import user_bp
    app.register_blueprint(user_bp)
 
-   from events import events_bp
+   from .events import events_bp
    app.register_blueprint(events_bp)
 
    # ! not implemented yet 
