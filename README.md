@@ -22,3 +22,26 @@ This usage has also been approved by Anshul Malik, Tutor at Queensland Universit
 The assets are used solely for the Front End Prototype assignment, and Fully Developed Solution assignment in IAB207, QUT.
 
 They are not to be redistributed or used commercially.
+
+### Running the project
+
+The included launch.json already configures the python debugger for running the flask application, however when
+running it normally, you may need to first point Flask towards the application:
+
+**Linux/MacOS**
+
+<pre>```bash
+export FLASK_APP=main.py  # Linux/macOS
+```
+
+**Windows (CMD)**
+<pre>```cmd
+set FLASK_APP=main.py  # windows cmd
+```
+
+
+**Windows (Powershell)**
+
+<pre>```powershell
+$env:FLASK_APP="main.py"  # windows powershell
+```
