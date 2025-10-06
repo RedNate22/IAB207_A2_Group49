@@ -8,7 +8,10 @@
             integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
             crossorigin="anonymous"
         />
-        <link rel="stylesheet" href="./static/styles/styles.css" />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='styles/styles.css')}}"
+        />
         <meta charset="utf-8" />
         <meta name="description" content="Cl: center95" />
         <meta name="author" content="IAB207 Group 49" />
@@ -30,7 +33,7 @@
                         href="{{ url_for('home_bp.index') }}"
                     >
                         <img
-                            src="../static/img/cassette.png"
+                            src="{{ url_for('static', filename='img/cassette.png') }}"
                             alt="Logo"
                             width="50"
                             height="50"
@@ -80,7 +83,7 @@
                             <li class="nav-item dropdown">
                                 <a
                                     class="nav-link dropdown-toggle"
-                                    href="#"
+                                    href="#!"
                                     role="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
@@ -148,7 +151,7 @@
                 <!-- Facebook -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="../static/img/facebook.png"
+                        src="{{ url_for('static', filename='img/facebook.png') }}"
                         alt="Facebook logo button"
                         height="35"
                         width="35"
@@ -158,7 +161,7 @@
                 <!-- Youtube -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="../static/img/youtube.png"
+                        src="{{ url_for('static', filename='img/youtube.png') }}"
                         alt="Youtube logo button"
                         height="35"
                         width="35"
@@ -168,7 +171,7 @@
                 <!-- Github -->
                 <a class="btn btn-floating m-1" href="#!" role="button">
                     <img
-                        src="../static/img/github.svg"
+                        src="{{ url_for('static', filename='img/github.svg') }}"
                         alt="Github logo button"
                         height="35"
                         width="35"
@@ -179,8 +182,8 @@
             <!-- Copyright -->
             <div class="container-fluid" id="copyright-bar">
                 <div class="p-2">
-                    © 2025 Copyright: Nathan Pithie
-                    <a href="#!">n12149691@qut.edu.au</a>
+                    © 2025 Copyright: Nathan Pithie, Ananya Aastha, Bryn
+                    McCulloch
                 </div>
             </div>
         </footer>
