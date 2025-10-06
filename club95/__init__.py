@@ -38,6 +38,7 @@ def create_app():
    # def load_user(user_id):
    #    return db.session.scalar(db.select(User).where(User.id==user_id))
 
+   # Import blueprints
    from .home import home_bp 
    app.register_blueprint(home_bp)
 
@@ -47,8 +48,7 @@ def create_app():
    from .events import events_bp
    app.register_blueprint(events_bp)
 
-   # ! not implemented yet 
-   # from . import auth
-   # app.register_blueprint(auth.auth_bp)
+   # from .auth import auth_bp
+   # app.register_blueprint(auth_bp)
    
    return app

@@ -1,0 +1,13 @@
+{
+    "Extend Base Template": {
+        "prefix": "extendBase",
+        "body": [
+            "{% extends \"base.html\" %}",
+            "{% block content %}",
+            "$0",
+            "{% endblock %}"
+        ],
+
+        "description": "Boilerplate template that extends base.html"
+    }
+}
