@@ -27,7 +27,7 @@
                     <!-- Website Icon (Placeholder) -->
                     <a
                         class="navbar-brand position-relative"
-                        href="./index.html"
+                        href="{{ url_for('home_bp.index') }}"
                     >
                         <img
                             src="./static/img/cassette.png"
@@ -61,7 +61,11 @@
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <!-- Home page link -->
                             <li class="nav-item">
-                                <a class="nav-link" href="./index.html">Home</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('home_bp.index') }}"
+                                    >Home</a
+                                >
                             </li>
                             <!-- Account page link -->
                             <li class="nav-item">
