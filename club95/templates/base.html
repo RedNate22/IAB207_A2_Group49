@@ -1,48 +1,195 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Boostrap and custom styles -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+            crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="./static/styles/styles.css" />
+        <meta charset="utf-8" />
+        <meta name="description" content="Cl: center95" />
+        <meta name="author" content="IAB207 Group 49" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Club95</title>
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IAB207 Assignment 3</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <body>
+        <header>
+            <!-- Navbar -->
+            <!-- Collapse on viewports smaller than large -->
+            <nav class="navbar navbar-expand-lg">
+                <div
+                    class="container-fluid d-flex justify-content-between position-relative"
+                >
+                    <!-- Website Icon (Placeholder) -->
+                    <a
+                        class="navbar-brand position-relative"
+                        href="{{ url_for('home_bp.index') }}"
+                    >
+                        <img
+                            src="../static/img/cassette.png"
+                            alt="Logo"
+                            width="50"
+                            height="50"
+                        />
+                    </a>
+                    <!-- Title -->
+                    <div
+                        class="navbar-title position-absolute start-50 translate-middle-x"
+                    >
+                        <a
+                            class="navbar-brand"
+                            href="{{ url_for('home_bp.index') }}"
+                            >Club95</a
+                        >
+                    </div>
+                    <!-- Toggle button to show/hide navbar on smaller viewports -->
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbar-nav"
+                        aria-controls="navbar-nav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!-- Collapsible part of the navbar -->
+                    <!-- (elements are hidden are smaller viewports) -->
+                    <div class="collapse navbar-collapse" id="navbar-nav">
+                        <!-- Left side elements of navbar -->
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <!-- Home page link -->
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link active"
+                                    aria-current="page"
+                                    href="{{ url_for('home_bp.index') }}"
+                                    >Home</a
+                                >
+                            </li>
+                            <!-- Account page link -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Account</a>
+                            </li>
+                            <!-- Help menu -->
+                            <li class="nav-item dropdown">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Help
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >FAQ</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >Contact Us</a
+                                        >
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#!"
+                                            >Privacy Policy</a
+                                        >
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!-- Right side elements of navbar -->
+                        <ul class="navbar-nav me-2 mb-auto mb-lg-0">
+                            <li class="nav-item" .createevent>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('events_bp.createevent') }}"
+                                    >Create Event</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">My Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('user_bp.mytickets') }}"
+                                    >My Tickets</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#!">Sign Out</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar ends -->
+        </header>
 
-</head>
+        <main>{% block body %} {% endblock %}</main>
 
-<body>
-    <!-- Header -->
-    <header>
+        <footer>
+            <!-- Social media buttons -->
+            <div
+                class="container-fluid"
+                id="social-container"
+                style="margin-top: 3rem"
+            >
+                <!-- Facebook -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="../static/img/facebook.png"
+                        alt="Facebook logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
 
-        <!-- Navbar -->
-        <nav>
-            <!-- Your navbar should go here -->
-        </nav>
-        <!-- Code for using Flask flash -->
-        <div class="container-fluid">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            {% for message in get_flashed_messages() %}
-            <div class="alert alert-warning">
-                <button type="button" class="close" data-dismiss="alert" aria-label="close">x</button>
-                {{message}}
+                <!-- Youtube -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="../static/img/youtube.png"
+                        alt="Youtube logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
+
+                <!-- Github -->
+                <a class="btn btn-floating m-1" href="#!" role="button">
+                    <img
+                        src="../static/img/github.svg"
+                        alt="Github logo button"
+                        height="35"
+                        width="35"
+                    />
+                </a>
             </div>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
-        </div>
-        {% block header %}
 
-        {% endblock %}
+            <!-- Copyright -->
+            <div class="container-fluid" id="copyright-bar">
+                <div class="p-2">
+                    © 2025 Copyright: Nathan Pithie
+                    <a href="#!">n12149691@qut.edu.au</a>
+                </div>
+            </div>
+        </footer>
 
-    </header>
-
-    {% block content %}
-
-    {% endblock %}
-
-    <footer class="footer">
-        <!-- Your footer should go here -->
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
-
+        <!-- Boostrap JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"
+        ></script>
+    </body>
 </html>
