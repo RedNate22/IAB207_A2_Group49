@@ -1,5 +1,5 @@
 # import flask - from 'package' import 'Class'
-from flask import Flask 
+from flask import Flask, session 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -14,6 +14,25 @@ def create_app():
    # Should be set to false in a production environment
    app.debug = True
    app.secret_key = 'somesecretkey'
+
+   ##Setting up sessions testing as per week 5 tutorial. should be able to see the returned statements at each step taken in inspect mode
+   @app.route('/login')
+   def set_session():
+      session['username'] = 'Bryn'
+      return 'Session data set'
+   
+   @app.route('/getsession')
+   def get_session():
+      if 'username' in session:
+         return session['username']
+      return 'no user logged in'
+   
+   @app.route('/logout')
+   def clear_session():
+      session.pop('username', None)
+      return 'session cleared'
+   ## end of session testing segement as per week 5 tutorial
+
    # set the app configuration data 
    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sitedata.sqlite'
    # initialise db with flask app
