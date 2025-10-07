@@ -14,7 +14,7 @@ from . import db
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates', url_prefix='/auth')
 
-@auth_bp.route('user/register', methods=['GET', 'POST'])
+@auth_bp.route('/auth/register', methods=['GET', 'POST'])
 def register():
     # Make the form
     form = RegisterForm()
@@ -44,9 +44,9 @@ def register():
         flash('Registration successful! Please log in.')
         return redirect(url_for('auth.login'))
     
-    return render_template('user/register.html', form=form, heading="Register")
+    return render_template('auth/register.html', form=form, heading="Register")
 
-@auth_bp.route('user/login', methods=['GET', 'POST'])
+@auth_bp.route('/auth/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     error=None
@@ -78,10 +78,10 @@ def login():
             print(error)
             flash(error)
     ## passed the gaunlets of checks and logged in
-    return render_template('user/login.html', form=form, heading="Login")
+    return render_template('auth/login.html', form=form, heading="Login")
 
 ## logout route - logs out user and redirects to homepage. thats it. thats all this does.
-@auth_bp.route('/logout')
+@auth_bp.route('auth/logout')
 def logout():
     logout_user()
     flash('You have been logged out.')
