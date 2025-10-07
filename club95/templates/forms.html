@@ -1,0 +1,33 @@
+{% include "base.html" %   %}
+{% import bootstrap from "bootstrap/wtf.html" %}
+{% block body %}
+
+<!-- todo: comment this page so nate and ana know what I did here - B -->
+
+<div class="page-header">
+    <h4>{{ heading }}</h4>
+</div>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert success">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="col-md-6">
+    {{wtf.quick_form(form)}}
+</div>
+
+<!-- checks if heading function was called from-->
+{% if heading|lower == 'create event'%}
+<div class="col-md-4">
+    <p>New user? <a href="{{ url_for('auth.register') }}">click here to register</a></p>
+</div>"
+{% endif %}
+
+{% endblock %}

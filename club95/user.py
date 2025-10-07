@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from .models import RegisterForm  # Import your form
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
@@ -6,7 +7,6 @@ user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 @user_bp.route('/user/mytickets')
 def mytickets():
     return render_template('user/mytickets.html')
-
 # ! NOT IMPLEMENTED
 # User profile page
 # @user_bp.route('/user/profile')
