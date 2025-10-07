@@ -1,9 +1,11 @@
-from . import db
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
+
+db = SQLAlchemy()
 
 ## define database models, in this case User is inheriting functionality from UserMixin
 ## UserMixin provides default implementations for the - 
@@ -34,5 +36,7 @@ class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Register')
+
+
 
 ## add additional models if needed here
