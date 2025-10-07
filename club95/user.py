@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template
-from .models import RegisterForm  # Import your form
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 

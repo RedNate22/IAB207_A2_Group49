@@ -15,7 +15,7 @@ def create_app():
    app.debug = True
    app.secret_key = 'somesecretkey'
 
-   ##Setting up sessions testing as per week 5 tutorial. should be able to see the returned statements at each step taken in inspect mode
+   ##Setting up sessions testing as per week 5 tutorial.
    @app.route('/login')
    def set_session():
       session['username'] = 'Bryn'
