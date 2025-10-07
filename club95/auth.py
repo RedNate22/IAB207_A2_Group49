@@ -12,7 +12,7 @@ from flask_login import login_user, logout_user
 from . import db
 
 
-auth_bp = Blueprint('auth', __name__, template_folder='templates', url_prefix='/auth')
+auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 @auth_bp.route('/auth/register', methods=['GET', 'POST'])
 def register():
@@ -44,7 +44,7 @@ def register():
         flash('Registration successful! Please log in.')
         return redirect(url_for('auth.login'))
     
-    return render_template('auth/register.html', form=form, heading="Register")
+    return render_template('/auth/register.html', form=form, heading="Register")
 
 @auth_bp.route('/auth/login', methods=['GET', 'POST'])
 def login():
@@ -78,13 +78,13 @@ def login():
             print(error)
             flash(error)
     ## passed the gaunlets of checks and logged in
-    return render_template('auth/login.html', form=form, heading="Login")
+    return render_template('/auth/login.html', form=form, heading="Login")
 
 ## logout route - logs out user and redirects to homepage. thats it. thats all this does.
-@auth_bp.route('auth/logout')
+@auth_bp.route('/auth/logout')
 def logout():
     logout_user()
     flash('You have been logged out.')
     ## spits user back to homepage
-    return redirect(url_for('home.index'))
+    return redirect(url_for('/home.index'))
     

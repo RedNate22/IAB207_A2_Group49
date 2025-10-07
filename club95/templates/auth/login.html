@@ -1,7 +1,11 @@
-{% extends "base.html" %} {% from "bootstrap5/form.html" import render_form %}
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+
 {% block body %}
 <div class="centered-form">
     <h2>Login</h2>
+
+    {# Flash message section #}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <div class="error">
@@ -11,26 +15,11 @@
             </div>
         {% endif %}
     {% endwith %}
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}<br>
-            {% for error in form.email.errors %}
-                <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {% for error in form.password.errors %}
-                <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a>.</p>
+
+    {{ render_form(form, method="POST", button_map={"submit": "primary"}) }}
+
+    <p>Don't have an account? 
+        <a href="{{ url_for('auth.register') }}">Register here</a>.
+    </p>
 </div>
 {% endblock %}
