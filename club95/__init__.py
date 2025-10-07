@@ -22,21 +22,24 @@ def create_app():
    
    # ! NOT IMPLEMENTED YET
    # initialise the login manager
-   # login_manager = LoginManager()
+   login_manager = LoginManager()
    
    # ! NOT IMPLEMENTED YET
    # set the name of the login function that lets user login
    # in our case it is auth.login (blueprintname.viewfunction name)
-   # login_manager.login_view = 'auth.login'
-   # login_manager.init_app(app)
+   # redirect to login page if user tries to access a login_required page without being logged in
+   login_manager.login_view = 'auth.login'
+   login_manager.init_app(app)
 
-   # ! NOT IMPLEMENTED YET
+   # ! NOT IMPLEMENTED YET - Thank you Nate for doing this step already - B
    # create a user loader function takes userid and returns User
    # Importing inside the create_app function avoids circular references
-   # from .models import User
-   # @login_manager.user_loader
-   # def load_user(user_id):
-   #    return db.session.scalar(db.select(User).where(User.id==user_id))
+   # takes the user ID from models and spits back the user object
+   # https://speckle.community/t/circular-references-detaching-objects-in-python/3071 - Good read on circular refs in py
+   from .models import User
+   @login_manager.user_loader
+   def load_user(user_id):
+      return db.session.scalar(db.select(User).where(User.id==user_id))
 
    # Import blueprints
    from .home import home_bp 
@@ -48,7 +51,7 @@ def create_app():
    from .events import events_bp
    app.register_blueprint(events_bp)
 
-   # from .auth import auth_bp
-   # app.register_blueprint(auth_bp)
+   from .auth import auth_bp
+   app.register_blueprint(auth_bp)
    
    return app
