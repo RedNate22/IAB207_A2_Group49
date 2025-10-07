@@ -1,0 +1,27 @@
+{
+    "Extend Base Template": {
+        "prefix": "extendBase",
+        "body": [
+            "{% extends \"base.html\" %}",
+            "{% block body %}",
+            "$0",
+            "{% endblock %}"
+        ],
+
+        "description": "Boilerplate template that extends base.html"
+    },
+
+    "Url Helper - styles": {
+        "prefix": "url_for_styles",
+        "body": ["{{ url_for('static', filename='styles/styles.css') }}$0"],
+
+        "description": "Create a url helper to link the styles.css"
+    },
+
+    "Url Helper - static img": {
+        "prefix": "url_for_static_img",
+        "body": ["{{ url_for('static', filename='img/$0') }}"],
+
+        "description": "Create a url helper to display an image"
+    }
+}

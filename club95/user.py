@@ -5,7 +5,7 @@ user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 # My tickets page
 @user_bp.route('/user/mytickets')
 def mytickets():
-    return render_template('mytickets.html')
+    return render_template('user/mytickets.html')
 
 # ! NOT IMPLEMENTED
 # User profile page
