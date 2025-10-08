@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from club95 import db 
+from club95.form import EventForm
 
 events_bp = Blueprint('events_bp', __name__, 'events')
 
@@ -28,4 +29,5 @@ def eventdetails():
 # Create events page
 @events_bp.route('/events/createvent')
 def createevent():
+    form = EventForm()
     return render_template('events/createevent.html')
