@@ -1,4 +1,3 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from . import db
 from flask_wtf import FlaskForm
@@ -43,13 +42,12 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150))
     ## TODO: add validation to ensure date isn't in the past
-    ## not sure if I added this datetime correctly or not
-    date = db.Column(db.dateTime)
+    date = db.Column(db.DateTime)
     body = db.Column(db.Text(300))
     location = db.Column(db.String(150))
     image = db.Column(db.String(150), nullable=True, default='./static/img/yeti.png')
     # link event to user - many to one 
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     # link event to tickets - one to many
     tickets = db.relationship('Ticket', backref='event')
     # relationship to comments - one to many
@@ -64,10 +62,10 @@ class Comment(db.Model):
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text(300))
-    commentDateTime = db.Column(db.dateTime)
+    commentDateTime = db.Column(db.DateTime)
     # link comment to event and user - many to one
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         return f"<Comment {self.content}>"
@@ -77,13 +75,13 @@ class Order(db.Model):
     __tablename__ = 'orders'
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    order_date = db.Column(db.dateTime)
+    order_date = db.Column(db.DateTime)
     amount = db.Column(db.Float)
     
     # link order to tickets - one to many
     tickets = db.relationship('Ticket', backref='order')
     # link order to user - many to one
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         return f"<Order {self.id}>"
@@ -93,14 +91,14 @@ class Ticket(db.Model):
     __tablename__ = 'tickets'
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    ticketTier = db.Column(db.Enum(150))
+    ticketTier = db.Column(db.Enum('standard', 'premium', 'vip', 'backstage', name='ticket_tiers'), nullable=False)
     price = db.Column(db.Float)
     availability = db.Column(db.Boolean, default=True)
 
     # link ticket to order - many to one
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
     # link ticket to event - many to one
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
     def __repr__(self):
         return f"<Ticket {self.ticketTier} - ${self.price}>"
@@ -110,11 +108,11 @@ class Genre(db.Model):
     __tablename__ = 'genres'
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    genreType = db.Column(db.enum, unique=True, nullable=False)
+    genreType = db.Column(db.Enum('electronic', 'jazz' 'indie', 'rock', 'punk'), nullable=False)
 
     # link genre to events - many to one
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
 
     def __repr__(self):
         return f"<Genre {self.genreType}>"
@@ -128,7 +126,7 @@ class Artist(db.Model):
     bio = db.Column(db.Text(500), nullable=True)
 
     # link artist to events - one to many
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
     # link artist to genre - one to many
     genres = db.relationship('Genre', backref='artist')
 

@@ -55,3 +55,23 @@ Once setup, run the Flask app by either pressing `F5` (vscode) to run, or:
 ```bash
 python -m flask run  # same command in any terminal
 ```
+
+#### Creating database steps
+
+1. Enter python interpreter in terminal. NOTE: use `quit()` to leave
+
+```bash
+python3.9
+```
+
+2. create app from our package (Club95 in this case). then import db and run the create app function
+
+```bash
+from club95 import db, create_app
+```
+3. create an instance of app. there may be some warnings. no biggie.
+
+```bash
+app=create_app()
+```
+
