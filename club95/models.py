@@ -22,11 +22,16 @@ class User(db.Model, UserMixin):
    name = db.Column(db.String(150))
    phoneNumber = db.Column(db.String(20), nullable=True)
    # relationship to events - one to many 
-   events = db.relationship('Event')
+   events = db.relationship('Event', backref='user')
    # relationship to comments - one to many
-   comments = db.relationship('comment')
+   comments = db.relationship('Comment', backref='user')
    # relationship to orders - one to many
-   orders = db.relationship('order')
+   orders = db.relationship('Order', backref='user')
+
+   #Creates a string representation of the User object for easier debugging and logging
+   def __repr__(self):
+        return f"<User {self.name}>"
+   
 
 
 
@@ -46,11 +51,14 @@ class Event(db.Model):
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # link event to tickets - one to many
-    tickets = db.relationship('ticket')
+    tickets = db.relationship('Ticket', backref='event')
     # relationship to comments - one to many
-    comments = db.relationship('comment')
+    comments = db.relationship('Comment', backref='event')
 
-class comment(db.Model):
+    def __repr__(self):
+        return f"<Event {self.title}>"
+
+class Comment(db.Model):
     # define the name of the table in the database
     __tablename__ = 'comments'
     # define the columns of the table
@@ -61,7 +69,10 @@ class comment(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-class order(db.Model):
+    def __repr__(self):
+        return f"<Comment {self.content}>"
+
+class Order(db.Model):
     # define the name of the table in the database
     __tablename__ = 'orders'
     # define the columns of the table
@@ -70,11 +81,14 @@ class order(db.Model):
     amount = db.Column(db.Float)
     
     # link order to tickets - one to many
-    tickets = db.relationship('ticket')
+    tickets = db.relationship('Ticket', backref='order')
     # link order to user - many to one
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-class ticket(db.Model):
+    def __repr__(self):
+        return f"<Order {self.id}>"
+
+class Ticket(db.Model):
     # define the name of the table in the database
     __tablename__ = 'tickets'
     # define the columns of the table
@@ -88,7 +102,10 @@ class ticket(db.Model):
     # link ticket to event - many to one
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
 
-class genre(db.Model):
+    def __repr__(self):
+        return f"<Ticket {self.ticketTier} - ${self.price}>"
+
+class Genre(db.Model):
     # define the name of the table in the database
     __tablename__ = 'genres'
     # define the columns of the table
@@ -99,7 +116,10 @@ class genre(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
 
-class artist(db.Model):
+    def __repr__(self):
+        return f"<Genre {self.genreType}>"
+
+class Artist(db.Model):
     # define the name of the table in the database
     __tablename__ = 'artists'
     # define the columns of the table
@@ -110,9 +130,12 @@ class artist(db.Model):
     # link artist to events - one to many
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     # link artist to genre - one to many
-    genres = db.relationship('genre')
+    genres = db.relationship('Genre', backref='artist')
 
-class venue(db.Model):
+    def __repr__(self):
+        return f"<Artist {self.artistName}>"
+
+class Venue(db.Model):
     # define the name of the table in the database
     __tablename__ = 'venues'
     # define the columns of the table
@@ -121,5 +144,8 @@ class venue(db.Model):
     location = db.Column(db.String(150), nullable=False)
 
     # link venue to events - one to many
-    events = db.relationship('event')
+    events = db.relationship('Event', backref='venue')
+
+    def __repr__(self):
+        return f"<Venue {self.venueName}>"
 ## add additional models if needed here
