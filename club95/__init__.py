@@ -40,6 +40,8 @@ def create_app():
    db.init_app(app)
 
    Bootstrap5(app)
+
+   db.Model.metadata.clear()
    
    # ! NOT IMPLEMENTED YET
    # initialise the login manager

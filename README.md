@@ -75,3 +75,19 @@ from club95 import db, create_app
 app=create_app()
 ```
 
+4. create a context object that points at the context for the application
+
+```bash
+ctx=app.app_context()
+```
+
+5. push it (?? this was poorly explained in video)
+``` bash
+ctx.push()
+```
+
+6. create the database (should see it in file explorer on left)
+
+```bash
+db.create_all()
+```

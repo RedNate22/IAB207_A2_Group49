@@ -1,8 +1,5 @@
 from flask_login import UserMixin
 from . import db
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
 
 
 
@@ -40,12 +37,14 @@ class Event(db.Model):
     __tablename__ = 'events'
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150))
-    ## TODO: add validation to ensure date isn't in the past
-    date = db.Column(db.DateTime)
-    body = db.Column(db.Text(300))
-    location = db.Column(db.String(150))
-    image = db.Column(db.String(150), nullable=True, default='./static/img/yeti.png')
+    title = db.Column(db.String(100), nullable=False)
+    genre = db.Column(db.String(50), nullable=False)
+    type = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    date = db.Column(db.String(20), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    location = db.Column(db.String(100), nullable=True)
+    image = db.Column(db.String(200), nullable=True)
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     # link event to tickets - one to many
