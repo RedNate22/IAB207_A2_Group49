@@ -56,6 +56,12 @@ Once setup, run the Flask app by either pressing `F5` (vscode) to run, or:
 python -m flask run  # same command in any terminal
 ```
 
+Alternatively, you can directly run the app by passing main.py:
+
+```bash
+python -m main.py
+```
+
 #### Creating database steps
 
 1. Enter python interpreter in terminal. NOTE: use `quit()` to leave
@@ -69,6 +75,7 @@ python3.9
 ```bash
 from club95 import db, create_app
 ```
+
 3. create an instance of app. there may be some warnings. no biggie.
 
 ```bash
@@ -82,7 +89,8 @@ ctx=app.app_context()
 ```
 
 5. push it (?? this was poorly explained in video)
-``` bash
+
+```bash
 ctx.push()
 ```
 
