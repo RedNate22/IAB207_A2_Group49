@@ -30,4 +30,4 @@ def eventdetails():
 @events_bp.route('/events/createvent')
 def createevent():
     form = EventForm()
-    return render_template('events/createevent.html')
+    return render_template('events/createevent.html' , form=form , heading="Create Event")
