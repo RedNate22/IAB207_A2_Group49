@@ -378,7 +378,7 @@
                 <!-- Add column padding -->
                 <div class="col-3"></div>
                 <!-- Post Comment Window -->
-                <div class="col-sm-12 col-md-6">
+                <div class="col-sm-12">
                     <div class="window" id="post-comment-window">
                         <div class="title-bar">
                             <span class="window-title">Post a Comment</span>
@@ -612,12 +612,17 @@
             const statusStyles = getComputedStyle(statusWindow);
 
             const combinedHeight =
-                statusWindow.scrollHeight +
-                ticketWindow.scrollHeight +
+                // alternatively, .scrollHeight might be better in some situations
+                statusWindow.offsetHeight +
+                ticketWindow.offsetHeight +
                 parseFloat(ticketStyles.marginBottom) +
+                parseFloat(ticketStyles.marginTop) +
                 parseFloat(statusStyles.marginBottom);
 
-            mapWindow.style.height = combinedHeight + "px";
+            // Calculate final height
+            // N: Had to add 1 extra pixel to fix it, cus I have no clue
+            // why there was a tiny gap
+            mapWindow.style.height = combinedHeight + 1 + "px";
         }
     }
 

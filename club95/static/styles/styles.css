@@ -584,7 +584,7 @@ html::-webkit-scrollbar-button:hover,
     width: 100%;
 
     margin-top: 3rem;
-    margin-bottom: 4rem; /* space out poster from middle section */
+    margin-bottom: 3rem; /* space out poster from middle section */
 
     .sub-window {
         border-bottom: 0px; /* remove base border on bottom */
@@ -600,7 +600,7 @@ html::-webkit-scrollbar-button:hover,
 #event-description-window,
 #event-venue-date-time-window,
 #event-tags-window {
-    height: 200px;
+    max-height: 250px;
     width: 100%;
 
     margin-top: 0rem;
@@ -617,12 +617,15 @@ html::-webkit-scrollbar-button:hover,
 /* EVENT TAGS */
 /* Holds the tags for the event */
 #event-tags-window {
-    height: 100%;
+    height: auto;
+
+    margin-top: 0rem;
 
     .window-tags {
         flex-direction: column;
         overflow: auto;
         justify-content: center;
+        margin-bottom: 0rem;
 
         border-bottom: 0px; /* remove base border on bottom */
 
@@ -639,10 +642,11 @@ html::-webkit-scrollbar-button:hover,
 /* TICKET TIERS */
 /* Notes the tiers of tickets along with their price and benefits */
 #ticket-tiers-window {
-    height: 100%;
+    height: auto;
     width: 100%;
 
     margin-top: 0rem;
+    margin-bottom: 0rem;
 
     .sub-window {
         .sub-window-content {
@@ -655,8 +659,9 @@ html::-webkit-scrollbar-button:hover,
 /* VENUE MAP */
 #venue-map-window {
     margin-top: 0rem;
+    margin-bottom: 1rem;
 
-    height: 100%;
+    height: auto;
     width: 100%;
 }
 
@@ -669,14 +674,15 @@ html::-webkit-scrollbar-button:hover,
     width: 100%;
 
     margin-top: 0rem;
-    /* margin-bottom: 1rem; */
 }
 
 #purchase-tickets-btn {
     color: var(--font-colour-primary);
     border: var(--border);
     background-color: var(--button-colour-3);
-    margin-bottom: 1rem;
+
+    margin-top: 0rem;
+    margin-bottom: 3rem;
 }
 
 /* Customise content inside modal */
@@ -698,8 +704,8 @@ html::-webkit-scrollbar-button:hover,
 /* EVENT MEDIA WINDOW */
 /* Holds all the pictures and/or videos related to the event */
 #event-media-window {
-    margin-top: 3rem;
-    margin-bottom: 4rem; /* add spacing between media and comments section */
+    margin-top: 0rem;
+    margin-bottom: 3rem; /* add spacing between media and comments section */
 
     height: 100%;
     width: 100%;
