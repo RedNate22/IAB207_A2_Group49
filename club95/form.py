@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired
 
 # adds forms for login
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    name = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 # adds forms for registration

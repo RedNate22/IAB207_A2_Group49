@@ -34,7 +34,9 @@ def register():
             #spits you back to register page if user exists already
             return redirect(url_for('auth.register'))
         # create new user with hashed password and add to db
-        new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+        # it defaults to sha256 with generate_password_hash. changing to scrypt on document advice. 
+        # Read more https://werkzeug.palletsprojects.com/en/stable/utils/
+        new_user = User(email=email, name=name, password=generate_password_hash(password, method='scrypt', salt_length=16))
         
         # add and commit user to db
         db.session.add(new_user)
@@ -72,7 +74,7 @@ def login():
             flash('Logged in successfully.')
             # redirect to the next page if it exists otherwise to the index page
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('home.index'))
+            return redirect(next_page or url_for('home_bp.index'))
         ## Literally no idea how we would get here with all the checks above but you never know
         else:
             print(error)
