@@ -600,16 +600,22 @@
 
 <!-- Script to sync the height of the Map window to match the combined height
  of the Status and Ticket Tiers windows -->
-<!-- N: Don't ask how long this took to figure out -->
 <script>
+    //  N: Don't ask how long this took to figure out
     function syncMapHeight() {
         const statusWindow = document.getElementById("event-tags-window");
         const ticketWindow = document.getElementById("ticket-tiers-window");
         const mapWindow = document.getElementById("venue-map-window");
 
         if (statusWindow && ticketWindow && mapWindow) {
+            const ticketStyles = getComputedStyle(ticketWindow);
+            const statusStyles = getComputedStyle(statusWindow);
+
             const combinedHeight =
-                statusWindow.offsetHeight + ticketWindow.offsetHeight;
+                statusWindow.scrollHeight +
+                ticketWindow.scrollHeight +
+                parseFloat(ticketStyles.marginBottom) +
+                parseFloat(statusStyles.marginBottom);
 
             mapWindow.style.height = combinedHeight + "px";
         }

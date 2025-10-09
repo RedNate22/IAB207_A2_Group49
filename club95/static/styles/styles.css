@@ -539,7 +539,7 @@ html::-webkit-scrollbar-button:hover,
         flex-grow: 1;
 
         /* Allows scrolling if text exceeds available window space */
-        overflow: hidden;
+        overflow: auto;
 
         /* Keep window images the same ratio */
         .img-fit {
@@ -608,6 +608,7 @@ html::-webkit-scrollbar-button:hover,
 
     .sub-window {
         .sub-window-content {
+            overflow: auto;
             font-size: larger;
         }
     }
@@ -616,7 +617,7 @@ html::-webkit-scrollbar-button:hover,
 /* EVENT TAGS */
 /* Holds the tags for the event */
 #event-tags-window {
-    height: auto; /* scale to proper height */
+    height: 100%;
 
     .window-tags {
         flex-direction: column;
@@ -642,13 +643,21 @@ html::-webkit-scrollbar-button:hover,
     width: 100%;
 
     margin-top: 0rem;
-    margin-bottom: 1rem;
 
     .sub-window {
         .sub-window-content {
+            overflow: auto;
             font-size: larger;
         }
     }
+}
+
+/* VENUE MAP */
+#venue-map-window {
+    margin-top: 0rem;
+
+    height: 100%;
+    width: 100%;
 }
 
 /* PURCHASE TICKETS BUTTON */
@@ -660,13 +669,14 @@ html::-webkit-scrollbar-button:hover,
     width: 100%;
 
     margin-top: 0rem;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
 }
 
 #purchase-tickets-btn {
     color: var(--font-colour-primary);
     border: var(--border);
     background-color: var(--button-colour-3);
+    margin-bottom: 1rem;
 }
 
 /* Customise content inside modal */
@@ -685,15 +695,8 @@ html::-webkit-scrollbar-button:hover,
     }
 }
 
-#venue-map-window {
-    margin-top: 0rem;
-    margin-bottom: 1rem; /* space out the media window */
-
-    /* height: 434px; */
-    height: 100%;
-    width: 100%;
-}
-
+/* EVENT MEDIA WINDOW */
+/* Holds all the pictures and/or videos related to the event */
 #event-media-window {
     margin-top: 3rem;
     margin-bottom: 4rem; /* add spacing between media and comments section */
@@ -714,6 +717,8 @@ html::-webkit-scrollbar-button:hover,
     }
 }
 
+/* COMMENT SECTION */
+/* Window for the user to post a comment(s) on the event */
 #post-comment-window {
     margin-top: 0rem;
     margin-bottom: 2rem;
@@ -741,6 +746,7 @@ html::-webkit-scrollbar-button:hover,
     }
 }
 
+/* Finialises and posts the comment (if any) */
 #post-comment-btn {
     margin: 5px;
 
@@ -749,6 +755,7 @@ html::-webkit-scrollbar-button:hover,
     background-color: var(--button-colour-6);
 }
 
+/* Existing comments */
 #event-comments-window {
     margin-top: 0rem;
     margin-bottom: 2rem;
