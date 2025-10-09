@@ -157,6 +157,7 @@ nav {
     overflow: visible; /* keep animation visible */
     top: 0%;
     animation: noise 0.2s linear infinite; /* main flicker effect */
+    color: var(--font-colour-seconday);
 }
 
 /* <a> element inside navbar title */
@@ -258,6 +259,19 @@ nav {
         opacity: 0.6;
         left: 2px;
     } /* visible and displaced right at end */
+}
+
+/* SUBTITLE */
+/* Indicates the purpose of the page */
+#subtitle {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    color: var(--font-colour-seconday);
+    position: relative;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 /* FOOTER */
