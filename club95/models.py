@@ -47,6 +47,8 @@ class Event(db.Model):
     image = db.Column(db.String(200), nullable=True)
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'))
     # link event to tickets - one to many
     tickets = db.relationship('Ticket', backref='event')
     # relationship to comments - one to many
