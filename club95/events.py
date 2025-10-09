@@ -23,9 +23,9 @@ class Event(db.Model):
 # Event details page
 @events_bp.route('/events/eventdetails')
 def eventdetails():
-    return render_template('events/eventdetails.html')
+    return render_template('events/eventdetails.html', subtitle='Event Details')
 
 # Create events page
 @events_bp.route('/events/createvent')
 def createevent():
-    return render_template('events/createevent.html')
+    return render_template('events/createevent.html', subtitle='Create Event')
