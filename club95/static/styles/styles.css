@@ -688,12 +688,14 @@ html::-webkit-scrollbar-button:hover,
 #venue-map-window {
     margin-top: 0rem;
     margin-bottom: 1rem; /* space out the media window */
-    height: 429px;
+
+    /* height: 434px; */
+    height: 100%;
     width: 100%;
 }
 
 #event-media-window {
-    margin-top: 0rem;
+    margin-top: 3rem;
     margin-bottom: 4rem; /* add spacing between media and comments section */
 
     height: 100%;
