@@ -4,7 +4,8 @@ from club95.form import EventForm
 
 events_bp = Blueprint('events_bp', __name__, 'events')
 
-#Event model - From b: dont think we will need this here since I am building the database in models.py
+# Event model - From b: dont think we will need this here since I am building the database in models.py
+
 #class Event(db.Model):
 #    __tablename__ = 'events'
 

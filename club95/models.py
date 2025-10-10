@@ -147,4 +147,5 @@ class Venue(db.Model):
 
     def __repr__(self):
         return f"<Venue {self.venueName}>"
+
 ## add additional models if needed here

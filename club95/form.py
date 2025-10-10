@@ -13,6 +13,7 @@ class LoginForm(FlaskForm):
     name = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
 # adds forms for registration. Note that 15 is the max length for a phone number
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
@@ -20,6 +21,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     phonenumber = StringField('Phone No.', [Length(min=4, max=25)])
     submit = SubmitField('Register')
+
 # adds forms for creating events
 class EventForm(FlaskForm):
     title = StringField('Event Title', validators=[DataRequired()])
