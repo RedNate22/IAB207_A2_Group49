@@ -261,9 +261,9 @@ nav {
     } /* visible and displaced right at end */
 }
 
-/* SUBTITLE */
+/* heading */
 /* Indicates the purpose of the page */
-#subtitle {
+#heading {
     font-size: 30px;
     font-style: italic;
     font-weight: bold;
