@@ -25,6 +25,14 @@ They are not to be redistributed or used commercially.
 
 ### Running the project
 
+#### Installing requirements
+
+First install the required modules from requirements.txt:
+
+```bash
+pip install -r requirements.txt
+```
+
 #### Configuring Flask
 
 The included launch.json already configures the python debugger for running the flask application, however when
