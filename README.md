@@ -67,7 +67,7 @@ python -m main.py
 1. Enter python interpreter in terminal. NOTE: use `quit()` to leave
 
 ```bash
-python3.9
+python
 ```
 
 2. create app from our package (Club95 in this case). then import db and run the create app function
