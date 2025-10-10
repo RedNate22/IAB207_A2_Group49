@@ -67,6 +67,12 @@ across multiple sections/pages here. This ensures proper consistency in styling 
     /* Footer colours */
     --social-container-bg-colour: var(--primary-colour);
     --copyright-bg-colour: rgba(0, 0, 0, 0.5);
+
+    /* Scrollbar shadow */
+    --scrollbar-thumb-btn-colour: var(--primary-colour);
+    --scrollbar-track-colour: var(--button-pressed-colour);
+    --scrollbar-hover-colour: darkgray;
+    --scrollbar-box-shadow: inset 0 0 2px white;
 }
 
 main {
@@ -151,6 +157,7 @@ nav {
     overflow: visible; /* keep animation visible */
     top: 0%;
     animation: noise 0.2s linear infinite; /* main flicker effect */
+    color: var(--font-colour-seconday);
 }
 
 /* <a> element inside navbar title */
@@ -254,6 +261,19 @@ nav {
     } /* visible and displaced right at end */
 }
 
+/* heading */
+/* Indicates the purpose of the page */
+#heading {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    color: var(--font-colour-seconday);
+    position: relative;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 /* FOOTER */
 /* Base footer properties */
 footer {
@@ -334,6 +354,51 @@ footer {
 /* * this styling is made based on and intended initially for the home page, any
 further tweaking for other pages / sections should be done via unique ID's only */
 
+/* Customise the scrollbar (globally) */
+/* * not visible on Firefox, sadly. */
+html::-webkit-scrollbar,
+.sub-window-content::-webkit-scrollbar {
+    border: var(--border);
+    /* ? transform: scale() to adjust border for viewport */
+}
+
+html::-webkit-scrollbar-track,
+.sub-window-content::-webkit-scrollbar-track {
+    border: var(--border);
+    background-color: var(--scrollbar-track-colour);
+    box-shadow: var(--box-shadow);
+}
+
+html::-webkit-scrollbar-thumb,
+.sub-window-content::-webkit-scrollbar-thumb {
+    border: var(--border);
+    background-color: var(--scrollbar-thumb-btn-colour);
+    box-shadow: var(--scrollbar-box-shadow);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+.sub-window-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-hover-colour);
+    box-shadow: var(--box-shadow);
+}
+
+html::-webkit-scrollbar-button,
+.sub-window-content::-webkit-scrollbar-button {
+    border: var(--border);
+    background-color: var(--scrollbar-thumb-btn-colour);
+    box-shadow: var(--scrollbar-box-shadow);
+    border-bottom: none;
+    border-top: none;
+    display: flex;
+    height: 20px;
+}
+
+html::-webkit-scrollbar-button:hover,
+.sub-window-content::-webkit-scrollbar-button:hover {
+    background-color: var(--scrollbar-hover-colour);
+}
+
+/* Events window styling */
 .window {
     position: relative;
 
@@ -488,7 +553,7 @@ further tweaking for other pages / sections should be done via unique ID's only 
         flex-grow: 1;
 
         /* Allows scrolling if text exceeds available window space */
-        overflow: hidden;
+        overflow: auto;
 
         /* Keep window images the same ratio */
         .img-fit {
@@ -532,8 +597,8 @@ further tweaking for other pages / sections should be done via unique ID's only 
     height: 100%;
     width: 100%;
 
-    margin-top: 3rem;
-    margin-bottom: 4rem; /* space out poster from middle section */
+    margin-top: 1rem;
+    margin-bottom: 3rem; /* space out poster from middle section */
 
     .sub-window {
         border-bottom: 0px; /* remove base border on bottom */
@@ -549,7 +614,7 @@ further tweaking for other pages / sections should be done via unique ID's only 
 #event-description-window,
 #event-venue-date-time-window,
 #event-tags-window {
-    height: 200px;
+    max-height: 250px;
     width: 100%;
 
     margin-top: 0rem;
@@ -557,6 +622,7 @@ further tweaking for other pages / sections should be done via unique ID's only 
 
     .sub-window {
         .sub-window-content {
+            overflow: auto;
             font-size: larger;
         }
     }
@@ -565,12 +631,15 @@ further tweaking for other pages / sections should be done via unique ID's only 
 /* EVENT TAGS */
 /* Holds the tags for the event */
 #event-tags-window {
-    height: auto; /* scale to proper height */
+    height: auto;
+
+    margin-top: 0rem;
 
     .window-tags {
         flex-direction: column;
         overflow: auto;
         justify-content: center;
+        margin-bottom: 0rem;
 
         border-bottom: 0px; /* remove base border on bottom */
 
@@ -587,17 +656,27 @@ further tweaking for other pages / sections should be done via unique ID's only 
 /* TICKET TIERS */
 /* Notes the tiers of tickets along with their price and benefits */
 #ticket-tiers-window {
-    height: 100%;
+    height: auto;
     width: 100%;
 
     margin-top: 0rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
 
     .sub-window {
         .sub-window-content {
+            overflow: auto;
             font-size: larger;
         }
     }
+}
+
+/* VENUE MAP */
+#venue-map-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: auto;
+    width: 100%;
 }
 
 /* PURCHASE TICKETS BUTTON */
@@ -609,13 +688,15 @@ further tweaking for other pages / sections should be done via unique ID's only 
     width: 100%;
 
     margin-top: 0rem;
-    margin-bottom: 1rem;
 }
 
 #purchase-tickets-btn {
     color: var(--font-colour-primary);
     border: var(--border);
     background-color: var(--button-colour-3);
+
+    margin-top: 0rem;
+    margin-bottom: 3rem;
 }
 
 /* Customise content inside modal */
@@ -634,16 +715,11 @@ further tweaking for other pages / sections should be done via unique ID's only 
     }
 }
 
-#venue-map-window {
-    margin-top: 0rem;
-    margin-bottom: 1rem; /* space out the media window */
-    height: 429px;
-    width: 100%;
-}
-
+/* EVENT MEDIA WINDOW */
+/* Holds all the pictures and/or videos related to the event */
 #event-media-window {
     margin-top: 0rem;
-    margin-bottom: 4rem; /* add spacing between media and comments section */
+    margin-bottom: 3rem; /* add spacing between media and comments section */
 
     height: 100%;
     width: 100%;
@@ -661,6 +737,8 @@ further tweaking for other pages / sections should be done via unique ID's only 
     }
 }
 
+/* COMMENT SECTION */
+/* Window for the user to post a comment(s) on the event */
 #post-comment-window {
     margin-top: 0rem;
     margin-bottom: 2rem;
@@ -688,6 +766,7 @@ further tweaking for other pages / sections should be done via unique ID's only 
     }
 }
 
+/* Finialises and posts the comment (if any) */
 #post-comment-btn {
     margin: 5px;
 
@@ -696,6 +775,7 @@ further tweaking for other pages / sections should be done via unique ID's only 
     background-color: var(--button-colour-6);
 }
 
+/* Existing comments */
 #event-comments-window {
     margin-top: 0rem;
     margin-bottom: 2rem;
@@ -960,5 +1040,3 @@ as well as filter, search and sort them. */
     height: 100%;
     width: 100%;
 }
-
-

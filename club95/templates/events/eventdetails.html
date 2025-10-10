@@ -130,148 +130,39 @@
                         </div>
                     </div>
 
-                    <div class="row align-items-start">
-                        <!-- Ticket Tiers Window -->
-                        <div class="col-12">
-                            <div class="window" id="ticket-tiers-window">
-                                <div class="title-bar">
-                                    <span class="window-title"
-                                        >Ticket Tiers</span
-                                    >
-                                    <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">
-                                            X
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- window content -->
-                                <div class="sub-window">
-                                    <p class="sub-window-content">
-                                        <strong>> TIER 1:</strong>
-                                        Free Entry
-                                        <br />
-                                        <strong>> TIER 2:</strong>
-                                        $7.99 + 1 drink of choice
-                                        <br />
-                                        <strong>> TIER 3:</strong>
-                                        $14.99 + 2 drinks of choice
-                                        <br />
-                                        <strong>> TIER 4:</strong>
-                                        $24.99 + 2 drinks of choice + priority
-                                        seating
-                                        <br />
-                                        <strong>> TIER 5:</strong>
-                                        $49.99 VIP (unlimited drinks, meet and
-                                        greet)
-                                    </p>
-                                </div>
+                    <!-- Ticket Tiers Window -->
+                    <div class="window" id="ticket-tiers-window">
+                        <div class="title-bar">
+                            <span class="window-title">Ticket Tiers</span>
+                            <div class="window-controls">
+                                <button class="btn">_</button>
+                                <button class="btn">☐</button>
+                                <button class="btn" id="closebtn">X</button>
                             </div>
+                        </div>
 
-                            <!-- Purchase Tickets Button -->
-                            <div class="col-12">
-                                <div
-                                    class="btn-group"
-                                    id="purchase-tickets-btn-group"
-                                >
-                                    <!-- Button trigger modal -->
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        id="purchase-tickets-btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#purchase-tickets-modal"
-                                    >
-                                        Purchase Tickets
-                                    </button>
-                                </div>
-
-                                <!-- Modal -->
-                                <div
-                                    class="modal fade"
-                                    id="purchase-tickets-modal"
-                                    tabindex="-1"
-                                    aria-labelledby="purchase-tickets"
-                                    aria-hidden="true"
-                                >
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h1
-                                                    class="modal-title fs-5"
-                                                    id="purchase-tickets-title"
-                                                >
-                                                    Purchase Tickets
-                                                </h1>
-                                                <button
-                                                    type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"
-                                                ></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p></p>
-                                                <div
-                                                    class="label"
-                                                    id="ticket-tier-label"
-                                                >
-                                                    Tier 1
-                                                </div>
-                                                <p></p>
-                                                <div
-                                                    class="label"
-                                                    id="ticket-tier-label"
-                                                >
-                                                    Tier 2
-                                                </div>
-                                                <p></p>
-                                                <div
-                                                    class="label"
-                                                    id="ticket-tier-label"
-                                                >
-                                                    Tier 3
-                                                </div>
-                                                <p></p>
-                                                <div
-                                                    class="label"
-                                                    id="ticket-tier-label"
-                                                >
-                                                    Tier 4
-                                                </div>
-                                                <p></p>
-                                                <div
-                                                    class="label"
-                                                    id="ticket-tier-label"
-                                                >
-                                                    Tier 5
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-secondary"
-                                                    data-bs-dismiss="modal"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="btn btn-primary"
-                                                >
-                                                    Confirm
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End of Purchase Tickets Button -->
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <p class="sub-window-content">
+                                <strong>> TIER 1:</strong>
+                                Free Entry
+                                <br />
+                                <strong>> TIER 2:</strong>
+                                $7.99 + 1 drink of choice
+                                <br />
+                                <strong>> TIER 3:</strong>
+                                $14.99 + 2 drinks of choice
+                                <br />
+                                <strong>> TIER 4:</strong>
+                                $24.99 + 2 drinks of choice + priority seating
+                                <br />
+                                <strong>> TIER 5:</strong>
+                                $49.99 VIP (unlimited drinks, meet and greet)
+                            </p>
                         </div>
                     </div>
                 </div>
+                <!-- End of Purchase Tickets Button -->
 
                 <!-- Venue Map Window -->
                 <div class="col-sm-12 col-md-6">
@@ -296,6 +187,89 @@
                                 loading="lazy"
                                 referrerpolicy="no-referrer-when-downgrade"
                             ></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row align-items-start">
+                <!-- Purchase Tickets Button -->
+                <div class="col-12">
+                    <div class="btn-group" id="purchase-tickets-btn-group">
+                        <!-- Button trigger modal -->
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="purchase-tickets-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#purchase-tickets-modal"
+                        >
+                            Purchase Tickets
+                        </button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div
+                        class="modal fade"
+                        id="purchase-tickets-modal"
+                        tabindex="-1"
+                        aria-labelledby="purchase-tickets"
+                        aria-hidden="true"
+                    >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1
+                                        class="modal-title fs-5"
+                                        id="purchase-tickets-title"
+                                    >
+                                        Purchase Tickets
+                                    </h1>
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p></p>
+                                    <div class="label" id="ticket-tier-label">
+                                        Tier 1
+                                    </div>
+                                    <p></p>
+                                    <div class="label" id="ticket-tier-label">
+                                        Tier 2
+                                    </div>
+                                    <p></p>
+                                    <div class="label" id="ticket-tier-label">
+                                        Tier 3
+                                    </div>
+                                    <p></p>
+                                    <div class="label" id="ticket-tier-label">
+                                        Tier 4
+                                    </div>
+                                    <p></p>
+                                    <div class="label" id="ticket-tier-label">
+                                        Tier 5
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                        type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                    >
+                                        Confirm
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -404,7 +378,7 @@
                 <!-- Add column padding -->
                 <div class="col-3"></div>
                 <!-- Post Comment Window -->
-                <div class="col-sm-12 col-md-6">
+                <div class="col-sm-12">
                     <div class="window" id="post-comment-window">
                         <div class="title-bar">
                             <span class="window-title">Post a Comment</span>
@@ -623,4 +597,36 @@
     </section>
     <!-- End of Events Details Section -->
 </div>
+
+<!-- Script to sync the height of the Map window to match the combined height
+ of the Status and Ticket Tiers windows -->
+<script>
+    //  N: Don't ask how long this took to figure out
+    function syncMapHeight() {
+        const statusWindow = document.getElementById("event-tags-window");
+        const ticketWindow = document.getElementById("ticket-tiers-window");
+        const mapWindow = document.getElementById("venue-map-window");
+
+        if (statusWindow && ticketWindow && mapWindow) {
+            const ticketStyles = getComputedStyle(ticketWindow);
+            const statusStyles = getComputedStyle(statusWindow);
+
+            const combinedHeight =
+                // alternatively, .scrollHeight might be better in some situations
+                statusWindow.offsetHeight +
+                ticketWindow.offsetHeight +
+                parseFloat(ticketStyles.marginBottom) +
+                parseFloat(ticketStyles.marginTop) +
+                parseFloat(statusStyles.marginBottom);
+
+            // Calculate final height
+            // N: Had to add 1 extra pixel to fix it, cus I have no clue
+            // why there was a tiny gap
+            mapWindow.style.height = combinedHeight + 1 + "px";
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", syncMapHeight);
+    window.addEventListener("resize", syncMapHeight);
+</script>
 {% endblock %}

@@ -24,7 +24,7 @@ events_bp = Blueprint('events_bp', __name__, 'events')
 # Event details page
 @events_bp.route('/events/eventdetails')
 def eventdetails():
-    return render_template('events/eventdetails.html')
+    return render_template('events/eventdetails.html', heading='Event Details')
 
 # Create events page
 @events_bp.route('/events/createvent')

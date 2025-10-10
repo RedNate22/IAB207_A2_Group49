@@ -40,9 +40,10 @@
                         />
                     </a>
                     <!-- Title -->
-                    <div
+                    <!-- <div
                         class="navbar-title position-absolute start-50 translate-middle-x"
-                    >
+                    > -->
+                    <div class="navbar-title">
                         <a
                             class="navbar-brand"
                             href="{{ url_for('home_bp.index') }}"
@@ -139,7 +140,10 @@
             <!-- Navbar ends -->
         </header>
 
-        <main>{% block body %} {% endblock %}</main>
+        <main>
+            <h1 id="heading">{{ heading }}</h1>
+            {% block body %} {% endblock %}
+        </main>
 
         <footer>
             <!-- Social media buttons -->
@@ -182,7 +186,7 @@
             <!-- Copyright -->
             <div class="container-fluid" id="copyright-bar">
                 <div class="p-2">
-                    © 2025 Copyright: Nathan Pithie, Ananya Aastha, Bryn
+                    &copy; 2025 Copyright: Nathan Pithie, Ananya Aastha, Bryn
                     McCulloch
                 </div>
             </div>
