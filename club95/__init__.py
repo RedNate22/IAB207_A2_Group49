@@ -4,6 +4,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
+# create a db object that is an instance of SQLAlchemy class
 db = SQLAlchemy()
 
 # create a function that creates a web application
@@ -32,12 +33,14 @@ def create_app():
       return 'session cleared'
    ## end of session testing segement as per week 5 tutorial
 
-   # set the app configuration data 
+   # set the app configuration data - where the db is located "provider://location.name"
    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sitedata.sqlite'
    # initialise db with flask app
    db.init_app(app)
 
    Bootstrap5(app)
+
+   db.Model.metadata.clear()
    
    # ! NOT IMPLEMENTED YET
    # initialise the login manager

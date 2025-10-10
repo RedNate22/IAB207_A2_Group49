@@ -5,4 +5,4 @@ home_bp = Blueprint('home_bp', __name__, template_folder='templates')
 # Home page
 @home_bp.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', heading='Browse Events')
