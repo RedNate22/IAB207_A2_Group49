@@ -31,7 +31,7 @@ class EventForm(FlaskForm):
     
     # Added by Ana 
     genre = StringField('Genre', validators=[DataRequired(), Length(max=50)])
-    from wtforms import SelectField  # add this import at top of file
+    from wtforms import SelectField 
     type = SelectField('Type', choices=[
         ('Live Concert','Live Concert'),
         ('Music Festival','Music Festival'),
@@ -43,7 +43,7 @@ class EventForm(FlaskForm):
         ('OPEN','OPEN'), ('INACTIVE','INACTIVE'),
         ('SOLD OUT','SOLD OUT'), ('CANCELLED','CANCELLED')
     ], validators=[DataRequired()])
-    
+
     image = StringField('Image path (optional)')
     ##poster = ImageField('Event Poster')  # Assuming you have an ImageField defined
     submit = SubmitField('Create Event')
