@@ -26,7 +26,7 @@ class RegisterForm(FlaskForm):
 class EventForm(FlaskForm):
     title = StringField('Event Title', validators=[DataRequired()])
     date = StringField('Event Date', validators=[DataRequired()])
-    body = StringField('Event Description', validators=[DataRequired()])
+    description = StringField('Event Description', validators=[DataRequired()])
     location = StringField('Event Location', validators=[DataRequired()])
     
     # Added by Ana 
