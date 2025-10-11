@@ -4,6 +4,7 @@ from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length
+from wtforms import SelectField 
 
 #Sets up forms for use thorughout the application using Flask-WTF and WTForms
 #https://wtforms.readthedocs.io/en/3.2.x/forms/ - Good read on WTForms
@@ -31,7 +32,6 @@ class EventForm(FlaskForm):
     
     # Added by Ana 
     genre = StringField('Genre', validators=[DataRequired(), Length(max=50)])
-    from wtforms import SelectField 
     type = SelectField('Type', choices=[
         ('Live Concert','Live Concert'),
         ('Music Festival','Music Festival'),
