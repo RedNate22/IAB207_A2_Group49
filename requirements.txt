@@ -1,8 +1,17 @@
+# Core framework - routing, request/response, templates, sessions...
 flask
+# WSGI utility library, depended on by Flask. HTTP utilities, request/response, URL routing...
 werkzeug
+# Integrates Bootstrap (CSS/JS frameworks) with Flask. Provides macros and helpers for forms, navigation bars,
+# modals, and other bootstrap components
 bootstrap-flask
+# Validates email addresses
 email-validator
+# Handles user session management. Provides login/logout, user auth, cookies...
 flask-login
+# SQLAlchemy integration for Flask. Used to define models for database, query etc.
 flask-sqlalchemy
+# Integrates WTForms with Flask. Provides form classes, CSRF protection, field validation, easy form handling
 flask-wtf
+# Provides bcrypt hashing utilities for password hashing and verification
 flask-bcrypt
