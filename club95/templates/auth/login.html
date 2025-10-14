@@ -16,7 +16,9 @@
         {% endif %}
     {% endwith %}
 
-    {{ render_form(form, method="POST", button_map={"submit": "primary"}) }}
+    <div class="col-md-6">
+        {{ render_form(form, method="POST", button_map={"submit": "primary"}) }}
+    </div>
 
     <p>Don't have an account? 
         <a href="{{ url_for('auth_bp.register') }}">Register here</a>.
