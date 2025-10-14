@@ -1,15 +1,56 @@
 {% extends "base.html" %}
-{% from "bootstrap5/form.html" import render_form %}
 {% block body %}
-<!-- Form rendering is simple and easy if using WTForms and Bootstrap -->
-<!--<div class="centered-form">{{ render_form(form, method="POST", novalidate=True, button_map={"submit": "primary"}) }}</div>
--->
-
-<!-- When you have Login form, then show the user a link to register -->
-{% if heading == 'Login' %}
-<div class="col-md-4">
-    <p>
-        New user? <a href="{{url_for('register')}}">Click here</a> to register.
-    </p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="window">
+                <div class="title-bar">
+                    <span class="window-title">Username's Profile</span>
+                    <div class="window-controls">
+                        <button class="btn">_</button>
+                        <button class="btn">☐</button>
+                        <button class="btn" id="closebtn">X</button>
+                    </div>
+                </div>
+                <div class="sub-window">
+                    <div class="row align-items-center">
+                        <div class="col-md-4 text-center">
+                            <img src="https://picsum.photos/200"
+                                 alt="Profile Picture" class="img-fluid rounded-circle mt-2 mb-3 profile-img">
+                            
+                            
+                                 <a href="#" class="btn mt-3" id="edit-profile-type">Edit Profile</a>
+                            
+                        </div>
+                        <div class="col-md-8">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent border-0">
+                                    <strong>Full Name:</strong>
+                                    <span class="badge" id="profile-name">John Doe</span>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0">
+                                    <strong>Email:</strong>
+                                    <span class="badge" id="profile-email">johndoe@example.com</span>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0">
+                                    <strong>Member Since:</strong>
+                                    <span class="badge" id="profile-date">January 1, 2023</span>
+                                </li>
+                                <li class="list-group-item bg-transparent border-0">
+                                    <strong>Bio:</strong>
+                                    <span class="badge" id="profile-bio">This is a placeholder bio.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col text-center">
+                            <a href="#" class="btn" id="leave-profile-type">Back to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-{% endif %} {% endblock %}
+{% endblock %}

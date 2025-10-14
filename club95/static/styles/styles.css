@@ -1056,3 +1056,22 @@ as well as filter, search and sort them. */
         margin-left: auto;
         margin-right: auto;
     }
+
+/* user profile elements */
+.profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 4px solid #010306;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#edit-profile-type{
+    color: var(--font-colour-primary);
+    background-color: var(--button-colour-4);
+}
+
+#leave-profile-type{
+    color: var(--font-colour-primary);
+    background-color: var(--button-colour-2);
+}
