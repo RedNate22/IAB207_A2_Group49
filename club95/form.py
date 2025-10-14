@@ -47,3 +47,11 @@ class EventForm(FlaskForm):
     image = StringField('Image path (optional)')
     ##poster = ImageField('Event Poster')  # Assuming you have an ImageField defined
     submit = SubmitField('Create Event')
+
+# adds forms for updating user profile
+class UpdateProfileForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    Password = PasswordField('Password', validators=[DataRequired()])
+    phonenumber = StringField('Phone No.', [Length(min=4, max=25)])
+    submit = SubmitField('Update Profile')
