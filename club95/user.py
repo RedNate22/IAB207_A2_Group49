@@ -9,6 +9,6 @@ def mytickets():
 
 # ! NOT IMPLEMENTED
 # User profile page
-# @user_bp.route('/user/profile')
-# def profile():
-#     return render_template('user/user.html')
+@user_bp.route('/user/profile')
+def profile():
+    return render_template('user/user.html')
