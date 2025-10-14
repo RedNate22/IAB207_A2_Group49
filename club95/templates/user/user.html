@@ -2,8 +2,8 @@
 {% from "bootstrap5/form.html" import render_form %}
 {% block body %}
 <!-- Form rendering is simple and easy if using WTForms and Bootstrap -->
-<div class="col-md-6">{{ render_form(form, method="POST", novalidate=True, button_map={"submit": "primary"}) }}</div>
-
+<!--<div class="centered-form">{{ render_form(form, method="POST", novalidate=True, button_map={"submit": "primary"}) }}</div>
+-->
 
 <!-- When you have Login form, then show the user a link to register -->
 {% if heading == 'Login' %}

@@ -3,7 +3,6 @@
 
 {% block body %}
 <div class="centered-form">
-    <h2>Login</h2>
 
     {# Flash message section #}
     {% with messages = get_flashed_messages() %}
@@ -16,7 +15,7 @@
         {% endif %}
     {% endwith %}
 
-    <div class="col-md-6">
+    <div class="centered-form">
         {{ render_form(form, method="POST", button_map={"submit": "primary"}) }}
     </div>
 

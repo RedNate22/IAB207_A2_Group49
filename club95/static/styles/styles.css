@@ -1040,3 +1040,19 @@ as well as filter, search and sort them. */
     height: 100%;
     width: 100%;
 }
+
+
+/* FORM ELEMENTS */
+    /* Center forms */
+    .centered-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
