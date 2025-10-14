@@ -12,7 +12,7 @@ from flask_login import login_user, logout_user
 from . import db
 
 
-auth_bp = Blueprint('auth', __name__, template_folder='templates')
+auth_bp = Blueprint('auth_bp', __name__, template_folder='templates')
 
 @auth_bp.route('/auth/register', methods=['GET', 'POST'])
 def register():
@@ -44,7 +44,7 @@ def register():
 
         #return success and redirect to login page
         flash('Registration successful! Please log in.')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth_bp.login'))
     
     return render_template('/auth/register.html', form=form, heading="Register")
 
@@ -62,12 +62,12 @@ def login():
         if u1 is None:
             error = 'Incorrect username.'
             flash(error)
-            return redirect(url_for('auth.login')) # reload login page if error
+            return redirect(url_for('auth_bp.login')) # reload login page if error
         # Check the password
         elif not check_password_hash(u1.password, password):
             error = 'Incorrect password.'
             flash(error)
-            return redirect(url_for('auth.login')) # reload login page if error
+            return redirect(url_for('auth_bp.login')) # reload login page if error
         if error is None:
             # this logs in the user for the session
             login_user(u1)
@@ -88,5 +88,5 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     ## spits user back to homepage
-    return redirect(url_for('/home.index'))
+    return redirect(url_for('home_bp.index'))
     

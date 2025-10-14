@@ -50,7 +50,7 @@ def create_app():
    # set the name of the login function that lets user login
    # in our case it is auth.login (blueprintname.viewfunction name)
    # redirect to login page if user tries to access a login_required page without being logged in
-   login_manager.login_view = 'auth.login'
+   login_manager.login_view = 'auth_bp.login'
    login_manager.init_app(app)
 
    # ! NOT IMPLEMENTED YET - Thank you Nate for doing this step already - B
