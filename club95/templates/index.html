@@ -1,10 +1,11 @@
 {% extends "base.html" %} {% block body %}
+
 <div class="main-window">
     <!-- Search Section -->
     <section class="search-section">
         <div class="container" id="search-container">
             <!-- Search bar -->
-            <form class="d-flex" role="search">
+            <form class="d-flex" role="search" action="{{url_for('home_bp.search')}}">
                 <input
                     class="form-control me-2"
                     type="search"
