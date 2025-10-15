@@ -5,10 +5,11 @@
     <section class="search-section">
         <div class="container" id="search-container">
             <!-- Search bar -->
-            <form class="d-flex" role="search" action="{{url_for('home_bp.search')}}">
+            <form class="d-flex" role="search" action="{{ url_for('home_bp.search') }}" method="get">
                 <input
                     class="form-control me-2"
                     type="search"
+                    name="search"
                     placeholder="Search for events..."
                     aria-label="Search"
                     id="search-bar"
@@ -324,6 +325,77 @@
     <section class="events-list-page">
         <!-- Events Page Container -->
         <div class="container" id="events-page-container">
+
+            {% for event in events %}
+            
+                    <div class="window" id="event1">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >{{event.title}}</span
+                            >
+                            <div class="window-controls">
+                                <button class="btn">_</button>
+                                <button class="btn">☐</button>
+                                <button class="btn" id="closebtn">X</button>
+                            </div>
+                        </div>
+
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/dj-1.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span
+                                    class="badge"
+                                    id="event-type"
+                                    onclick="window.location='#!'"
+                                    >{{event.type}}</span
+                                >
+                                <span class="badge" id="event-status-cancelled"
+                                    >{{event.status}}</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                Watch DJ Spreadsheet seamlessly mix quarterly
+                                reports into smooth beats. Free Wi-Fi included.
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Starting at $4.99
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                DJ Spreadsheet
+                                <br />
+                                <strong>> VENUE:</strong> Conference Room B,
+                                Novotel Brisbane
+                                <br />
+                                <strong>> DATE:</strong>
+                                {{event.date}}
+                                <br />
+                                <strong>> TIME:</strong>
+                                9am-5pm
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Electronic</a>,
+                                <a href="#!">Techno</a>,
+                                <a href="#!">Synthwave</a>
+                            </p>
+                            <a
+                                class="btn"
+                                id="view-details-btn"
+                                href="{{ url_for('events_bp.eventdetails') }}"
+                            >
+                                View details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+            {% endfor %}
+
+
+
             <div class="row align-items-center">
                 <!-- Event window 1 -->
                 <div class="col-sm-12 col-md-6 col-lg-4">
