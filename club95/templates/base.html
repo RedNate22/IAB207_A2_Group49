@@ -85,10 +85,11 @@
                                 >
                             </li>
                             {% else %}
-                            <!-- Account page link -->
+                            <!-- Account page link IMO not needed if no account 
                             <li class="nav-item">
                                 <a class="nav-link" href="#!">Account</a>
                             </li>
+                            -->
                             {% endif %}
                             <!-- Help menu -->
                             <li class="nav-item dropdown">
@@ -123,6 +124,7 @@
                         </ul>
                         <!-- Right side elements of navbar -->
                         <ul class="navbar-nav me-2 mb-auto mb-lg-0">
+                            {% if current_user.is_authenticated %}
                             <li class="nav-item" .createevent>
                                 <a
                                     class="nav-link"
@@ -140,9 +142,16 @@
                                     >My Tickets</a
                                 >
                             </li>
+                            {% endif %}
+                            {% if not current_user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Sign In</a>
+                            </li>
+                            {% else %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">Sign Out</a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
