@@ -29,7 +29,19 @@ class User(db.Model, UserMixin):
         return f"<User {self.name}>"
    
 
+# Association table for many-to-many relationship between Event and Artist
+event_artist = db.Table(
+    'event_artist',
+    db.Column('event_id', db.Integer, db.ForeignKey('events.id'), primary_key=True),
+    db.Column('artist_id', db.Integer, db.ForeignKey('artists.id'), primary_key=True)
+)
 
+# Association table for many-to-many relationship between Event and Genre
+event_genre = db.Table(
+    'event_genre',
+    db.Column('event_id', db.Integer, db.ForeignKey('events.id'), primary_key=True),
+    db.Column('genre_id', db.Integer, db.ForeignKey('genres.id'), primary_key=True)
+)
 
 ## setting this up to associate events with users in future
 class Event(db.Model):
@@ -38,21 +50,26 @@ class Event(db.Model):
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    genre = db.Column(db.String(50), nullable=False)
+    genres = db.relationship('Genre', secondary=event_genre, backref='events')
     type = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=True)
     location = db.Column(db.String(100), nullable=True)
     image = db.Column(db.String(200), nullable=True)
+
+    start_time = db.Column(db.String(10), nullable=True)
+    end_time = db.Column(db.String(10), nullable=True)
+
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
     venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'))
     # link event to tickets - one to many
     tickets = db.relationship('Ticket', backref='event')
     # relationship to comments - one to many
     comments = db.relationship('Comment', backref='event')
+    # many-to-many relationship with artists
+    artists = db.relationship('Artist', secondary='event_artist', back_populates='events')
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -109,10 +126,9 @@ class Genre(db.Model):
     __tablename__ = 'genres'
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    genreType = db.Column(db.Enum('electronic', 'jazz' 'indie', 'rock', 'punk'), nullable=False)
+    genreType = db.Column(db.String(50), nullable=False)
 
     # link genre to events - many to one
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
 
     def __repr__(self):
@@ -124,10 +140,8 @@ class Artist(db.Model):
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     artistName = db.Column(db.String(150), unique=True, nullable=False)
-    bio = db.Column(db.Text(500), nullable=True)
-
-    # link artist to events - one to many
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+    # many-to-many relationship with events
+    events = db.relationship('Event', secondary='event_artist', back_populates='artists')
     # link artist to genre - one to many
     genres = db.relationship('Genre', backref='artist')
 
@@ -147,5 +161,10 @@ class Venue(db.Model):
 
     def __repr__(self):
         return f"<Venue {self.venueName}>"
+
+
+
+
+
 
 ## add additional models if needed here

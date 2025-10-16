@@ -343,7 +343,8 @@
                         <!-- window content -->
                         <div class="sub-window">
                             <img
-                                src="{{ url_for('static', filename='img/dj-1.jpg') }}"
+                                src="{{ url_for('static', filename='img/' ~ event.image) }}"
+                                alt="Event Image"
                                 class="window-img-top img-fit"
                             />
                             <section class="window-tags">

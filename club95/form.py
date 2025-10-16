@@ -2,9 +2,10 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField
 from wtforms.validators import DataRequired, Length
 from wtforms import SelectField 
+from flask_wtf.file import FileField, FileAllowed
 
 #Sets up forms for use thorughout the application using Flask-WTF and WTForms
 #https://wtforms.readthedocs.io/en/3.2.x/forms/ - Good read on WTForms
@@ -29,9 +30,12 @@ class EventForm(FlaskForm):
     date = StringField('Event Date', validators=[DataRequired()])
     description = StringField('Event Description', validators=[DataRequired()])
     location = StringField('Event Location', validators=[DataRequired()])
-    
-    # Added by Ana 
-    genre = StringField('Genre', validators=[DataRequired(), Length(max=50)])
+    start_time = StringField('Start Time', validators=[DataRequired()])
+    end_time = StringField('End Time', validators=[DataRequired()])
+    genres = SelectMultipleField('Genres', coerce=int, validators=[DataRequired()])  # choices set in route
+    new_genre = StringField('Add New Genre', validators=[Length(max=50)])
+    artists = SelectMultipleField('Artists', coerce=int)  # choices set in route
+    new_artist = StringField('Add New Artist', validators=[Length(max=150)])
     type = SelectField('Type', choices=[
         ('Live Concert','Live Concert'),
         ('Music Festival','Music Festival'),
@@ -43,10 +47,13 @@ class EventForm(FlaskForm):
         ('OPEN','OPEN'), ('INACTIVE','INACTIVE'),
         ('SOLD OUT','SOLD OUT'), ('CANCELLED','CANCELLED')
     ], validators=[DataRequired()])
-
-    image = StringField('Image path (optional)')
-    ##poster = ImageField('Event Poster')  # Assuming you have an ImageField defined
+    image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Create Event')
+
+
+class AddGenreForm(FlaskForm):
+    new_genre = StringField('Add New Genre', validators=[Length(max=50), DataRequired()])
+    submit = SubmitField('Add Genre')
 
 # adds forms for updating user profile
 class UpdateProfileForm(FlaskForm):
