@@ -5,6 +5,8 @@ __pycache__/
 
 instance/
 
+./club95/static/img/
+
 .pytest_cache/
 .coverage
 htmlcov/
