@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from club95 import db 
-from club95.form import EventForm, AddGenreForm
+from club95.form import EventForm, AddGenreForm, CommentForm
 from .models import Event
 from . import db
 import os
 from werkzeug.utils import secure_filename
 from .models import Genre, Artist, Comment
+from flask_login import login_required, current_user
+from datetime import datetime
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
 

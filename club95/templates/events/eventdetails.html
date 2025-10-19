@@ -391,21 +391,24 @@
 
                         <!-- window content -->
                         <div class="sub-window">
-                            <div class="mb-3" id="post-comment-form">
-                                <label
-                                    for="exampleFormControlTextarea1"
-                                    class="enter-comment"
-                                    >Enter comment:</label
-                                >
-                                <textarea
-                                    class="form-control"
-                                    id="comment-text"
-                                    rows="3"
-                                ></textarea>
-                            </div>
-                            <a class="btn" id="post-comment-btn" href="#!">
-                                Post
-                            </a>
+                            <form
+                                method="POST"
+                                action="{{ url_for('events_bp.add_comment', event_id=event.id) }}"
+                            >
+                                {{ comment_form.hidden_tag() }}
+                                <div class="mb-3" id="post-comment-form">
+                                    <label for="comment-text" class="enter-comment">
+                                        Enter comment:
+                                    </label>
+                                    {{ comment_form.content(class="form-control", id="comment-text", rows="3") }}
+                                    {% if comment_form.content.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {{ comment_form.content.errors[0] }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {{ comment_form.submit(class="btn", id="post-comment-btn") }}
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -413,152 +416,10 @@
                 <div class="col-3"></div>
             </div>
 
+            {% if comments %}
             <div class="row align-items-start">
                 <!-- Event Comments Windows -->
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <div class="window" id="event-comments-window">
-                        <div class="title-bar">
-                            <span class="window-title">Comment</span>
-                            <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <p class="sub-window-content">
-                                <strong>Poster:</strong> Anonymous
-                                <br />
-                                <strong>DateTime:</strong> 02/09/25
-                                <br />
-                                <strong>Comment:</strong>
-                                Crescent City Players played a night I will
-                                never forget!
-                            </p>
-                            <a class="btn" id="reply-to-comment-btn" href="#!">
-                                Reply
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <div class="window" id="event-comments-window">
-                        <div class="title-bar">
-                            <span class="window-title">Comment</span>
-                            <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <p class="sub-window-content">
-                                <strong>Poster:</strong> Gilbert
-                                <br />
-                                <strong>DateTime:</strong> 22/05/25
-                                <br />
-                                <strong>Comment:</strong>
-                                The drinks were definitely worth the trip :))))
-                            </p>
-                            <a class="btn" id="reply-to-comment-btn" href="#!">
-                                Reply
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <div class="window" id="event-comments-window">
-                        <div class="title-bar">
-                            <span class="window-title">Comment</span>
-                            <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <p class="sub-window-content">
-                                <strong>Poster:</strong> Steve from accounting
-                                <br />
-                                <strong>DateTime:</strong> 24/12/24
-                                <br />
-                                <strong>Comment:</strong>
-                                Saw these guys for our Christmas Eve office
-                                party. 10/10 would headbang to a trumpet solo
-                                again.
-                            </p>
-                            <a class="btn" id="reply-to-comment-btn" href="#!">
-                                Reply
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <div class="window" id="event-comments-window">
-                        <div class="title-bar">
-                            <span class="window-title">Comment</span>
-                            <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <p class="sub-window-content">
-                                <strong>Poster:</strong> Karen Smith
-                                <br />
-                                <strong>DateTime:</strong> 13/06/23
-                                <br />
-                                <strong>Comment:</strong>
-                                I've never been a fan of jazz, until I saw these
-                                guys at my local bar.
-                            </p>
-                            <a class="btn" id="reply-to-comment-btn" href="#!">
-                                Reply
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <div class="window" id="event-comments-window">
-                        <div class="title-bar">
-                            <span class="window-title">Comment</span>
-                            <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <p class="sub-window-content">
-                                <strong>Poster:</strong> Dan
-                                <br />
-                                <strong>DateTime:</strong> 04/02/23
-                                <br />
-                                <strong>Comment:</strong>
-                                Loved the venue. The band...not so much.
-                            </p>
-                            <a class="btn" id="reply-to-comment-btn" href="#!">
-                                Reply
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
+                {% for comment in comments %}
                 <div class="col-sm-6 col-md-6 col-lg-4">
                     <div class="window" id="event-comments-window">
                         <div class="title-bar">
@@ -574,15 +435,13 @@
                         <div class="sub-window">
                             <p class="sub-window-content">
                                 <strong>Poster:</strong>
-                                CrescentCityPlayersFan49
+                                {{ comment.user.name if comment.user and comment.user.name else 'Anonymous' }}
                                 <br />
-                                <strong>DateTime:</strong> 19/08/22
+                                <strong>DateTime:</strong>
+                                {{ comment.commentDateTime.strftime('%d/%m/%y %H:%M') if comment.commentDateTime else 'N/A' }}
                                 <br />
                                 <strong>Comment:</strong>
-                                I've been following these guys since their OG
-                                days when they used to play doom jazz. Wish
-                                they'd go back to their roots and do another
-                                collab with Optimistic Yeti.
+                                {{ comment.content }}
                             </p>
                             <a class="btn" id="reply-to-comment-btn" href="#!">
                                 Reply
@@ -590,9 +449,35 @@
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
+            {% else %}
+            <div class="row align-items-start">
+                <div class="col-sm-12 col-md-8 col-lg-6">
+                    <div class="window" id="event-comments-window">
+                        <div class="title-bar">
+                            <span class="window-title">Comment</span>
+                            <div class="window-controls">
+                                <button class="btn">_</button>
+                                <button class="btn">☐</button>
+                                <button class="btn" id="closebtn">X</button>
+                            </div>
+                        </div>
+                        <div class="sub-window">
+                            <p class="sub-window-content">
+                                No comments yet. Be the first to share your thoughts!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             <!-- End of comments -->
         </div>
+        <!-- End of Events Details Container -->
+    </section>
+    <!-- End of Events Details Section -->
+</div>
         <!-- End of Events Details Container -->
     </section>
     <!-- End of Events Details Section -->

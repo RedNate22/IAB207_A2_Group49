@@ -19,7 +19,7 @@
                 </button>
             </form>
 
-            <!-- Event Type(s) filter button -->
+            <!-- TODO: Ana - Event Type(s) filter button -->
             <div class="btn-group" id="filter-btn-group">
                 <div class="filter-btn-wrapper">
                     <button
@@ -258,7 +258,7 @@
                 </div>
                 <!-- End of Event Genre(s) filter button -->
 
-                <!-- Event Status filter button -->
+                <!-- TODO: Ana - Event Status filter button -->
                 <div class="filter-btn-wrapper">
                     <button
                         class="btn dropdown-toggle"
@@ -318,22 +318,20 @@
     </section>
     <!-- End of Search Section -->
 
-    <!-- My Tickets Section -->
+    <!-- TODO: Nate please fix - My Tickets Section -->
     <section class="my-tickets-page">
         <!-- Events Page Container -->
         <div class="container" id="my-tickets-page-container">
-            <div class="row align-items-start">
-                <!-- Padding -->
-                <div class="col-sm-0 col-md-3"></div>
-
-                <!-- My ticket 1 -->
-                <div class="col-sm-12 col-md-6">
-                    <div class="window" id="my-ticket-1">
+            <div class="row justify-content-center gy-4">
+                {% for order in orders %}
+                {% set primary_item = order.line_items[0] if order.line_items else None %}
+                {% set event = primary_item.ticket.event if primary_item and primary_item.ticket else None %}
+                <div class="col-12 col-lg-8 d-flex">
+                    <div class="window" id="order-{{ order.id }}">
                         <div class="title-bar">
-                            <span class="window-title"
-                                >(ORDER ID: #15901850) Crescent City
-                                Players</span
-                            >
+                            <span class="window-title">
+                                (ORDER ID: #{{ '%08d' % order.id }}) {{ event.title if event else 'Event Details' }}
+                            </span>
                             <div class="window-controls">
                                 <button class="btn">_</button>
                                 <button class="btn">☐</button>
@@ -341,68 +339,92 @@
                             </div>
                         </div>
 
-                        <!-- window content -->
                         <div class="sub-window">
                             <img
-                                src="{{ url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
+                                src="{{ url_for('static', filename='img/' ~ event.image) if event and event.image else url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
                                 class="window-img-top img-fit"
+                                alt="{{ event.title if event else 'Event poster' }}"
                             />
                             <section class="window-tags">
-                                <span class="badge" id="event-type"
-                                    >Live Concert</span
-                                >
-                                <span class="badge" id="event-status-open"
-                                    >OPEN</span
-                                >
+                                <span class="badge" id="event-type">
+                                    {{ event.type if event and event.type else 'Event' }}
+                                </span>
+                                <span class="badge" id="event-status-open">
+                                    {{ event.status if event and event.status else 'OPEN' }}
+                                </span>
                             </section>
                             <p class="sub-window-content">
-                                <strong>> ORDER DATE:</strong> Sept 1, 2025
+                                <strong>> ORDER DATE:</strong>
+                                {{ order.order_date.strftime('%b %d, %Y') if order.order_date else 'Pending' }}
                                 <br />
                                 <strong>> PURCHASED TICKET(s):</strong>
                                 <br />
-                                2x Tier 2: $7.99 + 1 drink of choice
-                                <br />
-                                1x Tier 3: $14.99 + 2 drinks of choice
-                                <br />
+                                {% for line_item in order.line_items %}
+                                    {{ line_item.quantity }}x {{ line_item.ticket.ticketTier }} – ${{ '%.2f'|format(line_item.price_at_purchase) }}
+                                    <br />
+                                {% endfor %}
                                 <br />
                                 <strong>> DESCRIPTION: </strong>
-                                An intimate evening of smooth jazz and
-                                improvisation, featuring local hit talent,
-                                Crescent City Players, joined by The Walters and
-                                Mojo Webb. Enjoy classic standards and modern
-                                tunes in a cozy, relaxed setting.
+                                {{ event.description if event and event.description else 'No description available.' }}
                                 <br />
                                 <br />
                                 <strong>> ARTIST LINEUP:</strong>
-                                Crescent City Players, The Walters and Mojo Webb
+                                {% if event and event.artists %}
+                                    {% for artist in event.artists %}
+                                        {{ artist.artistName }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Not available
+                                {% endif %}
                                 <br />
-                                <strong>> VENUE:</strong> Royal Mail Hotel (92
-                                Brisbane Terrace Goodna, QLD)
+                                <strong>> VENUE:</strong>
+                                {{ event.location if event and event.location else 'TBA' }}
                                 <br />
                                 <strong>> DATE:</strong>
-                                Sept 30, 2025
+                                {{ event.date if event and event.date else 'TBA' }}
                                 <br />
                                 <strong>> TIME:</strong>
-                                1pm-3pm
+                                {{ event.start_time if event and event.start_time else 'TBA' }}
+                                {% if event and event.end_time %}-{{ event.end_time }}{% endif %}
                                 <br />
                                 <strong>> GENRES:</strong>
-                                <a href="#!">Jazz</a>, <a href="#!">Swing</a>,
-                                <a href="#!">Fusion</a>
+                                {% if event and event.genres %}
+                                    {% for genre in event.genres %}
+                                        <a href="#!">{{ genre.genreType }}</a>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <span>N/A</span>
+                                {% endif %}
                             </p>
                             <a
                                 class="btn"
                                 id="view-details-btn"
-                                href="{{ url_for('events_bp.eventdetails') }}"
+                                href="{{ url_for('events_bp.eventdetails', event_id=event.id) if event else '#!' }}"
                             >
                                 View details
                             </a>
                         </div>
                     </div>
                 </div>
-                <!-- End of My ticket 1 -->
-
-                <!-- Padding -->
-                <div class="col-sm-0 col-md-3"></div>
+                {% else %}
+                <div class="col-12 col-lg-8 d-flex">
+                    <div class="window" id="no-orders-window">
+                        <div class="title-bar">
+                            <span class="window-title">No Orders Yet</span>
+                            <div class="window-controls">
+                                <button class="btn">_</button>
+                                <button class="btn">☐</button>
+                                <button class="btn" id="closebtn">X</button>
+                            </div>
+                        </div>
+                        <div class="sub-window">
+                            <p class="sub-window-content">
+                                Purchase tickets to see them listed here.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             <!-- End of row -->
 
@@ -474,7 +496,7 @@
                             <a
                                 class="btn"
                                 id="view-details-btn"
-                                href="{{ url_for('events_bp.eventdetails') }}"
+                                href="#!"
                             >
                                 View details
                             </a>
@@ -557,7 +579,7 @@
                             <a
                                 class="btn"
                                 id="view-details-btn"
-                                href="{{ url_for('events_bp.eventdetails') }}"
+                                href="#!"
                             >
                                 View details
                             </a>
