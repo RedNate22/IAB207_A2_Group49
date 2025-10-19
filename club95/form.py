@@ -2,7 +2,7 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, TextAreaField
 from wtforms.validators import DataRequired, Length
 from wtforms import SelectField 
 from flask_wtf.file import FileField, FileAllowed
@@ -24,6 +24,8 @@ class RegisterForm(FlaskForm):
     phonenumber = StringField('Phone No.', [Length(min=4, max=25)])
     submit = SubmitField('Register')
 
+# TODO: Ana - now that I have updated the database I need you to update these forms for me
+# note keep FileField for image upload
 # adds forms for creating events
 class EventForm(FlaskForm):
     title = StringField('Event Title', validators=[DataRequired()])
@@ -62,3 +64,10 @@ class UpdateProfileForm(FlaskForm):
     Password = PasswordField('Password', validators=[DataRequired()])
     phonenumber = StringField('Phone No.', [Length(min=4, max=25)])
     submit = SubmitField('Update Profile')
+
+# TODO: Nate - Ticket buying forms and creating new ticket tiers for events
+
+# form for creating a comment on an event
+class CommentForm(FlaskForm):
+    content = TextAreaField('Comment', validators=[DataRequired(), Length(max=300)])
+    submit = SubmitField('Post')

@@ -5,7 +5,7 @@ from .models import Event
 from . import db
 import os
 from werkzeug.utils import secure_filename
-from .models import Genre, Artist
+from .models import Genre, Artist, Comment
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
 
@@ -74,3 +74,36 @@ def add_genre():
     else:
         flash("Please provide a valid genre name.", "warning")
     return redirect(url_for('events_bp.createevent'))
+
+
+# Comment creation endpoint
+@events_bp.route('/events/eventdetails/<int:event_id>/comment', methods=['POST'])
+@login_required
+def add_comment(event_id):
+    event = Event.query.get_or_404(event_id)
+    form = CommentForm()
+
+    if not form.validate_on_submit():
+        message = form.content.errors[0] if form.content.errors else "Comment cannot be empty."
+        flash(message, "warning")
+        return redirect(url_for('events_bp.eventdetails', event_id=event.id))
+
+    content = form.content.data.strip()
+    if not content:
+        flash("Comment cannot be empty.", "warning")
+        return redirect(url_for('events_bp.eventdetails', event_id=event.id))
+
+    new_comment = Comment(
+        content=content,
+        commentDateTime=datetime.today(),
+        event_id=event.id,
+        user_id=current_user.id
+    )
+
+    # Adds comment to Database
+    db.session.add(new_comment)
+    db.session.commit()
+
+    flash("Comment posted successfully!", "success")
+    return redirect(url_for('events_bp.eventdetails', event_id=event.id))
+

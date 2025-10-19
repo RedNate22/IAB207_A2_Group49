@@ -5,6 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
 
+DATABASE_FILENAME = 'sitedata.sqlite'
+
+
 # create a db object that is an instance of SQLAlchemy class
 db = SQLAlchemy()
 

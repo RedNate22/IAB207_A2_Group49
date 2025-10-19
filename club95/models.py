@@ -88,38 +88,60 @@ class Comment(db.Model):
     def __repr__(self):
         return f"<Comment {self.content}>"
 
+class OrderTicket(db.Model):
+    __tablename__ = 'order_ticket'
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), primary_key=True)
+    ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'), primary_key=True)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    price_at_purchase = db.Column(db.Float, nullable=False)
+    # orders ↔ tickets relationships defined below
+    order = db.relationship('Order', back_populates='line_items')
+    ticket = db.relationship('Ticket', back_populates='order_links')
+
 class Order(db.Model):
-    # define the name of the table in the database
     __tablename__ = 'orders'
-    # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     order_date = db.Column(db.DateTime)
     amount = db.Column(db.Float)
-    
-    # link order to tickets - one to many
-    tickets = db.relationship('Ticket', backref='order')
-    # link order to user - many to one
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    tickets = db.relationship(
+        'Ticket',
+        secondary='order_ticket',
+        back_populates='orders',
+        overlaps='line_items,order,ticket'
+    )
+    line_items = db.relationship(
+        'OrderTicket',
+        back_populates='order',
+        cascade='all, delete-orphan',
+        overlaps='tickets'
+    )
 
     def __repr__(self):
         return f"<Order {self.id}>"
 
 class Ticket(db.Model):
-    # define the name of the table in the database
     __tablename__ = 'tickets'
-    # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    ticketTier = db.Column(db.Enum('standard', 'premium', 'vip', 'backstage', name='ticket_tiers'), nullable=False)
-    price = db.Column(db.Float)
-    availability = db.Column(db.Boolean, default=True)
-
-    # link ticket to order - many to one
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'))
-    # link ticket to event - many to one
+    ticketTier = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    availability = db.Column(db.Integer, default=1, nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+    orders = db.relationship(
+        'Order',
+        secondary='order_ticket',
+        back_populates='tickets',
+        overlaps='order_links,line_items,order'
+    )
+    order_links = db.relationship(
+        'OrderTicket',
+        back_populates='ticket',
+        cascade='all, delete-orphan',
+        overlaps='orders,tickets'
+    )
 
     def __repr__(self):
-        return f"<Ticket {self.ticketTier} - ${self.price}>"
+        return f"<Ticket {self.ticketTier} (${self.price}) x{self.availability}"
 
 class Genre(db.Model):
     # define the name of the table in the database
