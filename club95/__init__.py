@@ -3,6 +3,7 @@ from flask import Flask, session
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from pathlib import Path
 
 # create a db object that is an instance of SQLAlchemy class
 db = SQLAlchemy()
@@ -33,8 +34,13 @@ def create_app():
       return 'session cleared'
    ## end of session testing segement as per week 5 tutorial
 
+   # ensure the instance folder exists for database storage
+   Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+
    # set the app configuration data - where the db is located "provider://location.name"
-   app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sitedata.sqlite'
+   database_path = Path(app.instance_path) / DATABASE_FILENAME
+   app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{database_path.as_posix()}"
+
    # initialise db with flask app
    db.init_app(app)
 
@@ -75,5 +81,19 @@ def create_app():
 
    from .auth import auth_bp
    app.register_blueprint(auth_bp)
+
+   # checks for and then creates database
+   _ensure_database(app)
    
    return app
+
+def _ensure_database(app: Flask) -> None:
+   """Create the SQLite database on first launch if it doesn't exist."""
+   database_path = Path(app.instance_path) / DATABASE_FILENAME
+   if database_path.exists():
+      return
+
+   with app.app_context():
+      db.create_all()
+
+# TODO: Add scripts to populate initial database data using static images and dummy data provided by Nate
