@@ -108,3 +108,39 @@ def add_comment(event_id):
 
     flash("Comment posted successfully!", "success")
     return redirect(url_for('events_bp.eventdetails', event_id=event.id))
+
+# Purchase tickets
+@events_bp.route('/events/purchase/<int:event_id>', methods = ['POST'])
+@login_required
+def purchase_tickets(event_id):
+    event = Event.query.get_or_404(event_id)
+    form = TicketPurchaseForm(event.tickets, formdata = request.form)
+
+    if not form.validate_on_submit():
+        flash("Please review your ticket selections.", "danger")
+        return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+
+    order_items = []
+    total_amount = 0.0
+
+    for ticket in event.tickets:
+        field = getattr(form, f"quantity_{ticket.id}", None)
+        quantity = field.data if field is not None else 0
+        quantity = quantity or 0
+
+        if quantity < 0:
+            flash("Quantities cannot be negative.", "danger")
+            return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+
+        if quantity == 0:
+            continue
+
+        if quantity > ticket.availability:
+            flash(f"Not enough availability for {ticket.ticketTier}. Only {ticket.availability} left.",
+                "warning")
+            return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+        
+        order_items.append((ticket, quantity))
+        total_amount += ticket.price 
+
+                

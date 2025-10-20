@@ -66,6 +66,33 @@ class UpdateProfileForm(FlaskForm):
     submit = SubmitField('Update Profile')
 
 # TODO: Nate - Ticket buying forms and creating new ticket tiers for events
+class TicketPurchaseForm(FlaskForm):
+    submit = SubmitField('Purchase')
+
+    def __init__(self, ticket_tiers, formdata = None, *args, **kwargs):
+        super().__init__(formdata = formdata, *args, **kwargs)
+
+        # Bind quantity field for each ticket tier on the instance
+        for ticket in ticket_tiers:
+            field_name = f"quantity_{ticket.id}"
+            label = f"{ticket.ticketTier.capitalize()} (${'{:.2f}'.format(ticket.price)})"
+            unbound_field = IntegerField(
+                label, 
+                validators = [Optional(), NumberRange(min = 0)],
+                default = 0,
+                render_kw = {
+                    "class": "form-control",
+                    "min": 0,
+                    "max": ticket.availability,
+                    "id": f"quantity-{ticket.id}",
+                    "data-tier": ticket.ticketTier,
+                    "data-price": ticket.price    
+                    }
+                )
+            bound_field = unbound_field.bind(form = self, name = field_name)
+            bound_field.process(formdata, bound_field.default)
+            self._fields[field_name] = bound_field
+            setattr(self, field_name, bound_field)
 
 # form for creating a comment on an event
 class CommentForm(FlaskForm):
