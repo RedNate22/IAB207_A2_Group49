@@ -108,4 +108,3 @@ def add_comment(event_id):
 
     flash("Comment posted successfully!", "success")
     return redirect(url_for('events_bp.eventdetails', event_id=event.id))
-
