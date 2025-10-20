@@ -1,12 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from club95 import db 
-from club95.form import EventForm, AddGenreForm, CommentForm
+from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
 from .models import Event
 from . import db
 import os
 from werkzeug.utils import secure_filename
-from .models import Genre, Artist, Comment
-from flask_login import login_required, current_user
+from .models import Genre, Artist, Ticket, Order, OrderTicket, Comment
+from flask_login import current_user, login_required
 from datetime import datetime
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
@@ -128,19 +128,53 @@ def purchase_tickets(event_id):
         quantity = field.data if field is not None else 0
         quantity = quantity or 0
 
+        # Negative quantity entered
         if quantity < 0:
             flash("Quantities cannot be negative.", "danger")
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
 
+        # No quantity entered
         if quantity == 0:
             continue
 
+        # Not enough tickets
         if quantity > ticket.availability:
             flash(f"Not enough availability for {ticket.ticketTier}. Only {ticket.availability} left.",
                 "warning")
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
         
         order_items.append((ticket, quantity))
-        total_amount += ticket.price 
+        total_amount += ticket.price * quantity
+
+        if not order_items:
+            flash("Select at least one ticket to purchase.", "warning")
+            return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+
+        order = Order(
+            # ! utcnow is deprecated
+            order_data = datetime.utcnow(),
+            amount = total_amount,
+            user_id = current_user.id
+        )
+
+        db.session.add(order)
+        db.session.flush()
+
+        for ticket, quantity in order_items:
+            db.session.add(
+                OrderTicket(
+                    order_id = order.id,
+                    ticket_id = ticket.id,
+                    quantity = quantity,
+                    price_at_purchase = ticket.price
+                )
+            )
+
+            ticket.availability -= quantity
+
+        db.session.commit()
+        flash("Tickets purchased successfully!", "success")
+        return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+        
 
                 

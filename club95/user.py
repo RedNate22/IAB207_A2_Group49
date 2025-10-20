@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 
 from club95.form import UpdateProfileForm
-from club95.models import Order, OrderTicket, Ticket
+from .models import Order, OrderTicket,Ticket
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 

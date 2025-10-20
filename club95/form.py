@@ -2,10 +2,10 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, IntegerField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, Length
-from wtforms import SelectField 
 from flask_wtf.file import FileField, FileAllowed
+from wtforms.validators import NumberRange,Optional
 
 #Sets up forms for use thorughout the application using Flask-WTF and WTForms
 #https://wtforms.readthedocs.io/en/3.2.x/forms/ - Good read on WTForms
@@ -70,11 +70,14 @@ class TicketPurchaseForm(FlaskForm):
     submit = SubmitField('Purchase')
 
     def __init__(self, ticket_tiers, formdata = None, *args, **kwargs):
+        # call constructor of parent class (FlaskForm)
         super().__init__(formdata = formdata, *args, **kwargs)
 
         # Bind quantity field for each ticket tier on the instance
         for ticket in ticket_tiers:
             field_name = f"quantity_{ticket.id}"
+
+            # Set format for ticket prices and add $
             label = f"{ticket.ticketTier.capitalize()} (${'{:.2f}'.format(ticket.price)})"
             unbound_field = IntegerField(
                 label, 

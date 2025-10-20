@@ -1,4 +1,3 @@
-# import flask - from 'package' import 'Class'
 from flask import Flask, session 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
