@@ -74,15 +74,22 @@ class TicketPurchaseForm(FlaskForm):
         super().__init__(formdata = formdata, *args, **kwargs)
 
         # Bind quantity field for each ticket tier on the instance
+        # i.e each ticket tier gets its own quantity
         for ticket in ticket_tiers:
+            # create unique field name based on ticket ID
             field_name = f"quantity_{ticket.id}"
 
             # Set format for ticket prices and add $
+            # format price to floating point with 2 decimal places
             label = f"{ticket.ticketTier.capitalize()} (${'{:.2f}'.format(ticket.price)})"
+
+            # (fields are built dynamically)
             unbound_field = IntegerField(
                 label, 
                 validators = [Optional(), NumberRange(min = 0)],
-                default = 0,
+                default = 0,  # avoid unassigned
+
+                # Set HTML attributes for each ticket tier row
                 render_kw = {
                     "class": "form-control",
                     "min": 0,
@@ -92,9 +99,16 @@ class TicketPurchaseForm(FlaskForm):
                     "data-price": ticket.price    
                     }
                 )
+
+            ## Bind field to form
+            # Attach field to this form instance with dynamic name
             bound_field = unbound_field.bind(form = self, name = field_name)
+            # Initialise field value using submitted data or default
             bound_field.process(formdata, bound_field.default)
+            # Register field in Flask-WTF interal dictionary
+            # to be indexed and accessible by name when requested
             self._fields[field_name] = bound_field
+            # Grab form and assign it a name (provided by database), grab integer that was bound
             setattr(self, field_name, bound_field)
 
 # form for creating a comment on an event

@@ -136,6 +136,9 @@ def purchase_tickets(event_id):
         # No quantity entered
         if quantity == 0:
             continue
+            # ? put it here?
+            # flash("Select at least one ticket to purchase.", "warning")
+            # return redirect(url_for('events_bp.eventdetails', event_id = event.id))
 
         # Not enough tickets
         if quantity > ticket.availability:
@@ -146,6 +149,7 @@ def purchase_tickets(event_id):
         order_items.append((ticket, quantity))
         total_amount += ticket.price * quantity
 
+        # ? put it under quantity == 0?
         if not order_items:
             flash("Select at least one ticket to purchase.", "warning")
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
