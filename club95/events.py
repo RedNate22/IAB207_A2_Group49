@@ -113,19 +113,26 @@ def add_comment(event_id):
 @events_bp.route('/events/purchase/<int:event_id>', methods = ['POST'])
 @login_required
 def purchase_tickets(event_id):
+    # Lookup event by ID, if not found: return 404
     event = Event.query.get_or_404(event_id)
     form = TicketPurchaseForm(event.tickets, formdata = request.form)
 
+    # If form is invalid, redirect back with error message
+    # Validation is checked by WTForms
     if not form.validate_on_submit():
         flash("Please review your ticket selections.", "danger")
         return redirect(url_for('events_bp.eventdetails', event_id = event.id))
 
+    # Clears both order items and total amount to start fresh when opening modal
     order_items = []
     total_amount = 0.0
 
+    # Iterate through tickets and get quantities from form
     for ticket in event.tickets:
         field = getattr(form, f"quantity_{ticket.id}", None)
-        quantity = field.data if field is not None else 0
+        # If 'field' exists, use it's 'data' attribute, otherwise default to 0
+        quantity = field.data if field is not None else 0 
+        # If 'quantity' is falsy (None, 0, '', etc.), replace with 0
         quantity = quantity or 0
 
         # Negative quantity entered
@@ -134,51 +141,55 @@ def purchase_tickets(event_id):
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
 
         # No quantity entered
+        # Prevents forcing user to buy one of every ticket type
         if quantity == 0:
             continue
-            # ? put it here?
-            # flash("Select at least one ticket to purchase.", "warning")
-            # return redirect(url_for('events_bp.eventdetails', event_id = event.id))
 
-        # Not enough tickets
+        # Not enough tickets available for quantity entered
         if quantity > ticket.availability:
             flash(f"Not enough availability for {ticket.ticketTier}. Only {ticket.availability} left.",
                 "warning")
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
         
+        # Add ticket and quantity to order items and update total amount
         order_items.append((ticket, quantity))
         total_amount += ticket.price * quantity
 
-        # ? put it under quantity == 0?
-        if not order_items:
-            flash("Select at least one ticket to purchase.", "warning")
-            return redirect(url_for('events_bp.eventdetails', event_id = event.id))
-
-        order = Order(
-            # ! utcnow is deprecated
-            order_data = datetime.utcnow(),
-            amount = total_amount,
-            user_id = current_user.id
-        )
-
-        db.session.add(order)
-        db.session.flush()
-
-        for ticket, quantity in order_items:
-            db.session.add(
-                OrderTicket(
-                    order_id = order.id,
-                    ticket_id = ticket.id,
-                    quantity = quantity,
-                    price_at_purchase = ticket.price
-                )
-            )
-
-            ticket.availability -= quantity
-
-        db.session.commit()
-        flash("Tickets purchased successfully!", "success")
+    # If no tickets were selected, flash error and redirect
+    if not order_items:
+        flash("Select at least one ticket to purchase.", "warning")
         return redirect(url_for('events_bp.eventdetails', event_id = event.id))
-        
 
-                
+    # Create order and order tickets table items, update ticket availability
+    # to reflect this on  next visit to same modal
+    order = Order(
+        # ! utcnow is deprecated
+        order_data = datetime.now(),  # * previously datetime.utcnow() but was deprecated
+        amount = total_amount,
+        user_id = current_user.id
+    )
+
+    # Add order object to database
+    db.session.add(order)
+    db.session.flush()
+
+    # Create OrderTicket entries and update ticket availability
+    # for each ticket in order_items, create an OrderTicket entry and update ticket availability
+    for ticket, quantity in order_items:
+        db.session.add(
+            OrderTicket(
+                order_id = order.id,
+                ticket_id = ticket.id,
+                quantity = quantity,
+                price_at_purchase = ticket.price
+            )
+        )
+        # Update ticket availability
+        ticket.availability -= quantity
+
+    # Commit all changes to database
+    db.session.commit()
+    # Confirm successful purchase
+    flash("Tickets purchased successfully!", "success")
+    # Return to event details page
+    return redirect(url_for('events_bp.eventdetails', event_id = event.id))
