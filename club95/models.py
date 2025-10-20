@@ -8,26 +8,26 @@ from . import db
 ## methods that Flask-Login expects user objects to have.
 ## https://flask-login.readthedocs.io/en/latest/#flask_login.UserMixin
 class User(db.Model, UserMixin):
-   # define the name of the table in the database
-   __tablename__ = 'users'
+    # define the name of the table in the database
+    __tablename__ = 'users'
 
-   # define the columns of the table
-   id = db.Column(db.Integer, primary_key=True)
-   email = db.Column(db.String(150), unique=True)
-   password = db.Column(db.String(150))
-   name = db.Column(db.String(150))
-   phoneNumber = db.Column(db.String(20), nullable=True)
-   # relationship to events - one to many 
-   events = db.relationship('Event', backref='user')
-   # relationship to comments - one to many
-   comments = db.relationship('Comment', backref='user')
-   # relationship to orders - one to many
-   orders = db.relationship('Order', backref='user')
+    # define the columns of the table
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
+    password = db.Column(db.String(150))
+    name = db.Column(db.String(150))
+    phoneNumber = db.Column(db.String(20), nullable=True)
+    # relationship to events - one to many 
+    events = db.relationship('Event', backref='user')
+    # relationship to comments - one to many
+    comments = db.relationship('Comment', backref='user')
+    # relationship to orders - one to many
+    orders = db.relationship('Order', backref='user')
 
-   #Creates a string representation of the User object for easier debugging and logging
-   def __repr__(self):
+    #Creates a string representation of the User object for easier debugging and logging
+    def __repr__(self):
         return f"<User {self.name}>"
-   
+
 
 # Association table for many-to-many relationship between Event and Artist
 event_artist = db.Table(
