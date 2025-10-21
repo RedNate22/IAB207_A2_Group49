@@ -1,7 +1,10 @@
-{% extends "base.html" %}
-{% block body %}
+{% extends "base.html" %} {% block body %}
 <div class="main-window">
-    <form id="add-genre-form" method="POST" action="{{ url_for('events_bp.add_genre') }}">
+    <form
+        id="add-genre-form"
+        method="POST"
+        action="{{ url_for('events_bp.add_genre') }}"
+    >
         {{ add_genre_form.hidden_tag() }}
     </form>
     <form method="POST" enctype="multipart/form-data">
@@ -18,12 +21,32 @@
                                 <div class="title-bar">
                                     <span class="window-title">Event Name</span>
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
+                                    <!-- prettier-ignore -->
                                     {{ form.title(class="form-control form-control-lg", placeholder="Enter the name of the event") }}
                                 </div>
                             </div>
@@ -38,22 +61,56 @@
                     <div class="row align-items-start">
                         <div class="col-3"></div>
                         <div class="col-6">
-                            <div class="window" id="enter-event-description-window">
+                            <div
+                                class="window"
+                                id="enter-event-description-window"
+                            >
                                 <div class="title-bar">
-                                    <span class="window-title">Description</span>
+                                    <span class="window-title"
+                                        >Description</span
+                                    >
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
                                     <div class="mb-3" id="post-comment-form">
-                                        <label for="description-text" class="enter-comment">Enter description:</label>
-                                        {{ form.description(class="form-control", id="description-text", rows="6") }}
+                                        <label
+                                            for="description-text"
+                                            class="enter-comment"
+                                            >Enter description:</label
+                                        >
+                                        {{
+                                        form.description(class="form-control",
+                                        id="description-text", rows="6") }}
                                     </div>
-                                    <div id="description-help" class="form-text">
-                                        Your description must be at least 20 words long.
+                                    <div
+                                        id="description-help"
+                                        class="form-text"
+                                    >
+                                        Your description must be at least 20
+                                        words long.
                                     </div>
                                 </div>
                             </div>
@@ -70,16 +127,40 @@
                         <div class="col-6">
                             <div class="window" id="upload-event-poster-window">
                                 <div class="title-bar">
-                                    <span class="window-title">Event Poster</span>
+                                    <span class="window-title"
+                                        >Event Poster</span
+                                    >
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    <label for="formFile" class="form-label">Upload a poster for your event.</label>
-                                    {{ form.image(class="form-control", id="formFile") }}
+                                    <label for="formFile" class="form-label"
+                                        >Upload a poster for your event.</label
+                                    >
+                                    {{ form.image(class="form-control",
+                                    id="formFile") }}
                                 </div>
                             </div>
                         </div>
@@ -93,17 +174,41 @@
                     <div class="row align-items-start">
                         <div class="col-3"></div>
                         <div class="col-6">
-                            <div class="window" id="enter-event-location-window">
+                            <div
+                                class="window"
+                                id="enter-event-location-window"
+                            >
                                 <div class="title-bar">
                                     <span class="window-title">Location</span>
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.location(class="form-control", placeholder="Enter the location of the event") }}
+                                    {{ form.location(class="form-control",
+                                    placeholder="Enter the location of the
+                                    event") }}
                                 </div>
                             </div>
                         </div>
@@ -120,13 +225,33 @@
                                 <div class="title-bar">
                                     <span class="window-title">Date</span>
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.date(class="form-control", placeholder="Enter date in dd/mm/yyyy") }}
+                                    {{ form.date(class="form-control",
+                                    placeholder="Enter date in dd/mm/yyyy") }}
                                 </div>
                             </div>
                         </div>
@@ -140,32 +265,84 @@
                     <div class="row align-items-start">
                         <div class="col-3"></div>
                         <div class="col-3">
-                            <div class="window" id="enter-event-start-time-window">
+                            <div
+                                class="window"
+                                id="enter-event-start-time-window"
+                            >
                                 <div class="title-bar">
-                                    <span class="window-title">Event Start Time</span>
+                                    <span class="window-title"
+                                        >Event Start Time</span
+                                    >
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.start_time(class="form-control", placeholder="Enter event start time in 24hr time (hh:mm)") }}
+                                    {{ form.start_time(class="form-control",
+                                    placeholder="Enter event start time in 24hr
+                                    time (hh:mm)") }}
                                 </div>
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="window" id="enter-event-end-time-window">
+                            <div
+                                class="window"
+                                id="enter-event-end-time-window"
+                            >
                                 <div class="title-bar">
-                                    <span class="window-title">Event End Time</span>
+                                    <span class="window-title"
+                                        >Event End Time</span
+                                    >
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.end_time(class="form-control", placeholder="Enter event end time in 24hr time (hh:mm)") }}
+                                    {{ form.end_time(class="form-control",
+                                    placeholder="Enter event end time in 24hr
+                                    time (hh:mm)") }}
                                 </div>
                             </div>
                         </div>
@@ -183,9 +360,28 @@
                                 <div class="title-bar">
                                     <span class="window-title">Event Type</span>
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
@@ -205,11 +401,32 @@
                         <div class="col-6">
                             <div class="window" id="enter-event-status-window">
                                 <div class="title-bar">
-                                    <span class="window-title">Event Status</span>
+                                    <span class="window-title"
+                                        >Event Status</span
+                                    >
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
@@ -223,45 +440,70 @@
                 <!-- End of Enter Event Status Section -->
 
                 <!-- Enter Event Genres section -->
-            <section class="enter-event-genres-section">
-                <div class="row align-items-start">
-                    <div class="col-3"></div>
-                    <div class="col-6 d-flex align-items-start" style="gap: 12px;">
-                        <div class="btn-group" id="enter-event-genres-btn-group">
-                            <button
-                                class="btn dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                type="button"
-                                id="enter-event-genres-btn"
+                <section class="enter-event-genres-section">
+                    <div class="row align-items-start">
+                        <div class="col-3"></div>
+                        <div
+                            class="col-6 d-flex align-items-start"
+                            style="gap: 12px"
+                        >
+                            <div
+                                class="btn-group"
+                                id="enter-event-genres-btn-group"
                             >
-                                Select Genres For Event
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end" id="dropdown-menu">
-                                {% for id, name in form.genres.choices %}
-                                <li class="d-flex align-items-center">
-                                    <input
-                                        class="form-check-input mt-0 ms-2"
-                                        type="checkbox"
-                                        name="genres"
-                                        value="{{ id }}"
-                                        id="genre-{{ id }}"
-                                        {% if id in (form.genres.data or []) %}checked{% endif %}
-                                    />
-                                    <span class="dropdown-text">
-                                        {{ name }}
-                                    </span>
-                                </li>
-                                {% endfor %}
-                            </ul>
+                                <button
+                                    class="btn dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    type="button"
+                                    id="enter-event-genres-btn"
+                                >
+                                    Select Genres For Event
+                                </button>
+                                <ul
+                                    class="dropdown-menu dropdown-menu-end"
+                                    id="dropdown-menu"
+                                >
+                                    {% for id, name in form.genres.choices %}
+                                    <li class="d-flex align-items-center">
+                                        <input
+                                            class="form-check-input mt-0 ms-2"
+                                            type="checkbox"
+                                            name="genres"
+                                            value="{{ id }}"
+                                            id="genre-{{ id }}"
+                                            {%
+                                            if
+                                            id
+                                            in
+                                            (form.genres.data
+                                            or
+                                            [])
+                                            %}checked{%
+                                            endif
+                                            %}
+                                        />
+                                        <span class="dropdown-text">
+                                            {{ name }}
+                                        </span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div
+                                class="d-flex align-items-center"
+                                style="gap: 8px"
+                            >
+                                {{
+                                add_genre_form.new_genre(class="form-control",
+                                id="new-genre", placeholder="Add new genre",
+                                form="add-genre-form") }} {{
+                                add_genre_form.submit(class="btn btn-secondary",
+                                form="add-genre-form") }}
+                            </div>
                         </div>
-                        <div class="d-flex align-items-center" style="gap: 8px;">
-                            {{ add_genre_form.new_genre(class="form-control", id="new-genre", placeholder="Add new genre", form="add-genre-form") }}
-                            {{ add_genre_form.submit(class="btn btn-secondary", form="add-genre-form") }}
-                        </div>
+                        <div class="col-3"></div>
                     </div>
-                    <div class="col-3"></div>
-                </div>
-            </section>
+                </section>
 
                 <!-- End of Enter Event Genres section -->
 
@@ -271,32 +513,90 @@
                         <div class="row align-items-start artist-row">
                             <div class="col-3"></div>
                             <div class="col-3">
-                                <div class="window" id="enter-artist-name-window">
+                                <div
+                                    class="window"
+                                    id="enter-artist-name-window"
+                                >
                                     <div class="title-bar">
-                                        <span class="window-title">Artist Name</span>
+                                        <span class="window-title"
+                                            >Artist Name</span
+                                        >
                                         <div class="window-controls">
-                                            <button class="btn">_</button>
-                                            <button class="btn">☐</button>
-                                            <button class="btn" id="closebtn">X</button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                _
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                ☐
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                id="closebtn"
+                                                href="#!"
+                                            >
+                                                X
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="sub-window">
-                                        <input class="form-control" type="text" placeholder="Enter artist name" name="artist_name[]" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            placeholder="Enter artist name"
+                                            name="artist_name[]"
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="window" id="enter-artist-set-time-window">
+                                <div
+                                    class="window"
+                                    id="enter-artist-set-time-window"
+                                >
                                     <div class="title-bar">
-                                        <span class="window-title">Set Time</span>
+                                        <span class="window-title"
+                                            >Set Time</span
+                                        >
                                         <div class="window-controls">
-                                            <button class="btn">_</button>
-                                            <button class="btn">☐</button>
-                                            <button class="btn" id="closebtn">X</button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                _
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                ☐
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                id="closebtn"
+                                                href="#!"
+                                            >
+                                                X
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="sub-window">
-                                        <input class="form-control" type="text" placeholder="Enter set start time in 24hr (hh:mm)" name="artist_set_time[]" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            placeholder="Enter set start time in 24hr (hh:mm)"
+                                            name="artist_set_time[]"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -306,8 +606,15 @@
                     <div class="row align-items-start">
                         <div class="col-3"></div>
                         <div class="col-6">
-                            <div class="btn-group" id="add-more-artists-btn-group">
-                                <button type="button" class="btn btn-primary" id="add-more-artists-btn">
+                            <div
+                                class="btn-group"
+                                id="add-more-artists-btn-group"
+                            >
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    id="add-more-artists-btn"
+                                >
                                     Add more artists...
                                 </button>
                             </div>
@@ -323,47 +630,132 @@
                         <div class="row align-items-start ticket-row">
                             <div class="col-3"></div>
                             <div class="col-2">
-                                <div class="window" id="enter-ticket-tier-window">
+                                <div
+                                    class="window"
+                                    id="enter-ticket-tier-window"
+                                >
                                     <div class="title-bar">
-                                        <span class="window-title">Ticket Tier</span>
+                                        <span class="window-title"
+                                            >Ticket Tier</span
+                                        >
                                         <div class="window-controls">
-                                            <button class="btn">_</button>
-                                            <button class="btn">☐</button>
-                                            <button class="btn" id="closebtn">X</button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                _
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                ☐
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                id="closebtn"
+                                                href="#!"
+                                            >
+                                                X
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="sub-window">
-                                        <input class="form-control" type="text" name="ticket_tier[]" placeholder="Enter Ticket Tier" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            name="ticket_tier[]"
+                                            placeholder="Enter Ticket Tier"
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-2">
-                                <div class="window" id="enter-ticket-price-window">
+                                <div
+                                    class="window"
+                                    id="enter-ticket-price-window"
+                                >
                                     <div class="title-bar">
                                         <span class="window-title">Price</span>
                                         <div class="window-controls">
-                                            <button class="btn">_</button>
-                                            <button class="btn">☐</button>
-                                            <button class="btn" id="closebtn">X</button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                _
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                ☐
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                id="closebtn"
+                                                href="#!"
+                                            >
+                                                X
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="sub-window">
-                                        <input class="form-control" type="text" name="ticket_price[]" placeholder="Enter Ticket Price ($)" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            name="ticket_price[]"
+                                            placeholder="Enter Ticket Price ($)"
+                                        />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-2">
-                                <div class="window" id="enter-ticket-quantity-window">
+                                <div
+                                    class="window"
+                                    id="enter-ticket-quantity-window"
+                                >
                                     <div class="title-bar">
-                                        <span class="window-title">Quantity</span>
+                                        <span class="window-title"
+                                            >Quantity</span
+                                        >
                                         <div class="window-controls">
-                                            <button class="btn">_</button>
-                                            <button class="btn">☐</button>
-                                            <button class="btn" id="closebtn">X</button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                _
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                ☐
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                id="closebtn"
+                                                href="#!"
+                                            >
+                                                X
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="sub-window">
-                                        <input class="form-control" type="text" name="ticket_quantity[]" placeholder="Enter Ticket Quantity" />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            name="ticket_quantity[]"
+                                            placeholder="Enter Ticket Quantity"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -373,8 +765,15 @@
                     <div class="row align-items-start">
                         <div class="col-3"></div>
                         <div class="col-6">
-                            <div class="btn-group" id="add-more-ticket-tiers-btn-group">
-                                <button type="button" class="btn btn-primary" id="add-more-ticket-tiers-btn">
+                            <div
+                                class="btn-group"
+                                id="add-more-ticket-tiers-btn-group"
+                            >
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    id="add-more-ticket-tiers-btn"
+                                >
                                     Add More Ticket Tiers...
                                 </button>
                             </div>
@@ -389,18 +788,53 @@
                     <div class="row align-items-start">
                         <div class="col-3"></div>
                         <div class="col-6">
-                            <div class="window" id="upload-additional-media-window">
+                            <div
+                                class="window"
+                                id="upload-additional-media-window"
+                            >
                                 <div class="title-bar">
-                                    <span class="window-title">Additional Media</span>
+                                    <span class="window-title"
+                                        >Additional Media</span
+                                    >
                                     <div class="window-controls">
-                                        <button class="btn">_</button>
-                                        <button class="btn">☐</button>
-                                        <button class="btn" id="closebtn">X</button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            _
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            href="#!"
+                                        >
+                                            ☐
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn"
+                                            id="closebtn"
+                                            href="#!"
+                                        >
+                                            X
+                                        </button>
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    <label for="formFileMultiple" class="form-label">(Optional) Upload additional media for your event.</label>
-                                    <input class="form-control" type="file" id="formFileMultiple" name="additional_media" multiple />
+                                    <label
+                                        for="formFileMultiple"
+                                        class="form-label"
+                                        >(Optional) Upload additional media for
+                                        your event.</label
+                                    >
+                                    <input
+                                        class="form-control"
+                                        type="file"
+                                        id="formFileMultiple"
+                                        name="additional_media"
+                                        multiple
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -415,7 +849,8 @@
                         <div class="col-3"></div>
                         <div class="col-6">
                             <div class="btn-group" id="post-event-btn-group">
-                                {{ form.submit(class="btn btn-primary", id="post-event-btn") }}
+                                {{ form.submit(class="btn btn-primary",
+                                id="post-event-btn") }}
                             </div>
                         </div>
                         <div class="col-3"></div>
@@ -430,37 +865,44 @@
 
 <!-- TODO: Ana add javascript -->
 <script>
-  // Wait until the page has fully loaded before running the code
-  document.addEventListener('DOMContentLoaded', () => {
+    // Wait until the page has fully loaded before running the code
+    document.addEventListener("DOMContentLoaded", () => {
+        // When the "Add more artists" button is clicked, duplicate the first artist input row
+        document
+            .getElementById("add-more-artists-btn")
+            .addEventListener("click", function () {
+                const artistRows =
+                    document.getElementById("artist-lineup-rows");
 
-    // When the "Add more artists" button is clicked, duplicate the first artist input row
-    document.getElementById('add-more-artists-btn').addEventListener('click', function() {
-      const artistRows = document.getElementById('artist-lineup-rows');
+                // Clone the first artist input group (name + set time)
+                const newRow = artistRows.children[0].cloneNode(true);
 
-      // Clone the first artist input group (name + set time)
-      const newRow = artistRows.children[0].cloneNode(true);
+                // Clear any text from the cloned input fields so they start blank
+                newRow
+                    .querySelectorAll("input")
+                    .forEach((input) => (input.value = ""));
 
-      // Clear any text from the cloned input fields so they start blank
-      newRow.querySelectorAll('input').forEach(input => input.value = '');
+                // Add the cleared copy back into the page below the existing rows
+                artistRows.appendChild(newRow);
+            });
 
-      // Add the cleared copy back into the page below the existing rows
-      artistRows.appendChild(newRow);
+        // When the "Add more ticket tiers" button is clicked, duplicate the first ticket tier row
+        document
+            .getElementById("add-more-ticket-tiers-btn")
+            .addEventListener("click", function () {
+                const ticketRows = document.getElementById("ticket-tiers-rows");
+
+                // Clone the first ticket tier input group (tier, price, and quantity)
+                const newRow = ticketRows.children[0].cloneNode(true);
+
+                // Remove any previous text or numbers so the new row is empty
+                newRow
+                    .querySelectorAll("input")
+                    .forEach((input) => (input.value = ""));
+
+                // Add the blank ticket tier row back into the list
+                ticketRows.appendChild(newRow);
+            });
     });
-
-    // When the "Add more ticket tiers" button is clicked, duplicate the first ticket tier row
-    document.getElementById('add-more-ticket-tiers-btn').addEventListener('click', function() {
-      const ticketRows = document.getElementById('ticket-tiers-rows');
-
-      // Clone the first ticket tier input group (tier, price, and quantity)
-      const newRow = ticketRows.children[0].cloneNode(true);
-
-      // Remove any previous text or numbers so the new row is empty
-      newRow.querySelectorAll('input').forEach(input => input.value = '');
-
-      // Add the blank ticket tier row back into the list
-      ticketRows.appendChild(newRow);
-    });
-
-  });
 </script>
 {% endblock %}
