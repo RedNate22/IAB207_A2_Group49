@@ -11,12 +11,22 @@ from datetime import datetime
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
 
-
-
 # Event details page
-@events_bp.route('/events/eventdetails')
-def eventdetails():
-    return render_template('events/eventdetails.html', heading='Event Details')
+@events_bp.route('/events/eventdetails/<int:event_id>', methods=['GET'])
+def eventdetails(event_id):
+    event = Event.query.get_or_404(event_id)
+    purchase_form = TicketPurchaseForm(event.tickets)
+    comment_form = CommentForm()
+    comments = Comment.query.filter_by(event_id=event.id).order_by(Comment.commentDateTime.desc()).all()
+
+    return render_template(
+        'events/eventdetails.html',
+        event = event,
+        purchase_form = purchase_form,
+        comment_form = comment_form,
+        comments = comments,
+        heading = 'Event Details'
+    )
 
 # Create events page
 @events_bp.route('/events/createvent', methods=['GET', 'POST'])
