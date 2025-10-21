@@ -224,7 +224,10 @@
                                 >
                                     {{ purchase_form.hidden_tag() }}
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="purchase-tickets-title">
+                                        <h1
+                                            class="modal-title fs-5"
+                                            id="purchase-tickets-title"
+                                        >
                                             Purchase Tickets
                                         </h1>
                                         <button
@@ -240,21 +243,28 @@
                                             role="alert"
                                             id="ticket-selection-alert"
                                         >
-                                            Select at least one ticket before continuing.
+                                            Select at least one ticket before
+                                            continuing.
                                         </div>
                                         {% for ticket in event.tickets %}
-                                            <div class="mb-3">
-                                                <label
-                                                    class="form-label"
-                                                    for="quantity-{{ ticket.id }}"
-                                                >
-                                                    {{ ticket.ticketTier }} – ${{ '%.2f'|format(ticket.price) }}
-                                                    ({{ ticket.availability }} available)
-                                                </label>
-                                                {{ purchase_form['quantity_' ~ ticket.id] }}
-                                            </div>
+                                        <div class="mb-3">
+                                            <label
+                                                class="form-label"
+                                                for="quantity-{{ ticket.id }}"
+                                            >
+                                                {{ ticket.ticketTier }} – ${{
+                                                '%.2f'|format(ticket.price) }}
+                                                ({{ ticket.availability }}
+                                                available)
+                                            </label>
+                                            {{ purchase_form['quantity_' ~
+                                            ticket.id] }}
+                                        </div>
                                         {% else %}
-                                            <p class="mb-3">No ticket tiers are available for this event.</p>
+                                        <p class="mb-3">
+                                            No ticket tiers are available for
+                                            this event.
+                                        </p>
                                         {% endfor %}
                                     </div>
                                     <div class="modal-footer">
@@ -265,7 +275,11 @@
                                         >
                                             Cancel
                                         </button>
-                                        <button type="button" class="btn btn-primary" id="review-order-btn">
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            id="review-order-btn"
+                                        >
                                             Review Order
                                         </button>
                                     </div>
@@ -284,7 +298,10 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="confirm-purchase-title">
+                                    <h1
+                                        class="modal-title fs-5"
+                                        id="confirm-purchase-title"
+                                    >
                                         Confirm Order
                                     </h1>
                                     <button
@@ -295,10 +312,17 @@
                                     ></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p class="mb-3">Please confirm your ticket selection.</p>
-                                    <ul class="list-group list-group-flush mb-3" id="order-summary-list"></ul>
+                                    <p class="mb-3">
+                                        Please confirm your ticket selection.
+                                    </p>
+                                    <ul
+                                        class="list-group list-group-flush mb-3"
+                                        id="order-summary-list"
+                                    ></ul>
                                     <p class="fw-bold">
-                                        Total: $<span id="order-summary-total">0.00</span>
+                                        Total: $<span id="order-summary-total"
+                                            >0.00</span
+                                        >
                                     </p>
                                 </div>
                                 <div class="modal-footer">
@@ -309,7 +333,11 @@
                                     >
                                         Back
                                     </button>
-                                    <button type="button" class="btn btn-primary" id="confirm-purchase-btn">
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        id="confirm-purchase-btn"
+                                    >
                                         Confirm Purchase
                                     </button>
                                 </div>
@@ -319,69 +347,127 @@
 
                     <!-- Shopping cart logic -->
                     <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const selectionForm = document.getElementById("ticket-selection-form");
-                            const reviewBtn = document.getElementById("review-order-btn");
-                            const confirmModalEl = document.getElementById("confirm-purchase-modal");
-                            const summaryList = document.getElementById("order-summary-list");
-                            const summaryTotalEl = document.getElementById("order-summary-total");
-                            const alertBox = document.getElementById("ticket-selection-alert");
-                            const confirmBtn = document.getElementById("confirm-purchase-btn");
-                            if (!selectionForm || !confirmModalEl) {
-                                return;
-                            }
-
-                            let confirmModalInstance = null;
-
-                            reviewBtn?.addEventListener("click", function () {
-                                alertBox?.classList.add("d-none");
-
-                                const selections = [];
-                                let orderTotal = 0;
-
-                                selectionForm.querySelectorAll('input[type="number"]').forEach(function (input) {
-                                    const quantity = parseInt(input.value, 10) || 0;
-                                    const price = parseFloat(input.getAttribute("data-price")) || 0;
-                                    const tier = input.getAttribute("data-tier") || "Ticket";
-
-                                    if (quantity > 0) {
-                                        const subtotal = quantity * price;
-                                        selections.push({ tier, quantity, subtotal });
-                                        orderTotal += subtotal;
-                                    }
-                                });
-
-                                if (selections.length === 0) {
-                                    alertBox?.classList.remove("d-none");
+                        document.addEventListener(
+                            "DOMContentLoaded",
+                            function () {
+                                const selectionForm = document.getElementById(
+                                    "ticket-selection-form"
+                                );
+                                const reviewBtn =
+                                    document.getElementById("review-order-btn");
+                                const confirmModalEl = document.getElementById(
+                                    "confirm-purchase-modal"
+                                );
+                                const summaryList =
+                                    document.getElementById(
+                                        "order-summary-list"
+                                    );
+                                const summaryTotalEl = document.getElementById(
+                                    "order-summary-total"
+                                );
+                                const alertBox = document.getElementById(
+                                    "ticket-selection-alert"
+                                );
+                                const confirmBtn = document.getElementById(
+                                    "confirm-purchase-btn"
+                                );
+                                if (!selectionForm || !confirmModalEl) {
                                     return;
                                 }
 
-                                if (summaryList) {
-                                    summaryList.innerHTML = "";
-                                    selections.forEach(function (item) {
-                                        const li = document.createElement("li");
-                                        li.className = "list-group-item d-flex justify-content-between align-items-center";
-                                        li.innerHTML = `<span>${item.tier} × ${item.quantity}</span><span>$${item.subtotal.toFixed(2)}</span>`;
-                                        summaryList.appendChild(li);
-                                    });
-                                }
+                                let confirmModalInstance = null;
 
-                                if (summaryTotalEl) {
-                                    summaryTotalEl.textContent = orderTotal.toFixed(2);
-                                }
+                                reviewBtn?.addEventListener(
+                                    "click",
+                                    function () {
+                                        alertBox?.classList.add("d-none");
 
-                                if (typeof bootstrap !== "undefined") {
-                                    if (!confirmModalInstance) {
-                                        confirmModalInstance = new bootstrap.Modal(confirmModalEl);
+                                        const selections = [];
+                                        let orderTotal = 0;
+
+                                        selectionForm
+                                            .querySelectorAll(
+                                                'input[type="number"]'
+                                            )
+                                            .forEach(function (input) {
+                                                const quantity =
+                                                    parseInt(input.value, 10) ||
+                                                    0;
+                                                const price =
+                                                    parseFloat(
+                                                        input.getAttribute(
+                                                            "data-price"
+                                                        )
+                                                    ) || 0;
+                                                const tier =
+                                                    input.getAttribute(
+                                                        "data-tier"
+                                                    ) || "Ticket";
+
+                                                if (quantity > 0) {
+                                                    const subtotal =
+                                                        quantity * price;
+                                                    selections.push({
+                                                        tier,
+                                                        quantity,
+                                                        subtotal,
+                                                    });
+                                                    orderTotal += subtotal;
+                                                }
+                                            });
+
+                                        if (selections.length === 0) {
+                                            alertBox?.classList.remove(
+                                                "d-none"
+                                            );
+                                            return;
+                                        }
+
+                                        if (summaryList) {
+                                            summaryList.innerHTML = "";
+                                            selections.forEach(function (item) {
+                                                const li =
+                                                    document.createElement(
+                                                        "li"
+                                                    );
+                                                li.className =
+                                                    "list-group-item d-flex justify-content-between align-items-center";
+                                                li.innerHTML = `<span>${
+                                                    item.tier
+                                                } × ${
+                                                    item.quantity
+                                                }</span><span>$${item.subtotal.toFixed(
+                                                    2
+                                                )}</span>`;
+                                                summaryList.appendChild(li);
+                                            });
+                                        }
+
+                                        if (summaryTotalEl) {
+                                            summaryTotalEl.textContent =
+                                                orderTotal.toFixed(2);
+                                        }
+
+                                        if (typeof bootstrap !== "undefined") {
+                                            if (!confirmModalInstance) {
+                                                confirmModalInstance =
+                                                    new bootstrap.Modal(
+                                                        confirmModalEl
+                                                    );
+                                            }
+                                            confirmModalInstance.show();
+                                        }
                                     }
-                                    confirmModalInstance.show();
-                                }
-                            });
+                                );
 
-                            confirmBtn?.addEventListener("click", function () {
-                                selectionForm.submit();
-                            });
-                        });
+                                confirmBtn?.addEventListener(
+                                    "click",
+                                    function () {
+                                        selectionForm.submit();
+                                    }
+                                );
+                            }
+                        );
                     </script>
                 </div>
             </div>
@@ -508,17 +594,23 @@
                             >
                                 {{ comment_form.hidden_tag() }}
                                 <div class="mb-3" id="post-comment-form">
-                                    <label for="comment-text" class="enter-comment">
+                                    <label
+                                        for="comment-text"
+                                        class="enter-comment"
+                                    >
                                         Enter comment:
                                     </label>
-                                    {{ comment_form.content(class="form-control", id="comment-text", rows="3") }}
-                                    {% if comment_form.content.errors %}
-                                        <div class="text-danger small mt-1">
-                                            {{ comment_form.content.errors[0] }}
-                                        </div>
+                                    {{
+                                    comment_form.content(class="form-control",
+                                    id="comment-text", rows="3") }} {% if
+                                    comment_form.content.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ comment_form.content.errors[0] }}
+                                    </div>
                                     {% endif %}
                                 </div>
-                                {{ comment_form.submit(class="btn", id="post-comment-btn") }}
+                                {{ comment_form.submit(class="btn",
+                                id="post-comment-btn") }}
                             </form>
                         </div>
                     </div>
@@ -546,10 +638,12 @@
                         <div class="sub-window">
                             <p class="sub-window-content">
                                 <strong>Poster:</strong>
-                                {{ comment.user.name if comment.user and comment.user.name else 'Anonymous' }}
+                                {{ comment.user.name if comment.user and
+                                comment.user.name else 'Anonymous' }}
                                 <br />
                                 <strong>DateTime:</strong>
-                                {{ comment.commentDateTime.strftime('%d/%m/%y %H:%M') if comment.commentDateTime else 'N/A' }}
+                                {{ comment.commentDateTime.strftime('%d/%m/%y
+                                %H:%M') if comment.commentDateTime else 'N/A' }}
                                 <br />
                                 <strong>Comment:</strong>
                                 {{ comment.content }}
@@ -576,7 +670,8 @@
                         </div>
                         <div class="sub-window">
                             <p class="sub-window-content">
-                                No comments yet. Be the first to share your thoughts!
+                                No comments yet. Be the first to share your
+                                thoughts!
                             </p>
                         </div>
                     </div>
@@ -585,10 +680,6 @@
             {% endif %}
             <!-- End of comments -->
         </div>
-        <!-- End of Events Details Container -->
-    </section>
-    <!-- End of Events Details Section -->
-</div>
         <!-- End of Events Details Container -->
     </section>
     <!-- End of Events Details Section -->
