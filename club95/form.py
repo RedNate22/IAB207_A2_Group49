@@ -27,38 +27,59 @@ class RegisterForm(FlaskForm):
 # TODO: Ana - now that I have updated the database I need you to update these forms for me
 # note keep FileField for image upload
 # adds forms for creating events
+
 class EventForm(FlaskForm):
-    title = StringField('Event Title', validators=[DataRequired()])
-    date = StringField('Event Date', validators=[DataRequired()])
-    description = StringField('Event Description', validators=[DataRequired()])
-    location = StringField('Event Location', validators=[DataRequired()])
-    start_time = StringField('Start Time', validators=[DataRequired()])
-    end_time = StringField('End Time', validators=[DataRequired()])
-    genres = SelectMultipleField('Genres', coerce=int, validators=[DataRequired()])  # choices set in route
+    # This form is used when creating a new event in the system
+    # Each field here matches an input in the Create Event page template
+
+    title = StringField('Event Title', validators=[DataRequired()])  # Name of the event
+    date = StringField('Event Date', validators=[DataRequired()])  # Date when the event will be held
+    description = StringField('Event Description', validators=[DataRequired()])  # Short description of the event
+    location = StringField('Event Location', validators=[DataRequired()])  # Where the event takes place
+    start_time = StringField('Start Time', validators=[DataRequired()])  # When the event begins
+    end_time = StringField('End Time', validators=[DataRequired()])  # When the event ends
+
+    # A list of genres is fetched from the database and displayed as checkboxes
+    genres = SelectMultipleField('Genres', coerce=int, validators=[DataRequired()])
+
+    # Allows users to add a new genre if the one they want is not listed
     new_genre = StringField('Add New Genre', validators=[Length(max=50)])
-    artists = SelectMultipleField('Artists', coerce=int)  # choices set in route
-    new_artist = StringField('Add New Artist', validators=[Length(max=150)])
+
+    # Dropdown menu for selecting what kind of event it is
     type = SelectField('Type', choices=[
-        ('Live Concert','Live Concert'),
-        ('Music Festival','Music Festival'),
-        ('Orchestra','Orchestra'),
-        ('DJ Set','DJ Set'),
-        ('Solo Artist Performance','Solo Artist Performance')
+        ('Live Concert', 'Live Concert'),
+        ('Music Festival', 'Music Festival'),
+        ('Orchestra', 'Orchestra'),
+        ('DJ Set', 'DJ Set'),
+        ('Solo Artist Performance', 'Solo Artist Performance')
     ], validators=[DataRequired()])
+
+    # Dropdown menu for choosing the current status of the event
     status = SelectField('Status', choices=[
-        ('OPEN','OPEN'), ('INACTIVE','INACTIVE'),
-        ('SOLD OUT','SOLD OUT'), ('CANCELLED','CANCELLED')
+        ('OPEN', 'OPEN'),
+        ('INACTIVE', 'INACTIVE'),
+        ('SOLD OUT', 'SOLD OUT'),
+        ('CANCELLED', 'CANCELLED')
     ], validators=[DataRequired()])
+
+    # Image upload field for the event poster
     image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
+
+    # Hidden field to store which user created the event (filled automatically by the backend)
+    user_id = HiddenField('Creator')
+
+    # Submit button to create the event
     submit = SubmitField('Create Event')
 
 
 class AddGenreForm(FlaskForm):
+    # A simple form that lets users add a new genre to the database
     new_genre = StringField('Add New Genre', validators=[Length(max=50), DataRequired()])
     submit = SubmitField('Add Genre')
 
-# adds forms for updating user profile
+
 class UpdateProfileForm(FlaskForm):
+    # Form for updating user account details on the profile page
     email = StringField('Email', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
     Password = PasswordField('Password', validators=[DataRequired()])
