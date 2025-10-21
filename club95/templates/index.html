@@ -325,77 +325,59 @@
     <section class="events-list-page">
         <!-- Events Page Container -->
         <div class="container" id="events-page-container">
-
+         <!-- TODO: Ana - Add dynamic cards using database stuff.-->
+         <!-- Ana: dynamic event cards rendered from database -->
             {% for event in events %}
-            
-                    <div class="window" id="event1">
-                        <div class="title-bar">
-                            <span class="window-title"
-                                >{{event.title}}</span
-                            >
-                            <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <img
-                                src="{{ url_for('static', filename='img/' ~ event.image) }}"
-                                alt="Event Image"
-                                class="window-img-top img-fit"
-                            />
-                            <section class="window-tags">
-                                <span
-                                    class="badge"
-                                    id="event-type"
-                                    onclick="window.location='#!'"
-                                    >{{event.type}}</span
-                                >
-                                <span class="badge" id="event-status-cancelled"
-                                    >{{event.status}}</span
-                                >
-                            </section>
-                            <p class="sub-window-content">
-                                Watch DJ Spreadsheet seamlessly mix quarterly
-                                reports into smooth beats. Free Wi-Fi included.
-                                <br />
-                                <br />
-                                <strong>> PRICE:</strong> Starting at $4.99
-                                <br />
-                                <strong>> ARTIST LINEUP:</strong>
-                                DJ Spreadsheet
-                                <br />
-                                <strong>> VENUE:</strong> Conference Room B,
-                                Novotel Brisbane
-                                <br />
-                                <strong>> DATE:</strong>
-                                {{event.date}}
-                                <br />
-                                <strong>> TIME:</strong>
-                                9am-5pm
-                                <br />
-                                <strong>> GENRES:</strong>
-                                <a href="#!">Electronic</a>,
-                                <a href="#!">Techno</a>,
-                                <a href="#!">Synthwave</a>
-                            </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="{{ url_for('events_bp.eventdetails') }}"
-                            >
-                                View details
-                            </a>
+                <div class="window" id="event-{{ event.id }}">
+                    <div class="title-bar">
+                        <span class="window-title">{{ event.title }}</span>
+                        <div class="window-controls">
+                            <button class="btn">_</button>
+                            <button class="btn">☐</button>
+                            <button class="btn" id="closebtn">X</button>
                         </div>
                     </div>
+
+                    <div class="sub-window">
+                        <img
+                            src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
+                            alt="{{ event.title }}"
+                            class="window-img-top img-fit"
+                        />
+                        <section class="window-tags">
+                            <span class="badge" id="event-type">{{ event.type }}</span>
+                            <span class="badge" id="event-status-{{ event.status|lower|replace(' ', '-') }}">
+                                {{ event.status }}
+                            </span>
+                        </section>
+                        <p class="sub-window-content">
+                            {{ event.description or "Description coming soon." }}
+                            <br /><br />
+                            <strong>> VENUE:</strong> {{ event.location or "TBA" }}<br />
+                            <strong>> DATE:</strong> {{ event.date or "TBA" }}<br />
+                            <strong>> TIME:</strong> {{ event.start_time or "TBA" }}{% if event.end_time %}-{{ event.end_time }}{% endif %}<br />
+                            <strong>> GENRES:</strong>
+                            {% if event.genres %}
+                                {% for g in event.genres %}
+                                    <a href="#!">{{ g.genreType }}</a>{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <span>N/A</span>
+                            {% endif %}
+                        </p>
+                        <a
+                            class="btn"
+                            id="view-details-btn"
+                            href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}"
+                        >
+                            View details
+                        </a>
+                    </div>
                 </div>
-                
             {% endfor %}
 
-
+            <!-- Ana: the static demo grid below is commented out because real events render above -->
+            <!--
 
             <div class="row align-items-center">
                 <!-- Event window 1 -->
@@ -410,7 +392,7 @@
                                 <button class="btn">☐</button>
                                 <button class="btn" id="closebtn">X</button>
                             </div>
-                        </div>
+                        </div> 
 
                         <!-- window content -->
                         <div class="sub-window">
@@ -721,7 +703,7 @@
                         </div>
                     </div>
                 </div>
-
+            -->
                 <!-- Event window 6 -->
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="window" id="event6">
