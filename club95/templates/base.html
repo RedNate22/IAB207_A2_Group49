@@ -85,11 +85,11 @@
                                 >
                             </li>
                             {% else %}
-                            <!-- Account page link IMO not needed if no account 
+                            
                             <li class="nav-item">
-                                <a class="nav-link" href="#!">Account</a>
+                                <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Account</a>
                             </li>
-                            -->
+                            
                             {% endif %}
                             <!-- Help menu -->
                             <li class="nav-item dropdown">
