@@ -3,7 +3,7 @@
 <div class="main-window">
     <!-- Event Details page -->
     <!-- The full details of the selected event are listed.
-                 Different 'sections' of details are split into separate windows. -->
+    Different 'sections' of details are split into separate windows. -->
     <section class="event-details-page">
         <!-- Event Details Page Container -->
         <div class="container" id="event-details-page-container">
@@ -317,6 +317,7 @@
                         </div>
                     </div>
 
+                    <!-- Shopping cart logic -->
                     <script>
                         document.addEventListener("DOMContentLoaded", function () {
                             const selectionForm = document.getElementById("ticket-selection-form");
@@ -594,7 +595,7 @@
 </div>
 
 <!-- Script to sync the height of the Map window to match the combined height
- of the Status and Ticket Tiers windows -->
+of the Status and Ticket Tiers windows -->
 <script>
     //  N: Don't ask how long this took to figure out
     function syncMapHeight() {
