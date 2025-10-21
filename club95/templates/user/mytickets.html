@@ -19,9 +19,8 @@
                 </button>
             </form>
             <div class="btn-group" id="filter-btn-group">
-
-          <!-- Ana: Event Type filter dropdown -->
-          <!-- This section adds a dropdown filter that lets users select one or more event types (e.g. concert, DJ set, etc.) -->               
+                <!-- Ana: Event Type filter dropdown -->
+                <!-- This section adds a dropdown filter that lets users select one or more event types (e.g. concert, DJ set, etc.) -->
                 <div class="filter-btn-wrapper">
                     <button
                         class="btn dropdown-toggle"
@@ -35,7 +34,7 @@
                         class="dropdown-menu dropdown-menu-end"
                         id="dropdown-menu"
                     >
-                         <!-- Each checkbox below represents an available event type users can filter by -->
+                        <!-- Each checkbox below represents an available event type users can filter by -->
                         <li class="d-flex align-items-center">
                             <input
                                 class="form-check-input mt-0 ms-2"
@@ -85,10 +84,10 @@
                         </li>
                     </ul>
                 </div>
-                <!-- End of Event Type(s) filter button -->            
+                <!-- End of Event Type(s) filter button -->
 
-                 <!-- Event Genre(s) filter button -->
-                  <!-- This section adds a dropdown menu that lets users filter events by music genre (like Pop, Jazz, Rock, etc.). -->
+                <!-- Event Genre(s) filter button -->
+                <!-- This section adds a dropdown menu that lets users filter events by music genre (like Pop, Jazz, Rock, etc.). -->
                 <div class="filter-btn-wrapper">
                     <button
                         class="btn dropdown-toggle"
@@ -102,7 +101,7 @@
                         class="dropdown-menu dropdown-menu-end"
                         id="dropdown-menu"
                     >
-                     <!-- Each checkbox below represents a genre that users can select to filter events -->
+                        <!-- Each checkbox below represents a genre that users can select to filter events -->
                         <li class="d-flex align-items-center">
                             <input
                                 class="form-check-input mt-0 ms-2"
@@ -262,9 +261,8 @@
                 </div>
                 <!-- End of Event Genre(s) filter button -->
 
-
                 <!-- TODO: Ana - Event Status filter button -->
-                 <!-- This section adds a dropdown menu that lets users filter events based on their current status (e.g. Open, Sold Out, Cancelled). -->
+                <!-- This section adds a dropdown menu that lets users filter events based on their current status (e.g. Open, Sold Out, Cancelled). -->
                 <div class="filter-btn-wrapper">
                     <button
                         class="btn dropdown-toggle"
@@ -330,19 +328,32 @@
         <!-- Events Page Container -->
         <div class="container" id="my-tickets-page-container">
             <div class="row justify-content-center gy-4">
-                {% for order in orders %}
-                {% set primary_item = order.line_items[0] if order.line_items else None %}
-                {% set event = primary_item.ticket.event if primary_item and primary_item.ticket else None %}
+                {% for order in orders %} {% set primary_item =
+                order.line_items[0] if order.line_items else None %} {% set
+                event = primary_item.ticket.event if primary_item and
+                primary_item.ticket else None %}
                 <div class="col-12 col-lg-8 d-flex">
                     <div class="window" id="order-{{ order.id }}">
                         <div class="title-bar">
                             <span class="window-title">
-                                (ORDER ID: #{{ '%08d' % order.id }}) {{ event.title if event else 'Event Details' }}
+                                (ORDER ID: #{{ '%08d' % order.id }}) {{
+                                event.title if event else 'Event Details' }}
                             </span>
                             <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -354,53 +365,61 @@
                             />
                             <section class="window-tags">
                                 <span class="badge" id="event-type">
-                                    {{ event.type if event and event.type else 'Event' }}
+                                    {{ event.type if event and event.type else
+                                    'Event' }}
                                 </span>
                                 <span class="badge" id="event-status-open">
-                                    {{ event.status if event and event.status else 'OPEN' }}
+                                    {{ event.status if event and event.status
+                                    else 'OPEN' }}
                                 </span>
                             </section>
                             <p class="sub-window-content">
                                 <strong>> ORDER DATE:</strong>
-                                {{ order.order_date.strftime('%b %d, %Y') if order.order_date else 'Pending' }}
+                                {{ order.order_date.strftime('%b %d, %Y') if
+                                order.order_date else 'Pending' }}
                                 <br />
                                 <strong>> PURCHASED TICKET(s):</strong>
                                 <br />
-                                {% for line_item in order.line_items %}
-                                    {{ line_item.quantity }}x {{ line_item.ticket.ticketTier }} – ${{ '%.2f'|format(line_item.price_at_purchase) }}
-                                    <br />
+                                {% for line_item in order.line_items %} {{
+                                line_item.quantity }}x {{
+                                line_item.ticket.ticketTier }} – ${{
+                                '%.2f'|format(line_item.price_at_purchase) }}
+                                <br />
                                 {% endfor %}
                                 <br />
                                 <strong>> DESCRIPTION: </strong>
-                                {{ event.description if event and event.description else 'No description available.' }}
+                                {{ event.description if event and
+                                event.description else 'No description
+                                available.' }}
                                 <br />
                                 <br />
                                 <strong>> ARTIST LINEUP:</strong>
-                                {% if event and event.artists %}
-                                    {% for artist in event.artists %}
-                                        {{ artist.artistName }}{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    Not available
-                                {% endif %}
+                                {% if event and event.artists %} {% for artist
+                                in event.artists %} {{ artist.artistName }}{% if
+                                not loop.last %}, {% endif %} {% endfor %} {%
+                                else %} Not available {% endif %}
                                 <br />
                                 <strong>> VENUE:</strong>
-                                {{ event.location if event and event.location else 'TBA' }}
+                                {{ event.location if event and event.location
+                                else 'TBA' }}
                                 <br />
                                 <strong>> DATE:</strong>
-                                {{ event.date if event and event.date else 'TBA' }}
+                                {{ event.date if event and event.date else 'TBA'
+                                }}
                                 <br />
                                 <strong>> TIME:</strong>
-                                {{ event.start_time if event and event.start_time else 'TBA' }}
-                                {% if event and event.end_time %}-{{ event.end_time }}{% endif %}
+                                {{ event.start_time if event and
+                                event.start_time else 'TBA' }} {% if event and
+                                event.end_time %}-{{ event.end_time }}{% endif
+                                %}
                                 <br />
                                 <strong>> GENRES:</strong>
-                                {% if event and event.genres %}
-                                    {% for genre in event.genres %}
-                                        <a href="#!">{{ genre.genreType }}</a>{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    <span>N/A</span>
+                                {% if event and event.genres %} {% for genre in
+                                event.genres %}
+                                <a href="#!">{{ genre.genreType }}</a>{% if not
+                                loop.last %}, {% endif %} {% endfor %} {% else
+                                %}
+                                <span>N/A</span>
                                 {% endif %}
                             </p>
                             <a
@@ -419,9 +438,20 @@
                         <div class="title-bar">
                             <span class="window-title">No Orders Yet</span>
                             <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
                         <div class="sub-window">
@@ -448,9 +478,20 @@
                                 Festival</span
                             >
                             <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -500,11 +541,7 @@
                                 <a href="#!">Techno</a>,
                                 <a href="#!">Indie</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
@@ -530,9 +567,20 @@
                                 Jazz</span
                             >
                             <div class="window-controls">
-                                <button class="btn">_</button>
-                                <button class="btn">☐</button>
-                                <button class="btn" id="closebtn">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -583,11 +631,7 @@
                                 <a href="#!">Jazz</a>,
                                 <a href="#!">Metal</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
