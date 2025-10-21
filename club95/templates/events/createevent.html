@@ -430,20 +430,37 @@
 
 <!-- TODO: Ana add javascript -->
 <script>
-// Add more artist rows
-  document.getElementById('add-more-artists-btn').addEventListener('click', function () {
-    const wrap = document.getElementById('artist-lineup-rows');
-    const clone = wrap.querySelector('.artist-row').cloneNode(true);
-    clone.querySelectorAll('input').forEach(i => i.value = '');
-    wrap.appendChild(clone);
-  });
+  // Wait until the page has fully loaded before running the code
+  document.addEventListener('DOMContentLoaded', () => {
 
-  // Add more ticket tier rows
-  document.getElementById('add-more-ticket-tiers-btn').addEventListener('click', function () {
-    const wrap = document.getElementById('ticket-tiers-rows');
-    const clone = wrap.querySelector('.ticket-row').cloneNode(true);
-    clone.querySelectorAll('input').forEach(i => i.value = '');
-    wrap.appendChild(clone);
+    // When the "Add more artists" button is clicked, duplicate the first artist input row
+    document.getElementById('add-more-artists-btn').addEventListener('click', function() {
+      const artistRows = document.getElementById('artist-lineup-rows');
+
+      // Clone the first artist input group (name + set time)
+      const newRow = artistRows.children[0].cloneNode(true);
+
+      // Clear any text from the cloned input fields so they start blank
+      newRow.querySelectorAll('input').forEach(input => input.value = '');
+
+      // Add the cleared copy back into the page below the existing rows
+      artistRows.appendChild(newRow);
+    });
+
+    // When the "Add more ticket tiers" button is clicked, duplicate the first ticket tier row
+    document.getElementById('add-more-ticket-tiers-btn').addEventListener('click', function() {
+      const ticketRows = document.getElementById('ticket-tiers-rows');
+
+      // Clone the first ticket tier input group (tier, price, and quantity)
+      const newRow = ticketRows.children[0].cloneNode(true);
+
+      // Remove any previous text or numbers so the new row is empty
+      newRow.querySelectorAll('input').forEach(input => input.value = '');
+
+      // Add the blank ticket tier row back into the list
+      ticketRows.appendChild(newRow);
+    });
+
   });
 </script>
 {% endblock %}
