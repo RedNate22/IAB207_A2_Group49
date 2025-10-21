@@ -430,6 +430,20 @@
 
 <!-- TODO: Ana add javascript -->
 <script>
+// Add more artist rows
+  document.getElementById('add-more-artists-btn').addEventListener('click', function () {
+    const wrap = document.getElementById('artist-lineup-rows');
+    const clone = wrap.querySelector('.artist-row').cloneNode(true);
+    clone.querySelectorAll('input').forEach(i => i.value = '');
+    wrap.appendChild(clone);
+  });
 
+  // Add more ticket tier rows
+  document.getElementById('add-more-ticket-tiers-btn').addEventListener('click', function () {
+    const wrap = document.getElementById('ticket-tiers-rows');
+    const clone = wrap.querySelector('.ticket-row').cloneNode(true);
+    clone.querySelectorAll('input').forEach(i => i.value = '');
+    wrap.appendChild(clone);
+  });
 </script>
 {% endblock %}
