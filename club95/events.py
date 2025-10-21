@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
+from sqlalchemy import DateTime
 from club95 import db 
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
 from .models import Event
@@ -245,7 +246,7 @@ def purchase_tickets(event_id):
     # to reflect this on  next visit to same modal
     order = Order(
         # ! utcnow is deprecated
-        order_data = datetime.now(),  # * previously datetime.utcnow() but was deprecated
+        order_date = datetime.utcnow(),  # * previously datetime.utcnow() but was deprecated
         amount = total_amount,
         user_id = current_user.id
     )
