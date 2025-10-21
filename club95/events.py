@@ -72,6 +72,7 @@ def createevent():
                 db.session.flush()   # ensure new_artist.id exists
                 selected_artists.append(new_artist)
 
+        status.default = 'OPEN'
         # Create the Event row from form fields
         new_event = Event(
             title=form.title.data,
@@ -81,7 +82,7 @@ def createevent():
             start_time=form.start_time.data,
             end_time=form.end_time.data,
             type=form.type.data,
-            status=form.status.data,
+            status= status.default,
             image=image_filename
         )
 
