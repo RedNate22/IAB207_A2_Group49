@@ -81,8 +81,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#!"
                                     >{{ current_user.name }}
-                                </a
-                                >
+                                </a>
                             </li>
                             {% else %}
                             <!-- Account page link IMO not needed if no account 
@@ -142,14 +141,29 @@
                                     >My Tickets</a
                                 >
                             </li>
-                            {% endif %}
-                            {% if not current_user.is_authenticated %}
+                            {% endif %} {% if not current_user.is_authenticated
+                            %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Sign In</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('auth_bp.login') }}"
+                                    >Sign In</a
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('auth_bp.register') }}"
+                                    >Register</a
+                                >
                             </li>
                             {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('auth_bp.logout') }}">Sign Out</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('auth_bp.logout') }}"
+                                    >Sign Out</a
+                                >
                             </li>
                             {% endif %}
                         </ul>
