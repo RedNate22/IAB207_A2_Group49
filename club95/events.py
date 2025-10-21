@@ -31,14 +31,19 @@ def eventdetails(event_id):
 # Create events page
 @events_bp.route('/events/createvent', methods=['GET', 'POST'])
 def createevent():
-    
-    # Set choices for genres and artists
+    # Build the two forms for this page
     form = EventForm()
     add_genre_form = AddGenreForm()
+
+    # Fill the Genres multiselect with real options from the database
     form.genres.choices = [(g.id, g.genreType) for g in Genre.query.all()]
-    form.artists.choices = [(a.id, a.artistName) for a in Artist.query.all()]
+
+    # If the user is logged in and the hidden creator field is empty, prefill it
+    if current_user.is_authenticated and not form.user_id.data:
+        form.user_id.data = str(current_user.id)
 
     if form.validate_on_submit():
+        # Save the uploaded image (if any) into static/img and keep just the filename in the DB
         image_filename = None
         if form.image.data:
             image_file = form.image.data
@@ -46,10 +51,27 @@ def createevent():
             image_path = os.path.join('club95', 'static', 'img', image_filename)
             image_file.save(image_path)
 
-        # Get selected genres and artists
+        # Turn selected genre IDs back into Genre objects
         selected_genres = Genre.query.filter(Genre.id.in_(form.genres.data)).all()
-        selected_artists = Artist.query.filter(Artist.id.in_(form.artists.data)).all()
 
+        # Read artist names from repeated text inputs named artist_name[]
+        artist_names = request.form.getlist('artist_name[]')
+        selected_artists = []
+        for raw in artist_names:
+            name = (raw or '').strip()
+            if not name:
+                continue
+            existing = Artist.query.filter_by(artistName=name).first()
+            if existing:
+                if existing not in selected_artists:
+                    selected_artists.append(existing)
+            else:
+                new_artist = Artist(artistName=name)
+                db.session.add(new_artist)
+                db.session.flush()   # ensure new_artist.id exists
+                selected_artists.append(new_artist)
+
+        # Create the Event row from form fields
         new_event = Event(
             title=form.title.data,
             description=form.description.data,
@@ -61,16 +83,65 @@ def createevent():
             status=form.status.data,
             image=image_filename
         )
+
+        # Link the creator if the hidden field was present
+        if form.user_id.data:
+            try:
+                new_event.user_id = int(form.user_id.data)
+            except ValueError:
+                pass
+
+        # Attach relationships and stage the event for insert
         new_event.genres = selected_genres
         new_event.artists = selected_artists
         db.session.add(new_event)
+
+        # We need the event id before creating tickets, so flush the INSERT
+        db.session.flush()
+
+        # Build tickets from the three parallel arrays in the form
+        tier_names = request.form.getlist('ticket_tier[]')
+        tier_prices = request.form.getlist('ticket_price[]')
+        tier_quantities = request.form.getlist('ticket_quantity[]')
+
+        for tname, pstr, qstr in zip(tier_names, tier_prices, tier_quantities):
+            name_value = (tname or '').strip()
+            if not name_value:
+                continue
+            try:
+                price_value = float(pstr)
+                qty_value = int(qstr)
+            except (TypeError, ValueError):
+                flash(f"Invalid ticket data for tier '{name_value}'.", "warning")
+                continue
+            if price_value < 0 or qty_value < 1:
+                flash(f"Invalid price or quantity for tier '{name_value}'.", "warning")
+                continue
+            ticket = Ticket(
+                ticketTier=name_value,
+                price=price_value,
+                availability=qty_value,
+                event_id=new_event.id
+            )
+            db.session.add(ticket)
+
+        # Finalise the whole transaction: event, any new artists, and tickets
         db.session.commit()
 
         flash("Event created successfully!", "success")
-        return redirect(url_for('home_bp.index'))
+        # Send the user to the event details page for this new event
+        return redirect(url_for('events_bp.eventdetails', event_id=new_event.id))
 
+    # If it was a POST but invalid, surface per-field validation messages
+    if request.method == 'POST':
+        for field_name, errors in form.errors.items():
+            field_label = getattr(getattr(form, field_name), 'label', None)
+            label_text = field_label.text if field_label else field_name.replace('_', ' ').title()
+            for message in errors:
+                flash(f"{label_text}: {message}", "danger")
+
+    # First load or invalid POST falls through to re-render the page
     return render_template('events/createevent.html', form=form, add_genre_form=add_genre_form, heading="Create Event")
-
 @events_bp.route('/events/add_genre', methods=['POST'])
 def add_genre():
     add_genre_form = AddGenreForm()
