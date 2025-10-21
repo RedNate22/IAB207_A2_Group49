@@ -628,7 +628,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row align-items-start ticket-row">
+                       
+                        <div  class="row align-items-start ticket-row">
                             <div class="col-3"></div>
                             <div class="col-3">
                                 <div
@@ -718,6 +719,7 @@
                             </div>
                             <div class="col-3"></div>
                         </div>
+                    
                     </div>
                     <div class="row align-items-start">
                         <div class="col-3"></div>
@@ -848,9 +850,10 @@
             .getElementById("add-more-ticket-tiers-btn")
             .addEventListener("click", function () {
                 const ticketRows = document.getElementById("ticket-tiers-rows");
-
+                const ticketRows2 = document.getElementById("ticket-tiers-rows");
                 // Clone the first ticket tier input group (tier, price, and quantity)
                 const newRow = ticketRows.children[0].cloneNode(true);
+                const newRow2 = ticketRows.children[1].cloneNode(true);
 
                 // Remove any previous text or numbers so the new row is empty
                 newRow
@@ -859,6 +862,7 @@
 
                 // Add the blank ticket tier row back into the list
                 ticketRows.appendChild(newRow);
+                ticketRows2.appendChild(newRow2);
             });
     });
 </script>
