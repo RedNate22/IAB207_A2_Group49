@@ -15,3 +15,4 @@ flask-sqlalchemy
 flask-wtf
 # Provides bcrypt hashing utilities for password hashing and verification
 flask-bcrypt
+gunicorn==20.1.0
