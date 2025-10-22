@@ -3,6 +3,7 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
+from events import Event
 
 DATABASE_FILENAME = 'sitedata.sqlite'
 
@@ -96,3 +97,28 @@ def _ensure_database(app: Flask) -> None:
       db.create_all()
 
 # TODO: Add scripts to populate initial database data using static images and dummy data provided by Nate
+# db.session.add(obj) - stage obj (event)
+# db.session.flush() - assign new_event.id so tickets can reference it
+# db.session.add(ticket) - stage tickets
+# db.session.add(.....)
+# db.session.commit() - write everything permanently
+
+# Populate db with sample events
+def populate_database():
+   new_event = Event(
+      title = "Event Test",
+      genres = "",
+      description = "Test desc",
+      date = "Test date",
+      location = "Test local",
+      start_time = "Now",
+      end_time = "Never",
+      type = "",
+      status = "OPEN",
+      image = "",
+   )
+
+   # Add sample events to db
+   db.session.add(new_event)
+   db.session.flush()
+   db.session.commit()

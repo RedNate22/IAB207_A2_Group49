@@ -43,7 +43,7 @@ event_genre = db.Table(
     db.Column('genre_id', db.Integer, db.ForeignKey('genres.id'), primary_key=True)
 )
 
-## setting this up to associate events with users in future
+# Event model
 class Event(db.Model):
     # define the name of the table in the database
     __tablename__ = 'events'
