@@ -67,6 +67,9 @@ class Event(db.Model):
     start_time = db.Column(db.String(10), nullable=True)
     end_time = db.Column(db.String(10), nullable=True)
 
+    # relationship to event images - so that events can have multiple images
+    images = db.relationship("EventImage", back_populates="event", cascade="all, delete-orphan")
+
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'))
@@ -100,7 +103,7 @@ class OrderTicket(db.Model):
     ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'), primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     price_at_purchase = db.Column(db.Float, nullable=False)
-    # orders ↔ tickets relationships defined below
+    # orders to tickets relationships defined below
     order = db.relationship('Order', back_populates='line_items')
     ticket = db.relationship('Ticket', back_populates='order_links')
 
@@ -189,7 +192,14 @@ class Venue(db.Model):
 
     def __repr__(self):
         return f"<Venue {self.venueName}>"
+class EventImage(db.Model):
+    __tablename__ = "event_images"
+    id = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    order_index = db.Column(db.Integer, nullable=True)
 
+    event = db.relationship("Event", back_populates="images")
 
 
 
