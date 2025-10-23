@@ -102,12 +102,17 @@ def populate_database(app: Flask) -> None:
 
    with app.app_context():
       from .models import User, Event, Genre, Artist, Ticket, Venue
+      from werkzeug.security import generate_password_hash
       
       # Create a sample user
       sample_email = "sample@club95.com"
       user = User.query.filter_by(email=sample_email).first()  # check if already exists
       if not user:  # user doesn't exist (yet)
-         user = User(email=sample_email, password="samplepassword", name="Sample User")
+         user = User(
+            email=sample_email, 
+            password=generate_password_hash("samplepassword", method='scrypt', salt_length=16),
+            name="Sample User")
+
          db.session.add(user)
          db.session.flush()  # ensure user.id available
 
