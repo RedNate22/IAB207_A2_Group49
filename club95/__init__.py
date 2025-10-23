@@ -86,7 +86,7 @@ def create_app():
    
    return app
 
-def _ensure_database(app: Flask) -> None:  # ! dont rlly need the type checking / hints without mypy
+def _ensure_database(app):
    """Create the SQLite database on first launch if it doesn't exist."""
    database_path = Path(app.instance_path) / DATABASE_FILENAME
    if database_path.exists():
