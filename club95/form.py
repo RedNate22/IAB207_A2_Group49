@@ -12,16 +12,19 @@ from wtforms.validators import NumberRange,Optional
 
 # adds forms for login
 class LoginForm(FlaskForm):
-    name = StringField('Username', validators=[DataRequired()])
+    firstName = StringField('First Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
 # adds forms for registration. Note that 15 is the max length for a phone number
 class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
+    firstName = StringField('First Name', validators=[DataRequired()])
+    lastName = StringField('Last Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    phonenumber = StringField('Phone No.', [Length(min=4, max=25)])
+    phonenumber = StringField('Phone No.', [Optional(), Length(min=4, max=25)])
+    bio = TextAreaField('Bio', validators=[Length(max=300)])
+    profilePicture = StringField('Profile Picture URL')
     submit = SubmitField('Register')
 
 # TODO: Ana - now that I have updated the database I need you to update these forms for me
@@ -74,10 +77,13 @@ class AddGenreForm(FlaskForm):
 
 class UpdateProfileForm(FlaskForm):
     # Form for updating user account details on the profile page
-    email = StringField('Email', validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
-    Password = PasswordField('Password', validators=[DataRequired()])
-    phonenumber = StringField('Phone No.', [Length(min=4, max=25)])
+    email = StringField('Email')
+    firstName = StringField('First Name')
+    lastName = StringField('Last Name')
+    password = PasswordField('Password')
+    phonenumber = StringField('Phone No.', [Optional(), Length(min=4, max=25)])
+    bio = TextAreaField('Bio', validators=[Length(max=300)])
+    profilePicture = StringField('Profile Picture URL')
     submit = SubmitField('Update Profile')
 
 # TODO: Nate - Ticket buying forms and creating new ticket tiers for events

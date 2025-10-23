@@ -24,21 +24,28 @@ def register():
 
         # DID we get form data
         email = form.email.data
-        name = form.name.data
+        firstName = form.firstName.data
+        lastName = form.lastName.data
         password = form.password.data
+        phonenumber = form.phonenumber.data
+        bio = form.bio.data
+        profilePicture = form.profilePicture.data
 
         # DOES the user already exists
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email address already exists')
-            #spits you back to register page if user exists already
-            return redirect(url_for('auth.register'))
+            return redirect(url_for('auth_bp.register'))
         # create new user with hashed password and add to db
-        # it defaults to sha256 with generate_password_hash. changing to scrypt on document advice. 
-        # Read more https://werkzeug.palletsprojects.com/en/stable/utils/
-        new_user = User(email=email, name=name, password=generate_password_hash(password, method='scrypt', salt_length=16))
-        
-        # add and commit user to db
+        new_user = User(
+            email=email,
+            firstName=firstName,
+            lastName=lastName,
+            password=generate_password_hash(password, method='scrypt', salt_length=16),
+            phoneNumber=phonenumber,
+            bio=bio,
+            profilePicture=profilePicture
+        )
         db.session.add(new_user)
         db.session.commit()
 
@@ -51,31 +58,26 @@ def register():
 @auth_bp.route('/auth/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    error=None
-    if(form.validate_on_submit()):
-        username = form.name.data
+    error = None
+    if form.validate_on_submit():
+        firstName = form.firstName.data
         password = form.password.data
-        # Find user by email (username) - unsure if I am calling on user right here. need to test
-        u1 = User.query.filter_by(name=username).first()
+        # Find user by firstName
+        u1 = User.query.filter_by(firstName=firstName).first()
 
-        # if no user exist
         if u1 is None:
-            error = 'Incorrect username.'
+            error = 'Incorrect first name.'
             flash(error)
-            return redirect(url_for('auth_bp.login')) # reload login page if error
-        # Check the password
+            return redirect(url_for('auth_bp.login'))
         elif not check_password_hash(u1.password, password):
             error = 'Incorrect password.'
             flash(error)
-            return redirect(url_for('auth_bp.login')) # reload login page if error
+            return redirect(url_for('auth_bp.login'))
         if error is None:
-            # this logs in the user for the session
             login_user(u1)
             flash('Logged in successfully.')
-            # redirect to the next page if it exists otherwise to the index page
             next_page = request.args.get('next')
             return redirect(next_page or url_for('home_bp.index'))
-        ## Literally no idea how we would get here with all the checks above but you never know
         else:
             print(error)
             flash(error)

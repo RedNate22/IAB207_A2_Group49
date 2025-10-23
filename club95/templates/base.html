@@ -79,8 +79,8 @@
                             <!-- welcome message for logged in user-->
                             {% if current_user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#!"
-                                    >{{ current_user.name }}
+                                <a class="nav-link" href="{{ url_for('user_bp.profile') }}"
+                                    >{{ (current_user.firstName ~ ' ' ~ (current_user.lastName or '')) | trim }}
                                 </a
                                 >
                             </li>
@@ -146,6 +146,9 @@
                             {% if not current_user.is_authenticated %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Sign In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth_bp.register') }}">Register</a>
                             </li>
                             {% else %}
                             <li class="nav-item">

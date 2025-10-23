@@ -15,8 +15,11 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
-    name = db.Column(db.String(150))
+    firstName = db.Column(db.String(150))
+    lastName = db.Column(db.String(150))
     phoneNumber = db.Column(db.String(20), nullable=True)
+    bio = db.Column(db.Text(300), nullable=True)
+    profilePicture = db.Column(db.String(200), nullable=True)
     # relationship to events - one to many 
     events = db.relationship('Event', backref='user')
     # relationship to comments - one to many
@@ -26,7 +29,10 @@ class User(db.Model, UserMixin):
 
     #Creates a string representation of the User object for easier debugging and logging
     def __repr__(self):
-        return f"<User {self.name}>"
+        first = self.firstName or ''
+        last = self.lastName or ''
+        full_name = f"{first} {last}".strip()
+        return f"<User {full_name}>"
 
 
 # Association table for many-to-many relationship between Event and Artist

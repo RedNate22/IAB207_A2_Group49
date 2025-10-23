@@ -3,7 +3,7 @@
 <div class="main-window">
     <!-- Event Details page -->
     <!-- The full details of the selected event are listed.
-    Different 'sections' of details are split into separate windows. -->
+                 Different 'sections' of details are split into separate windows. -->
     <section class="event-details-page">
         <!-- Event Details Page Container -->
         <div class="container" id="event-details-page-container">
@@ -737,8 +737,8 @@
                         <div class="sub-window">
                             <p class="sub-window-content">
                                 <strong>Poster:</strong>
-                                {{ comment.user.name if comment.user and
-                                comment.user.name else 'Anonymous' }}
+                                {% set commenter_name = ((comment.user.firstName ~ ' ' ~ (comment.user.lastName or '')) | trim) if comment.user else '' %}
+                                {{ commenter_name or (comment.user.email if comment.user and comment.user.email else 'Anonymous') }}
                                 <br />
                                 <strong>DateTime:</strong>
                                 {{ comment.commentDateTime.strftime('%d/%m/%y
