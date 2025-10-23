@@ -402,424 +402,435 @@
                 </div>
             </div>
             {% endfor %}
-        </div>
 
-        <div class="row align-items-center">
-            <!-- Event window 1 -->
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="window" id="event1">
-                    <div class="title-bar">
-                        <span class="window-title">DJ Spreadsheet Live</span>
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">
-                                _
-                            </button>
-                            <button type="button" class="btn" href="#!">
-                                ☐
-                            </button>
-                            <button
-                                type="button"
-                                class="btn"
-                                id="closebtn"
-                                href="#!"
+            <div class="row align-items-center">
+                <!-- Event window 1 -->
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event1">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >DJ Spreadsheet Live</span
                             >
-                                X
-                            </button>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- window content -->
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/dj-1.jpg') }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span
-                                class="badge"
-                                id="event-type"
-                                onclick="window.location='#!'"
-                                >DJ Set</span
-                            >
-                            <span class="badge" id="event-status-cancelled"
-                                >CANCELLED</span
-                            >
-                        </section>
-                        <p class="sub-window-content">
-                            Watch DJ Spreadsheet seamlessly mix quarterly
-                            reports into smooth beats. Free Wi-Fi included.
-                            <br />
-                            <br />
-                            <strong>> PRICE:</strong> Starting at $4.99
-                            <br />
-                            <strong>> ARTIST LINEUP:</strong>
-                            DJ Spreadsheet
-                            <br />
-                            <strong>> VENUE:</strong> Conference Room B, Novotel
-                            Brisbane
-                            <br />
-                            <strong>> DATE:</strong>
-                            Oct 23, 2025
-                            <br />
-                            <strong>> TIME:</strong>
-                            9am-5pm
-                            <br />
-                            <strong>> GENRES:</strong>
-                            <a href="#!">Electronic</a>,
-                            <a href="#!">Techno</a>,
-                            <a href="#!">Synthwave</a>
-                        </p>
-                        <a class="btn" id="view-details-btn" href="#!">
-                            View details
-                        </a>
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/dj-1.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span
+                                    class="badge"
+                                    id="event-type"
+                                    onclick="window.location='#!'"
+                                    >DJ Set</span
+                                >
+                                <span class="badge" id="event-status-cancelled"
+                                    >CANCELLED</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                Watch DJ Spreadsheet seamlessly mix quarterly
+                                reports into smooth beats. Free Wi-Fi included.
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Starting at $4.99
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                DJ Spreadsheet
+                                <br />
+                                <strong>> VENUE:</strong> Conference Room B,
+                                Novotel Brisbane
+                                <br />
+                                <strong>> DATE:</strong>
+                                Oct 23, 2025
+                                <br />
+                                <strong>> TIME:</strong>
+                                9am-5pm
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Electronic</a>,
+                                <a href="#!">Techno</a>,
+                                <a href="#!">Synthwave</a>
+                            </p>
+                            <a class="btn" id="view-details-btn" href="#!">
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Event window 2 -->
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="window" id="event2">
-                    <div class="title-bar">
-                        <span class="window-title">Crescent City Players</span>
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">
-                                _
-                            </button>
-                            <button type="button" class="btn" href="#!">
-                                ☐
-                            </button>
-                            <button
-                                type="button"
-                                class="btn"
-                                id="closebtn"
-                                href="#!"
+                <!-- Event window 2 -->
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event2">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >Crescent City Players</span
                             >
-                                X
-                            </button>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- window content -->
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span class="badge" id="event-type"
-                                >Live Concert</span
-                            >
-                            <span class="badge" id="event-status-open"
-                                >OPEN</span
-                            >
-                        </section>
-                        <p class="sub-window-content">
-                            An intimate evening of smooth jazz and
-                            improvisation, featuring local hit talent, Crescent
-                            City Players, joined by The Walters and Mojo Webb.
-                            Enjoy classic standards and modern tunes in a cozy,
-                            relaxed setting.
-                            <br />
-                            <br />
-                            <strong>> PRICE:</strong> Free Entry (see details
-                            for more)
-                            <br />
-                            <strong>> ARTIST LINEUP:</strong>
-                            Crescent City Players, The Walters and Mojo Webb
-                            <br />
-                            <strong>> VENUE:</strong> Royal Mail Hotel (92
-                            Brisbane Terrace Goodna, QLD)
-                            <br />
-                            <strong>> DATE:</strong>
-                            Sept 30, 2025
-                            <br />
-                            <strong>> TIME:</strong>
-                            1pm-3pm
-                            <br />
-                            <strong>> GENRES:</strong>
-                            <a href="#!">Jazz</a>, <a href="#!">Swing</a>,
-                            <a href="#!">Fusion</a>
-                        </p>
-                        <a class="btn" id="view-details-btn" href="#!">
-                            View details
-                        </a>
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span class="badge" id="event-type"
+                                    >Live Concert</span
+                                >
+                                <span class="badge" id="event-status-open"
+                                    >OPEN</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                An intimate evening of smooth jazz and
+                                improvisation, featuring local hit talent,
+                                Crescent City Players, joined by The Walters and
+                                Mojo Webb. Enjoy classic standards and modern
+                                tunes in a cozy, relaxed setting.
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Free Entry (see
+                                details for more)
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                Crescent City Players, The Walters and Mojo Webb
+                                <br />
+                                <strong>> VENUE:</strong> Royal Mail Hotel (92
+                                Brisbane Terrace Goodna, QLD)
+                                <br />
+                                <strong>> DATE:</strong>
+                                Sept 30, 2025
+                                <br />
+                                <strong>> TIME:</strong>
+                                1pm-3pm
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Jazz</a>, <a href="#!">Swing</a>,
+                                <a href="#!">Fusion</a>
+                            </p>
+                            <a class="btn" id="view-details-btn" href="#!">
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Event window 3 -->
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="window" id="event3">
-                    <div class="title-bar">
-                        <span class="window-title">Moonlight Resonance</span>
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">
-                                _
-                            </button>
-                            <button type="button" class="btn" href="#!">
-                                ☐
-                            </button>
-                            <button
-                                type="button"
-                                class="btn"
-                                id="closebtn"
-                                href="#!"
+                <!-- Event window 3 -->
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event3">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >Moonlight Resonance</span
                             >
-                                X
-                            </button>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- window content -->
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/orchestra.jpg') }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span class="badge" id="event-type">Orchestra</span>
-                            <span class="badge" id="event-status-open"
-                                >OPEN</span
-                            >
-                        </section>
-                        <p class="sub-window-content">
-                            A riverside orchestral showcase blending timeless
-                            symphonies with modern compositions.
-                            <br />
-                            <br />
-                            <strong>> PRICE:</strong> Starting at $32.00
-                            <br />
-                            <strong>> ARTIST LINEUP:</strong>
-                            Commonwealth Orchestra
-                            <br />
-                            <strong>> VENUE:</strong> Riverside Pavilion,
-                            Brisbane QLD <br />
-                            <strong>> DATE:</strong>
-                            Sept 16, 2025
-                            <br />
-                            <strong>> TIME:</strong>
-                            7pm-9pm
-                            <br />
-                            <strong>> GENRES:</strong>
-                            <a href="#!">Classical</a>,
-                            <a href="#!">Contemporary Orchestral</a>,
-                        </p>
-                        <a class="btn" id="view-details-btn" href="#!">
-                            View details
-                        </a>
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/orchestra.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span class="badge" id="event-type"
+                                    >Orchestra</span
+                                >
+                                <span class="badge" id="event-status-open"
+                                    >OPEN</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                A riverside orchestral showcase blending
+                                timeless symphonies with modern compositions.
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Starting at $32.00
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                Commonwealth Orchestra
+                                <br />
+                                <strong>> VENUE:</strong> Riverside Pavilion,
+                                Brisbane QLD <br />
+                                <strong>> DATE:</strong>
+                                Sept 16, 2025
+                                <br />
+                                <strong>> TIME:</strong>
+                                7pm-9pm
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Classical</a>,
+                                <a href="#!">Contemporary Orchestral</a>,
+                            </p>
+                            <a class="btn" id="view-details-btn" href="#!">
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Event window 4 -->
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="window" id="event4">
-                    <div class="title-bar">
-                        <span class="window-title"
-                            >The Overwhelming Festival</span
-                        >
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">
-                                _
-                            </button>
-                            <button type="button" class="btn" href="#!">
-                                ☐
-                            </button>
-                            <button
-                                type="button"
-                                class="btn"
-                                id="closebtn"
-                                href="#!"
+                <!-- Event window 4 -->
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event4">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >The Overwhelming Festival</span
                             >
-                                X
-                            </button>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- window content -->
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/festival.jpg') }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span class="badge" id="event-type"
-                                >Music Festival</span
-                            >
-                            <span class="badge" id="event-status-open"
-                                >OPEN</span
-                            >
-                        </section>
-                        <p class="sub-window-content">
-                            Three stages, 600 bands, 30 taco trucks, 1 working
-                            portaloo. An afternoon to remember (or forget).
-                            <br />
-                            <br />
-                            <strong>> PRICE:</strong> Starting at $12.05
-                            <br />
-                            <strong>> ARTIST LINEUP:</strong>
-                            Do I really need to list all 600?
-                            <br />
-                            <strong>> VENUE:</strong> Abandoned Bunnings
-                            Warehouse, Perth
-                            <br />
-                            <strong>> DATE:</strong>
-                            Dec 12, 2025
-                            <br />
-                            <strong>> TIME:</strong>
-                            12pm-12am
-                            <br />
-                            <strong>> GENRES:</strong>
-                            <a href="#!">Pop</a>, <a href="#!">Electronic</a>,
-                            <a href="#!">Techno</a>,
-                            <a href="#!">Indie</a>
-                        </p>
-                        <a class="btn" id="view-details-btn" href="#!">
-                            View details
-                        </a>
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/festival.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span class="badge" id="event-type"
+                                    >Music Festival</span
+                                >
+                                <span class="badge" id="event-status-open"
+                                    >OPEN</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                Three stages, 600 bands, 30 taco trucks, 1
+                                working portaloo. An afternoon to remember (or
+                                forget).
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Starting at $12.05
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                Do I really need to list all 600?
+                                <br />
+                                <strong>> VENUE:</strong> Abandoned Bunnings
+                                Warehouse, Perth
+                                <br />
+                                <strong>> DATE:</strong>
+                                Dec 12, 2025
+                                <br />
+                                <strong>> TIME:</strong>
+                                12pm-12am
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Pop</a>,
+                                <a href="#!">Electronic</a>,
+                                <a href="#!">Techno</a>,
+                                <a href="#!">Indie</a>
+                            </p>
+                            <a class="btn" id="view-details-btn" href="#!">
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Event window 5 -->
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="window" id="event5">
-                    <div class="title-bar">
-                        <span class="window-title"
-                            >Optimistic Yeti: Doom Jazz</span
-                        >
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">
-                                _
-                            </button>
-                            <button type="button" class="btn" href="#!">
-                                ☐
-                            </button>
-                            <button
-                                type="button"
-                                class="btn"
-                                id="closebtn"
-                                href="#!"
+                <!-- Event window 5 -->
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event5">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >Optimistic Yeti: Doom Jazz</span
                             >
-                                X
-                            </button>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- window content -->
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/yeti.jpg') }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span class="badge" id="event-type"
-                                >Solo Artist Performance</span
-                            >
-                            <span class="badge" id="event-status-sold-out"
-                                >SOLD OUT</span
-                            >
-                        </section>
-                        <p class="sub-window-content">
-                            The elusive Optimistic Yeti descends from the Blue
-                            Mountains once a year to perform a doom jazz set
-                            that critics describe as "The kind of music you hear
-                            right before a haunted elevator drops".
-                            <br />
-                            <br />
-                            <strong>> PRICE:</strong> Starting at $21.99
-                            <br />
-                            <strong>> ARTIST LINEUP:</strong>
-                            Optimistic Yeti
-                            <br />
-                            <strong>> VENUE:</strong> Aisle 12 (frozen foods),
-                            24/7 IGA, Hobart
-                            <br />
-                            <strong>> DATE:</strong>
-                            The winter solstice
-                            <br />
-                            <strong>> TIME:</strong>
-                            6:30pm-10:50pm
-                            <br />
-                            <strong>> GENRES:</strong>
-                            <a href="#!">Experimental</a>,
-                            <a href="#!">Jazz</a>,
-                            <a href="#!">Metal</a>
-                        </p>
-                        <a class="btn" id="view-details-btn" href="#!">
-                            View details
-                        </a>
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/yeti.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span class="badge" id="event-type"
+                                    >Solo Artist Performance</span
+                                >
+                                <span class="badge" id="event-status-sold-out"
+                                    >SOLD OUT</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                The elusive Optimistic Yeti descends from the
+                                Blue Mountains once a year to perform a doom
+                                jazz set that critics describe as "The kind of
+                                music you hear right before a haunted elevator
+                                drops".
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Starting at $21.99
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                Optimistic Yeti
+                                <br />
+                                <strong>> VENUE:</strong> Aisle 12 (frozen
+                                foods), 24/7 IGA, Hobart
+                                <br />
+                                <strong>> DATE:</strong>
+                                The winter solstice
+                                <br />
+                                <strong>> TIME:</strong>
+                                6:30pm-10:50pm
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Experimental</a>,
+                                <a href="#!">Jazz</a>,
+                                <a href="#!">Metal</a>
+                            </p>
+                            <a class="btn" id="view-details-btn" href="#!">
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Event window 6 -->
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <div class="window" id="event6">
-                    <div class="title-bar">
-                        <span class="window-title"
-                            >Sydney Indie Nights: Local Showcase</span
-                        >
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">
-                                _
-                            </button>
-                            <button type="button" class="btn" href="#!">
-                                ☐
-                            </button>
-                            <button
-                                type="button"
-                                class="btn"
-                                id="closebtn"
-                                href="#!"
+                <!-- Event window 6 -->
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event6">
+                        <div class="title-bar">
+                            <span class="window-title"
+                                >Sydney Indie Nights: Local Showcase</span
                             >
-                                X
-                            </button>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- window content -->
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/indie-band.jpg') }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span class="badge" id="event-type"
-                                >Live Concert</span
-                            >
-                            <span class="badge" id="event-status-inactive"
-                                >INACTIVE</span
-                            >
-                        </section>
-                        <p class="sub-window-content">
-                            A lineup of Sydney's top emerging indie and
-                            alternative bands, offerning an energetic night of
-                            original music and live performances.
-                            <br />
-                            <br />
-                            <strong>> PRICE:</strong> Starting at $10.50
-                            <br />
-                            <strong>> ARTIST LINEUP:</strong>
-                            Finlay's Starlights, Sour Tart, Dead Gear, Lead
-                            Donkeys, Bitter Sweet's and more!
-                            <br />
-                            <strong>> VENUE:</strong> The Enmore Theatre,
-                            Enmore, NSW
-                            <br />
-                            <strong>> DATE:</strong>
-                            Jan 6, 2025
-                            <br />
-                            <strong>> TIME:</strong>
-                            7pm-11pm
-                            <br />
-                            <strong>> GENRES:</strong>
-                            <a href="#!">Indie</a>, <a href="#!">Rock</a>,
-                            <a href="#!">Alternative</a>
-                        </p>
-                        <a class="btn" id="view-details-btn" href="#!">
-                            View details
-                        </a>
+                        <!-- window content -->
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/indie-band.jpg') }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span class="badge" id="event-type"
+                                    >Live Concert</span
+                                >
+                                <span class="badge" id="event-status-inactive"
+                                    >INACTIVE</span
+                                >
+                            </section>
+                            <p class="sub-window-content">
+                                A lineup of Sydney's top emerging indie and
+                                alternative bands, offerning an energetic night
+                                of original music and live performances.
+                                <br />
+                                <br />
+                                <strong>> PRICE:</strong> Starting at $10.50
+                                <br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                Finlay's Starlights, Sour Tart, Dead Gear, Lead
+                                Donkeys, Bitter Sweet's and more!
+                                <br />
+                                <strong>> VENUE:</strong> The Enmore Theatre,
+                                Enmore, NSW
+                                <br />
+                                <strong>> DATE:</strong>
+                                Jan 6, 2025
+                                <br />
+                                <strong>> TIME:</strong>
+                                7pm-11pm
+                                <br />
+                                <strong>> GENRES:</strong>
+                                <a href="#!">Indie</a>, <a href="#!">Rock</a>,
+                                <a href="#!">Alternative</a>
+                            </p>
+                            <a class="btn" id="view-details-btn" href="#!">
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
