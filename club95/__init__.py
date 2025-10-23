@@ -132,7 +132,6 @@ def populate_database(app: Flask) -> None:
 
       # Create event (only if it doesn't exist yet)
       if not Event.query.filter_by(title="Event Test").first():
-
          new_event = Event(
             title = "Event Test",
             description = "Test description",
@@ -142,12 +141,19 @@ def populate_database(app: Flask) -> None:
             end_time = "24:00",
             type = "Concert",
             status = "OPEN",
-            image = "",
+            image = "dj-1.jpg",
+            user=user,
+            venue=venue,
+            genres=[genre],
+            artists=[artist]
          )
-         new_event.user_id = user.id
-         new_event.venue_id = venue.id
-         new_event.genres = [genre]
-         new_event.artists = [artist]
+
+         # Create tickets
+         new_event.tickets = [
+            Ticket(ticketTier="Basic", price=25.0, availability=100, event=new_event),
+            Ticket(ticketTier="Fan", price=50.0, availability=50, event=new_event),
+            Ticket(ticketTier="VIP", price=100, availability=5, event=new_event)
+         ]
 
          # Add sample events to db
          db.session.add(new_event)  # stage event(s)
