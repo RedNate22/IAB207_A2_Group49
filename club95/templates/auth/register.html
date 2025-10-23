@@ -4,7 +4,7 @@
 {% block body %}
 
 <div class="centered-form">
-    {{ render_form(form, method="POST", novalidate=True, button_map={"submit": "primary"}) }}
+    {{ render_form(form, method="POST", novalidate=True, enctype="multipart/form-data", button_map={"submit": "primary"}) }}
 </div>
 
 {% endblock %}

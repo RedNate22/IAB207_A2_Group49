@@ -12,7 +12,7 @@ from wtforms.validators import NumberRange,Optional
 
 # adds forms for login
 class LoginForm(FlaskForm):
-    firstName = StringField('First Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
@@ -24,7 +24,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     phonenumber = StringField('Phone No.', [Optional(), Length(min=4, max=25)])
     bio = TextAreaField('Bio', validators=[Length(max=300)])
-    profilePicture = StringField('Profile Picture URL')
+    profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Register')
 
 # TODO: Ana - now that I have updated the database I need you to update these forms for me
@@ -83,7 +83,7 @@ class UpdateProfileForm(FlaskForm):
     password = PasswordField('Password')
     phonenumber = StringField('Phone No.', [Optional(), Length(min=4, max=25)])
     bio = TextAreaField('Bio', validators=[Length(max=300)])
-    profilePicture = StringField('Profile Picture URL')
+    profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Update Profile')
 
 # TODO: Nate - Ticket buying forms and creating new ticket tiers for events

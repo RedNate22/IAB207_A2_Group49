@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
@@ -5,6 +7,7 @@ from club95.form import UpdateProfileForm
 from .models import Order, OrderTicket, Ticket
 from . import db
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
@@ -44,7 +47,7 @@ def profile():
         form.email.data = current_user.email
         form.phonenumber.data = current_user.phoneNumber
         form.bio.data = current_user.bio
-        form.profilePicture.data = current_user.profilePicture
+        form.profilePicture.data = None
         form.password.data = ''
 
     if request.method == 'GET':
@@ -66,8 +69,14 @@ def profile():
             current_user.phoneNumber = form.phonenumber.data
         if form.bio.data:
             current_user.bio = form.bio.data
-        if form.profilePicture.data:
-            current_user.profilePicture = form.profilePicture.data
+        if form.profilePicture.data and getattr(form.profilePicture.data, 'filename', ''):
+            filename = secure_filename(form.profilePicture.data.filename)
+            if filename:
+                upload_dir = os.path.join('club95', 'static', 'img')
+                os.makedirs(upload_dir, exist_ok=True)
+                save_path = os.path.join(upload_dir, filename)
+                form.profilePicture.data.save(save_path)
+                current_user.profilePicture = os.path.join('img', filename).replace('\\', '/')
         db.session.commit()
         db.session.refresh(current_user)
         editing = False

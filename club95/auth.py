@@ -3,10 +3,13 @@
 ## Create user_loader callback
 ## register a seperate "auth" blueprint for authentication routes
 
+import os
+
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from .form import LoginForm, RegisterForm
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_login import login_user, logout_user
 
 from . import db
@@ -29,7 +32,16 @@ def register():
         password = form.password.data
         phonenumber = form.phonenumber.data
         bio = form.bio.data
-        profilePicture = form.profilePicture.data
+        profile_picture_file = form.profilePicture.data
+        profile_picture_path = None
+        if profile_picture_file and getattr(profile_picture_file, 'filename', ''):
+            filename = secure_filename(profile_picture_file.filename)
+            if filename:
+                upload_dir = os.path.join('club95', 'static', 'img')
+                os.makedirs(upload_dir, exist_ok=True)
+                save_path = os.path.join(upload_dir, filename)
+                profile_picture_file.save(save_path)
+                profile_picture_path = os.path.join('img', filename).replace('\\', '/')
 
         # DOES the user already exists
         user = User.query.filter_by(email=email).first()
@@ -44,7 +56,7 @@ def register():
             password=generate_password_hash(password, method='scrypt', salt_length=16),
             phoneNumber=phonenumber,
             bio=bio,
-            profilePicture=profilePicture
+            profilePicture=profile_picture_path
         )
         db.session.add(new_user)
         db.session.commit()
@@ -60,13 +72,13 @@ def login():
     form = LoginForm()
     error = None
     if form.validate_on_submit():
-        firstName = form.firstName.data
+        email = form.email.data
         password = form.password.data
-        # Find user by firstName
-        u1 = User.query.filter_by(firstName=firstName).first()
+        # Find user by email
+        u1 = User.query.filter_by(email=email).first()
 
         if u1 is None:
-            error = 'Incorrect first name.'
+            error = 'Incorrect email.'
             flash(error)
             return redirect(url_for('auth_bp.login'))
         elif not check_password_hash(u1.password, password):

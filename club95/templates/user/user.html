@@ -21,11 +21,27 @@
                 <div class="sub-window">
                     <div class="row align-items-center">
                         <div class="col-md-4 text-center">
-                            <img
-                                src="{{ user.profilePicture or 'https://picsum.photos/200' }}"
-                                alt="Profile Picture"
-                                class="img-fluid rounded-circle mt-2 mb-3 profile-img"
-                            />
+                            {% if user.profilePicture %}
+                                {% if '://' in user.profilePicture %}
+                                <img
+                                    src="{{ user.profilePicture }}"
+                                    alt="Profile Picture"
+                                    class="img-fluid rounded-circle mt-2 mb-3 profile-img"
+                                />
+                                {% else %}
+                                <img
+                                    src="{{ url_for('static', filename=user.profilePicture) }}"
+                                    alt="Profile Picture"
+                                    class="img-fluid rounded-circle mt-2 mb-3 profile-img"
+                                />
+                                {% endif %}
+                            {% else %}
+                                <img
+                                    src="https://picsum.photos/200"
+                                    alt="Profile Picture"
+                                    class="img-fluid rounded-circle mt-2 mb-3 profile-img"
+                                />
+                            {% endif %}
                             {% if not editing %}
                                 <form method="post">
                                     {{ form.csrf_token }}
@@ -35,7 +51,7 @@
                         </div>
                         <div class="col-md-8">
                             {% if editing %}
-                                <form method="post">
+                                <form method="post" enctype="multipart/form-data">
                                     {{ form.hidden_tag() }}
                                     <div class="mb-3">
                                         {{ form.firstName.label }}
@@ -84,10 +100,6 @@
                                     <li class="list-group-item bg-transparent border-0">
                                         <strong>Bio:</strong>
                                         <span class="badge" id="profile-bio">{{ user.bio or 'No bio yet.' }}</span>
-                                    </li>
-                                    <li class="list-group-item bg-transparent border-0">
-                                        <strong>Profile Picture URL:</strong>
-                                        <span class="badge" id="profile-picture">{{ user.profilePicture or 'Not set' }}</span>
                                     </li>
                                 </ul>
                             {% endif %}
