@@ -120,7 +120,7 @@ def populate_database(app: Flask) -> None:
 
       artist = Artist.query.filter_by(artistName="Sample Artist").first()
       if not artist:
-         artist = Artist(artistName="Sampple Artist")
+         artist = Artist(artistName="Sample Artist")
          db.session.add(artist)
          db.session.flush()
 
@@ -130,23 +130,27 @@ def populate_database(app: Flask) -> None:
          db.session.add(venue)
          db.session.flush()
 
-      # Create event
+      # Create event (only if it doesn't exist yet)
       if not Event.query.filter_by(title="Event Test").first():
 
          new_event = Event(
             title = "Event Test",
-            genres = "",
-            description = "Test desc",
-            date = "Test date",
-            location = "Test local",
-            start_time = "Now",
-            end_time = "Never",
-            type = "",
+            description = "Test description",
+            date = "01-01-2026",
+            location = "Test location",
+            start_time = "00:00",
+            end_time = "24:00",
+            type = "Concert",
             status = "OPEN",
             image = "",
          )
+         new_event.user_id = user.id
+         new_event.venue_id = venue.id
+         new_event.genres = [genre]
+         new_event.artists = [artist]
 
-      # Add sample events to db
-      db.session.add(new_event)  # stage event(s)
-      db.session.flush()         # update/insert etc.
+         # Add sample events to db
+         db.session.add(new_event)  # stage event(s)
+         db.session.flush()         # update/insert etc.
+
       db.session.commit()        # commit to db
