@@ -628,8 +628,8 @@
                                 </div>
                             </div>
                         </div>
-                       
-                        <div  class="row align-items-start ticket-row">
+
+                        <div class="row align-items-start ticket-row">
                             <div class="col-3"></div>
                             <div class="col-3">
                                 <div
@@ -719,7 +719,6 @@
                             </div>
                             <div class="col-3"></div>
                         </div>
-                    
                     </div>
                     <div class="row align-items-start">
                         <div class="col-3"></div>
@@ -822,7 +821,7 @@
     </form>
 </div>
 
-<!-- TODO: Ana add javascript -->
+<!-- prettier-ignore -->
 <script>
     // Wait until the page has fully loaded before running the code
     document.addEventListener("DOMContentLoaded", () => {
@@ -846,6 +845,7 @@
             });
 
         // When the "Add more ticket tiers" button is clicked, duplicate the first ticket tier row
+
         document
             .getElementById("add-more-ticket-tiers-btn")
             .addEventListener("click", function () {
@@ -856,9 +856,7 @@
                 const newRow2 = ticketRows.children[1].cloneNode(true);
 
                 // Remove any previous text or numbers so the new row is empty
-                newRow
-                    .querySelectorAll("input")
-                    .forEach((input) => (input.value = ""));
+                newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
 
                 // Add the blank ticket tier row back into the list
                 ticketRows.appendChild(newRow);
