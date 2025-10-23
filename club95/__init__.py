@@ -3,7 +3,6 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
-from events import Event
 
 DATABASE_FILENAME = 'sitedata.sqlite'
 
@@ -87,7 +86,7 @@ def create_app():
    
    return app
 
-def _ensure_database(app: Flask) -> None:
+def _ensure_database(app: Flask) -> None:  # ! dont rlly need the type checking / hints without mypy
    """Create the SQLite database on first launch if it doesn't exist."""
    database_path = Path(app.instance_path) / DATABASE_FILENAME
    if database_path.exists():
@@ -95,30 +94,59 @@ def _ensure_database(app: Flask) -> None:
 
    with app.app_context():
       db.create_all()
-
-# TODO: Add scripts to populate initial database data using static images and dummy data provided by Nate
-# db.session.add(obj) - stage obj (event)
-# db.session.flush() - assign new_event.id so tickets can reference it
-# db.session.add(ticket) - stage tickets
-# db.session.add(.....)
-# db.session.commit() - write everything permanently
+      populate_database(app)
 
 # Populate db with sample events
-def populate_database():
-   new_event = Event(
-      title = "Event Test",
-      genres = "",
-      description = "Test desc",
-      date = "Test date",
-      location = "Test local",
-      start_time = "Now",
-      end_time = "Never",
-      type = "",
-      status = "OPEN",
-      image = "",
-   )
+def populate_database(app: Flask) -> None:
+   """Populate database with a sample event and sample user. Only called upon initial creation of DB."""
 
-   # Add sample events to db
-   db.session.add(new_event)
-   db.session.flush()
-   db.session.commit()
+   with app.app_context():
+      from .models import User, Event, Genre, Artist, Ticket, Venue
+      
+      # Create a sample user
+      sample_email = "sample@club95.com"
+      user = User.query.filter_by(email=sample_email).first()  # check if already exists
+      if not user:  # user doesn't exist (yet)
+         user = User(email=sample_email, password="samplepassword", name="Sample User")
+         db.session.add(user)
+         db.session.flush()  # ensure user.id available
+
+      # Create or reuse a sample genre/artist/venue
+      genre = Genre.query.filter_by(genreType="Sample").first()
+      if not genre:
+         genre = Genre(genreType="Sample")
+         db.session.add(genre)
+         db.session.flush()
+
+      artist = Artist.query.filter_by(artistName="Sample Artist").first()
+      if not artist:
+         artist = Artist(artistName="Sampple Artist")
+         db.session.add(artist)
+         db.session.flush()
+
+      venue = Venue.query.filter_by(venueName="Sample Venue").first()
+      if not venue:
+         venue = Venue(venueName="Sample Venue", location="Sample Location")
+         db.session.add(venue)
+         db.session.flush()
+
+      # Create event
+      if not Event.query.filter_by(title="Event Test").first():
+
+         new_event = Event(
+            title = "Event Test",
+            genres = "",
+            description = "Test desc",
+            date = "Test date",
+            location = "Test local",
+            start_time = "Now",
+            end_time = "Never",
+            type = "",
+            status = "OPEN",
+            image = "",
+         )
+
+      # Add sample events to db
+      db.session.add(new_event)  # stage event(s)
+      db.session.flush()         # update/insert etc.
+      db.session.commit()        # commit to db
