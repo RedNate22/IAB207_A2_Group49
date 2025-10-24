@@ -48,12 +48,30 @@
                 {% for error in form.confirm_password.errors %}{{ error }}<br>{% endfor %}
             </div>
             {% endif %}
+        </div>
         <div class="mb-3">
-            {{ form.phonenumber.label }}
-            {{ form.phonenumber(class="form-control", placeholder="+61") }}
+            {{ form.phonenumber.label }}*
+            {{ form.phonenumber(
+                class="form-control",
+                placeholder="0412 345 678",
+                inputmode="numeric",
+                pattern="\d{4}\s\d{3}\s\d{3}",
+                maxlength="12",
+                autocomplete="tel",
+                oninput="const digits=this.value.replace(/\D/g,'').slice(0,10);let formatted=digits;if(digits.length>4){formatted=digits.slice(0,4)+' '+digits.slice(4);}if(digits.length>7){formatted=digits.slice(0,4)+' '+digits.slice(4,7)+' '+digits.slice(7);}this.value=formatted;"
+            ) }}
             {% if form.phonenumber.errors %}
             <div class="alert alert-danger mt-2">
                 {% for error in form.phonenumber.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.streetAddress.label }}*
+            {{ form.streetAddress(class="form-control", placeholder="123 Example St") }}
+            {% if form.streetAddress.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.streetAddress.errors %}{{ error }}<br>{% endfor %}
             </div>
             {% endif %}
         </div>

@@ -11,6 +11,15 @@ from werkzeug.utils import secure_filename
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
+
+def format_phone_display(number: str) -> str:
+    if not number:
+        return None
+    digits = ''.join(ch for ch in number if ch.isdigit())
+    if len(digits) == 10:
+        return f"{digits[:4]} {digits[4:7]} {digits[7:]}"
+    return number
+
 # My tickets page
 @user_bp.route('/user/mytickets')
 @login_required
@@ -45,7 +54,8 @@ def profile():
         form.firstName.data = current_user.firstName
         form.lastName.data = current_user.lastName
         form.email.data = current_user.email
-        form.phonenumber.data = current_user.phoneNumber
+        form.phonenumber.data = format_phone_display(current_user.phoneNumber)
+        form.streetAddress.data = current_user.streetAddress
         form.bio.data = current_user.bio
         form.profilePicture.data = None
         form.password.data = ''
@@ -67,6 +77,8 @@ def profile():
             current_user.password = generate_password_hash(form.password.data, method='scrypt', salt_length=16)
         if form.phonenumber.data:
             current_user.phoneNumber = form.phonenumber.data
+        if form.streetAddress.data:
+            current_user.streetAddress = form.streetAddress.data
         if form.bio.data:
             current_user.bio = form.bio.data
         if form.profilePicture.data and getattr(form.profilePicture.data, 'filename', ''):
@@ -83,4 +95,5 @@ def profile():
         populate_form_from_user()
     elif request.method == 'POST':
         editing = True
-    return render_template('user/user.html', form=form, editing=editing, user=current_user)
+    formatted_phone = format_phone_display(current_user.phoneNumber)
+    return render_template('user/user.html', form=form, editing=editing, user=current_user, formatted_phone=formatted_phone)

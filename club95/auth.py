@@ -31,6 +31,7 @@ def register():
         lastName = form.lastName.data
         password = form.password.data
         phonenumber = form.phonenumber.data
+        streetAddress = form.streetAddress.data
         bio = form.bio.data
         profile_picture_file = form.profilePicture.data
         profile_picture_path = None
@@ -56,6 +57,7 @@ def register():
             password=generate_password_hash(password, method='scrypt', salt_length=16),
             phoneNumber=phonenumber,
             bio=bio,
+            streetAddress=streetAddress,
             profilePicture=profile_picture_path
         )
         db.session.add(new_user)

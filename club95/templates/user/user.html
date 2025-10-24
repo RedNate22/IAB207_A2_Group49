@@ -101,10 +101,26 @@
                                     </div>
                                     <div class="mb-3">
                                         {{ form.phonenumber.label }}
-                                        {{ form.phonenumber(class="form-control") }}
+                                        {{ form.phonenumber(
+                                            class="form-control",
+                                            inputmode="numeric",
+                                            pattern="\d{4}\s\d{3}\s\d{3}",
+                                            maxlength="12",
+                                            autocomplete="tel",
+                                            oninput="const digits=this.value.replace(/\D/g,'').slice(0,10);let formatted=digits;if(digits.length>4){formatted=digits.slice(0,4)+' '+digits.slice(4);}if(digits.length>7){formatted=digits.slice(0,4)+' '+digits.slice(4,7)+' '+digits.slice(7);}this.value=formatted;"
+                                        ) }}
                                         {% if form.phonenumber.errors %}
                                         <div class="alert alert-danger mt-2">
                                             {% for error in form.phonenumber.errors %}{{ error }}<br>{% endfor %}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form.streetAddress.label }}
+                                        {{ form.streetAddress(class="form-control") }}
+                                        {% if form.streetAddress.errors %}
+                                        <div class="alert alert-danger mt-2">
+                                            {% for error in form.streetAddress.errors %}{{ error }}<br>{% endfor %}
                                         </div>
                                         {% endif %}
                                     </div>
@@ -140,7 +156,11 @@
                                     </li>
                                     <li class="list-group-item bg-transparent border-0">
                                         <strong>Phone No.:</strong>
-                                        <span class="badge" id="profile-phone">{{ user.phoneNumber or 'Not provided' }}</span>
+                                        <span class="badge" id="profile-phone">{{ formatted_phone or 'Not provided' }}</span>
+                                    </li>
+                                    <li class="list-group-item bg-transparent border-0">
+                                        <strong>Street Address:</strong>
+                                        <span class="badge" id="profile-address">{{ user.streetAddress or 'Not provided' }}</span>
                                     </li>
                                     <li class="list-group-item bg-transparent border-0">
                                         <strong>Bio:</strong>

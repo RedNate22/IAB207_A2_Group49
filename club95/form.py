@@ -31,9 +31,16 @@ class RegisterForm(FlaskForm):
                                                      EqualTo('confirm_password', message='Passwords must match')
                                                      ])
     confirm_password = PasswordField('Repeat Password', validators=[DataRequired()])
-    phonenumber = StringField('Phone No.', [Optional(), Length(min=10, max=15),
-                                            Regexp(r'^\+?\d{10,15}$', message='Enter a valid phone number.')])
-    streetAddress = StringField('Street Address', validators=[Length(max=200)])
+    phonenumber = StringField(
+        'Phone No.',
+        [
+            DataRequired(),
+            Length(min=10, max=10, message='Phone number must be 10 digits.'),
+            Regexp(r'^\d{10}$', message='Enter a valid phone number.'),
+        ],
+        filters=[lambda x: x.replace(' ', '') if x else x],
+    )
+    streetAddress = StringField('Street Address', validators=[DataRequired(), Length(max=200)])
     bio = TextAreaField('Bio', validators=[Optional(), Length(max=300)])
     profilePicture = FileField('Upload Image', validators=[Optional(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Register')
@@ -100,9 +107,16 @@ class UpdateProfileForm(FlaskForm):
                                 EqualTo('confirm_password', message='Passwords must match')
                                 ])
     confirm_password = PasswordField('Repeat Password', validators=[Optional(), EqualTo('password', message='Passwords must match')])
-    phonenumber = StringField('Phone No.', [Optional(), Length(min=10, max=15),
-                          Regexp(r'^\+?\d{10,15}$', message='Enter a valid phone number.')])
-    streetAddress = StringField('Street Address', validators=[Length(max=200)])
+    phonenumber = StringField(
+        'Phone No.',
+        [
+            DataRequired(),
+            Length(min=10, max=10, message='Phone number must be 10 digits.'),
+            Regexp(r'^\d{10}$', message='Enter a valid phone number.'),
+        ],
+        filters=[lambda x: x.replace(' ', '') if x else x],
+    )
+    streetAddress = StringField('Street Address', validators=[DataRequired(), Length(max=200)])
     bio = TextAreaField('Bio', validators=[Length(max=300)])
     profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Update Profile')
