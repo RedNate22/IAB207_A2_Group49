@@ -86,7 +86,7 @@ def create_app():
    
    return app
 
-def _ensure_database(app):
+def _ensure_database(app: Flask) -> None:
    """Create the SQLite database on first launch if it doesn't exist."""
    database_path = Path(app.instance_path) / DATABASE_FILENAME
    if database_path.exists():

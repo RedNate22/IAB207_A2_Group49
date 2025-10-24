@@ -370,14 +370,41 @@
                                     {{ event.status }}
                                 </span>
                             </section>
+                            <!-- prettier-ignore -->
                             <p class="sub-window-content">
                                 {{ event.description or "Description coming
                                 soon." }}
                                 <br /><br />
-                                <strong>> VENUE:</strong> {{ event.location or
-                                "TBA" }}<br />
-                                <strong>> DATE:</strong> {{ event.date or "TBA"
-                                }}<br />
+
+                                {# Get lowest priced ticket #}
+                                {% set min_ticket = event.tickets|min(attribute='price') if event.tickets else None %}
+                                <strong>> PRICE:</strong> 
+                                {% if min_ticket %}
+                                    {% if min_ticket.price == 0 %}
+                                        Free Entry
+                                    {% else %}
+                                        Starting at ${{ '%.2f'|format(min_ticket.price) }}
+                                    {% endif %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                                <br />
+
+                                {# Get artists #}
+                                <strong>> ARTIST LINEUP:</strong> <br />
+                                {% if event.artists %}
+                                    {{ event.artists | map(attribute='artistName') | join(', ') }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
+                                <br />
+
+                                <strong>> VENUE:</strong> {{ event.location or "TBA" }}
+                                <br />
+                                
+                                <strong>> DATE:</strong> {{ event.date or "TBA" }}
+                                <br />
+
                                 <strong>> TIME:</strong> {{ event.start_time or
                                 "TBA" }}{% if event.end_time %}-{{
                                 event.end_time }}{% endif %}<br />
