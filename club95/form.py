@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, IntegerField, HiddenField, TextAreaField
+from wtforms.fields import DateField, TimeField
 from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import NumberRange, Optional, EqualTo, Regexp, Email
@@ -32,6 +33,7 @@ class RegisterForm(FlaskForm):
     confirm_password = PasswordField('Repeat Password', validators=[DataRequired()])
     phonenumber = StringField('Phone No.', [Optional(), Length(min=10, max=15),
                                             Regexp(r'^\+?\d{10,15}$', message='Enter a valid phone number.')])
+    streetAddress = StringField('Street Address', validators=[Length(max=200)])
     bio = TextAreaField('Bio', validators=[Optional(), Length(max=300)])
     profilePicture = FileField('Upload Image', validators=[Optional(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Register')
@@ -45,11 +47,11 @@ class EventForm(FlaskForm):
     # Each field here matches an input in the Create Event page template
 
     title = StringField('Event Title', validators=[DataRequired()])  # Name of the event
-    date = StringField('Event Date', validators=[DataRequired()])  # Date when the event will be held
+    date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])  # Date when the event will be held
     description = StringField('Event Description', validators=[DataRequired()])  # Short description of the event
     location = StringField('Event Location', validators=[DataRequired()])  # Where the event takes place
-    start_time = StringField('Start Time', validators=[DataRequired()])  # When the event begins
-    end_time = StringField('End Time', validators=[DataRequired()])  # When the event ends
+    start_time = TimeField('Start Time', format='%H:%M', validators=[DataRequired()])  # When the event begins
+    end_time = TimeField('End Time', format='%H:%M', validators=[DataRequired()])  # When the event ends
 
     # A list of genres is fetched from the database and displayed as checkboxes
     genres = SelectMultipleField('Genres', coerce=int, validators=[DataRequired()])
@@ -100,6 +102,7 @@ class UpdateProfileForm(FlaskForm):
     confirm_password = PasswordField('Repeat Password', validators=[Optional(), EqualTo('password', message='Passwords must match')])
     phonenumber = StringField('Phone No.', [Optional(), Length(min=10, max=15),
                           Regexp(r'^\+?\d{10,15}$', message='Enter a valid phone number.')])
+    streetAddress = StringField('Street Address', validators=[Length(max=200)])
     bio = TextAreaField('Bio', validators=[Length(max=300)])
     profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Update Profile')
@@ -162,8 +165,8 @@ class updateEvent(FlaskForm):
     date = StringField('Event Date', validators=[DataRequired()])  # Date when the event will be held
     description = StringField('Event Description', validators=[DataRequired()])  # Short description of the event
     location = StringField('Event Location', validators=[DataRequired()])  # Where the event takes place
-    start_time = StringField('Start Time', validators=[DataRequired()])  # When the event begins
-    end_time = StringField('End Time', validators=[DataRequired()])  # When the event ends
+    start_time = TimeField('Start Time', format='%H:%M', validators=[DataRequired()])  # When the event begins
+    end_time = TimeField('End Time', format='%H:%M', validators=[DataRequired()])  # When the event ends
 
     # A list of genres is fetched from the database and displayed as checkboxes
     genres = SelectMultipleField('Genres', coerce=int, validators=[DataRequired()])

@@ -18,6 +18,7 @@ class User(db.Model, UserMixin):
     firstName = db.Column(db.String(150))
     lastName = db.Column(db.String(150))
     phoneNumber = db.Column(db.String(20), nullable=True)
+    streetAddress = db.Column(db.String(200), nullable=True)
     bio = db.Column(db.Text(300), nullable=True)
     profilePicture = db.Column(db.String(200), nullable=True)
     # relationship to events - one to many 

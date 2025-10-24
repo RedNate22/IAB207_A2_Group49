@@ -94,12 +94,12 @@ def createevent():
         new_event = Event(
             title=form.title.data,
             description=form.description.data,
-            date=form.date.data,
+            date=form.date.data.strftime('%Y-%m-%d') if form.date.data else None,
             location=form.location.data,
-            start_time=form.start_time.data,
-            end_time=form.end_time.data,
+            start_time=form.start_time.data.strftime('%H:%M') if form.start_time.data else None,
+            end_time=form.end_time.data.strftime('%H:%M') if form.end_time.data else None,
             type=form.type.data,
-            status = 'OPEN',
+            status='OPEN',
             image=image_filename
         )
 
