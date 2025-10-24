@@ -47,7 +47,7 @@ def register():
         # DOES the user already exists
         user = User.query.filter_by(email=email).first()
         if user:
-            flash('Email address already exists')
+            flash('Email address already exists', 'registration_email_error')
             return redirect(url_for('auth_bp.register'))
         # create new user with hashed password and add to db
         new_user = User(
@@ -64,7 +64,7 @@ def register():
         db.session.commit()
 
         #return success and redirect to login page
-        flash('Registration successful! Please log in.')
+        flash('Registration successful! Please log in.', 'registration_success')
         return redirect(url_for('auth_bp.login'))
     
     return render_template('/auth/register.html', form=form, heading="Register")
@@ -89,7 +89,7 @@ def login():
             return redirect(url_for('auth_bp.login'))
         if error is None:
             login_user(u1)
-            flash('Logged in successfully.')
+            flash('Logged in successfully. Welcome back, ' + u1.firstName + '!', 'login_success')
             next_page = request.args.get('next')
             return redirect(next_page or url_for('home_bp.index'))
         else:

@@ -15,6 +15,17 @@
         {% endif %}
     {% endwith %}
 
+        {# Flash message section #}
+    {% with messages = get_flashed_messages(category_filter=['registration_success']) %}
+        {% if messages %}
+            <div class="success">
+                {% for message in messages %}
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="centered-form">
         {{ render_form(form, method="POST", button_map={"submit": "primary"}) }}
     </div>

@@ -2,6 +2,18 @@
 {% block body %}
 
 <div class="centered-form">
+
+        {# Flash message section #}
+    {% with messages = get_flashed_messages(category_filter=['registration_email_error']) %}
+        {% if messages %}
+            <div class="error">
+                {% for message in messages %}
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <form method="POST" enctype="multipart/form-data" novalidate>
         {{ form.hidden_tag() }}
         <div class="mb-3">

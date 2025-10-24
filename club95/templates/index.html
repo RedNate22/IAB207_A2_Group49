@@ -319,12 +319,26 @@
     </section>
     <!-- End of Search Section -->
 
+
+
+
     <!-- Events List Section -->
     <!-- Events are listed inside 'windows' that include all
                  their promotional material. 3 event windows per row on large viewports. -->
     <section class="events-list-page">
         <!-- Events Page Container -->
         <div class="container" id="events-page-container">
+
+    {# Flash message section #}
+    {% with messages = get_flashed_messages(category_filter=['login_success']) %}
+        {% if messages %}
+            <div class="success">
+                {% for message in messages %}
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
          <!-- TODO: Ana - Add dynamic cards using database stuff.-->
          <!-- Ana: dynamic event cards rendered from database -->
             {% for event in events %}
