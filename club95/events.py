@@ -39,6 +39,23 @@ def createevent():
     # Fill the Genres multiselect with real options from the database
     form.genres.choices = [(g.id, g.genreType) for g in Genre.query.all()]
 
+    # Preselect genres passed via query string (e.g. after adding a new genre)
+    if request.method == 'GET':
+        preselected = request.args.get('selected_genres')
+        if preselected:
+            selected_ids = []
+            for raw in preselected.split(','):
+                raw = raw.strip()
+                if not raw:
+                    continue
+                try:
+                    value = int(raw)
+                except ValueError:
+                    continue
+                selected_ids.append(value)
+            if selected_ids:
+                form.genres.data = selected_ids
+
     # If the user is logged in and the hidden creator field is empty, prefill it
     if current_user.is_authenticated and not form.user_id.data:
         form.user_id.data = str(current_user.id)
@@ -149,13 +166,33 @@ def add_genre():
     add_genre_form = AddGenreForm()
     if add_genre_form.validate_on_submit():
         new_genre_name = add_genre_form.new_genre.data.strip()
+        selected_ids = []
+        if add_genre_form.selected_genres.data:
+            for raw in add_genre_form.selected_genres.data.split(','):
+                raw = raw.strip()
+                if not raw:
+                    continue
+                try:
+                    value = int(raw)
+                except ValueError:
+                    continue
+                selected_ids.append(value)
         if not Genre.query.filter_by(genreType=new_genre_name).first():
             new_genre = Genre(genreType=new_genre_name)
             db.session.add(new_genre)
             db.session.commit()
+            selected_ids.append(new_genre.id)
             flash(f"Genre '{new_genre_name}' added.", "success")
         else:
             flash(f"Genre '{new_genre_name}' already exists.", "info")
+        if selected_ids:
+            valid_ids = []
+            for gid in selected_ids:
+                if Genre.query.get(gid) and gid not in valid_ids:
+                    valid_ids.append(gid)
+            if valid_ids:
+                selected_param = ','.join(str(gid) for gid in valid_ids)
+                return redirect(url_for('events_bp.createevent', selected_genres=selected_param))
     else:
         flash("Please provide a valid genre name.", "warning")
     return redirect(url_for('events_bp.createevent'))

@@ -1,10 +1,84 @@
 {% extends "base.html" %}
-{% from "bootstrap5/form.html" import render_form %}
-
 {% block body %}
 
 <div class="centered-form">
-    {{ render_form(form, method="POST", novalidate=True, enctype="multipart/form-data", button_map={"submit": "primary"}) }}
+    <form method="POST" enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.email.label }}*
+            {{ form.email(class="form-control", placeholder="email@domain.com") }}
+            {% if form.email.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.email.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.firstName.label }}*
+            {{ form.firstName(class="form-control", placeholder="John") }}
+            {% if form.firstName.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.firstName.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.lastName.label }}*
+            {{ form.lastName(class="form-control", placeholder="Doe") }}
+            {% if form.lastName.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.lastName.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.password.label }}*
+            {{ form.password(class="form-control", placeholder="Password") }}
+            {% if form.password.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.password.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.confirm_password.label }}*
+            {{ form.confirm_password(class="form-control", placeholder="Repeat Password") }}
+            {% if form.confirm_password.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.confirm_password.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        <div class="mb-3">
+            {{ form.phonenumber.label }}
+            {{ form.phonenumber(class="form-control", placeholder="+61") }}
+            {% if form.phonenumber.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.phonenumber.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.bio.label }}
+            {{ form.bio(class="form-control", placeholder="Write something about yourself...") }}
+            {% if form.bio.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.bio.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.profilePicture.label }}
+            {{ form.profilePicture(class="form-control") }}
+            {% if form.profilePicture.errors %}
+            <div class="alert alert-danger mt-2">
+                {% for error in form.profilePicture.errors %}{{ error }}<br>{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
 </div>
 
 {% endblock %}

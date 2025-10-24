@@ -7,7 +7,7 @@
     >
         {{ add_genre_form.hidden_tag() }}
     </form>
-    <form method="POST" enctype="multipart/form-data">
+    <form id="create-event-form" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <!-- Create Event Section -->
         <section class="create-event-page">
@@ -48,6 +48,11 @@
                                 <div class="sub-window">
                                     <!-- prettier-ignore -->
                                     {{ form.title(class="form-control form-control-lg", placeholder="Enter the name of the event") }}
+                                    {% if form.title.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.title.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -101,9 +106,12 @@
                                             class="enter-comment"
                                             >Enter description:</label
                                         >
-                                        {{
-                                        form.description(class="form-control",
-                                        id="description-text", rows="6") }}
+                                        {{ form.description(class="form-control", id="description-text", rows="6") }}
+                                        {% if form.description.errors %}
+                                        <div class="alert alert-danger mt-2">
+                                            {% for error in form.description.errors %}{{ error }}<br>{% endfor %}
+                                        </div>
+                                        {% endif %}
                                     </div>
                                     <div
                                         id="description-help"
@@ -208,6 +216,11 @@
                                 <div class="sub-window">
                                     <!-- prettier-ignore -->
                                     {{ form.location(class="form-control", placeholder="Enter the location of the event") }}
+                                    {% if form.location.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.location.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -251,6 +264,11 @@
                                 <div class="sub-window">
                                     {{ form.date(class="form-control",
                                     placeholder="Enter date in dd/mm/yyyy") }}
+                                    {% if form.date.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.date.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -301,6 +319,11 @@
                                     {{ form.start_time(class="form-control",
                                     placeholder="Enter event start time in 24hr
                                     time (hh:mm)") }}
+                                    {% if form.start_time.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.start_time.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -342,6 +365,11 @@
                                     {{ form.end_time(class="form-control",
                                     placeholder="Enter event end time in 24hr
                                     time (hh:mm)") }}
+                                    {% if form.end_time.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.end_time.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -385,6 +413,11 @@
                                 </div>
                                 <div class="sub-window">
                                     {{ form.type(class="form-control") }}
+                                    {% if form.type.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.type.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -441,6 +474,11 @@
                                         </span>
                                     </li>
                                     {% endfor %}
+                                    {% if form.genres.errors %}
+                                    <div class="alert alert-danger mt-2">
+                                        {% for error in form.genres.errors %}{{ error }}<br>{% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <div
@@ -451,6 +489,11 @@
                                 add_genre_form.new_genre(class="form-control",
                                 id="new-genre", placeholder="Add new genre",
                                 form="add-genre-form") }} {{
+                                add_genre_form.selected_genres(
+                                    id="selected-genres-field",
+                                    type="hidden",
+                                    form="add-genre-form"
+                                ) }} {{
                                 add_genre_form.submit(class="btn btn-secondary",
                                 form="add-genre-form") }}
                             </div>
@@ -823,45 +866,242 @@
 
 <!-- prettier-ignore -->
 <script>
-    // Wait until the page has fully loaded before running the code
+    // Create event form state management
     document.addEventListener("DOMContentLoaded", () => {
-        // When the "Add more artists" button is clicked, duplicate the first artist input row
-        document
-            .getElementById("add-more-artists-btn")
-            .addEventListener("click", function () {
-                const artistRows =
-                    document.getElementById("artist-lineup-rows");
+        const STORAGE_KEY = "createEventFormState";
+        const createForm = document.getElementById("create-event-form");
+        const addGenreForm = document.getElementById("add-genre-form");
+        const selectedGenresField = document.getElementById(
+            "selected-genres-field"
+        );
+        const genreCheckboxSelector =
+            "#enter-event-genres-btn-group input[type='checkbox']";
 
-                // Clone the first artist input group (name + set time)
-                const newRow = artistRows.children[0].cloneNode(true);
+        const artistRows = document.getElementById("artist-lineup-rows");
+        const ticketRows = document.getElementById("ticket-tiers-rows");
+        const addMoreArtistsBtn = document.getElementById(
+            "add-more-artists-btn"
+        );
+        const addMoreTicketBtn = document.getElementById(
+            "add-more-ticket-tiers-btn"
+        );
 
-                // Clear any text from the cloned input fields so they start blank
-                newRow
-                    .querySelectorAll("input")
-                    .forEach((input) => (input.value = ""));
-
-                // Add the cleared copy back into the page below the existing rows
-                artistRows.appendChild(newRow);
+        const cloneTemplateRow = (template) => {
+            const clone = template.cloneNode(true);
+            clone.querySelectorAll("input").forEach((input) => {
+                input.value = "";
             });
+            return clone;
+        };
 
-        // When the "Add more ticket tiers" button is clicked, duplicate the first ticket tier row
+        const ensureRowCount = (container, desiredCount) => {
+            if (!container || !container.children.length) {
+                return;
+            }
+            const template = container.children[0];
+            const target = Math.max(desiredCount, 1);
+            while (container.children.length < target) {
+                container.appendChild(cloneTemplateRow(template));
+            }
+        };
 
-        document
-            .getElementById("add-more-ticket-tiers-btn")
-            .addEventListener("click", function () {
-                const ticketRows = document.getElementById("ticket-tiers-rows");
-                const ticketRows2 = document.getElementById("ticket-tiers-rows");
-                // Clone the first ticket tier input group (tier, price, and quantity)
-                const newRow = ticketRows.children[0].cloneNode(true);
-                const newRow2 = ticketRows.children[1].cloneNode(true);
+        const collectFormState = () => {
+            if (!createForm) {
+                return null;
+            }
+            const state = {};
+            const assignIfExists = (name) => {
+                const field = createForm.querySelector(`[name="${name}"]`);
+                state[name] = field ? field.value : "";
+            };
 
-                // Remove any previous text or numbers so the new row is empty
-                newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
+            [
+                "title",
+                "date",
+                "description",
+                "location",
+                "start_time",
+                "end_time",
+                "type",
+                "user_id",
+            ].forEach(assignIfExists);
 
-                // Add the blank ticket tier row back into the list
-                ticketRows.appendChild(newRow);
-                ticketRows2.appendChild(newRow2);
+            state.genres = Array.from(
+                document.querySelectorAll(genreCheckboxSelector)
+            )
+                .filter((checkbox) => checkbox.checked)
+                .map((checkbox) => parseInt(checkbox.value, 10));
+
+            state.artist_name = Array.from(
+                document.querySelectorAll('input[name="artist_name[]"]')
+            ).map((input) => input.value);
+
+            state.artist_set_time = Array.from(
+                document.querySelectorAll('input[name="artist_set_time[]"]')
+            ).map((input) => input.value);
+
+            state.ticket_tier = Array.from(
+                document.querySelectorAll('input[name="ticket_tier[]"]')
+            ).map((input) => input.value);
+
+            state.ticket_price = Array.from(
+                document.querySelectorAll('input[name="ticket_price[]"]')
+            ).map((input) => input.value);
+
+            state.ticket_quantity = Array.from(
+                document.querySelectorAll('input[name="ticket_quantity[]"]')
+            ).map((input) => input.value);
+
+            return state;
+        };
+
+        const saveState = () => {
+            const state = collectFormState();
+            // Save the current form state to localStorage
+            if (state) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            }
+        };
+
+        // Restore the form state from localStorage if available
+        const restoreState = () => {
+            if (!createForm) {
+                return;
+            }
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) {
+                return;
+            }
+            let state;
+            try {
+                state = JSON.parse(raw);
+            } catch (error) {
+                return;
+            }
+            // Helper to set field value if it exists in the form
+            const setIfExists = (name, value) => {
+                const field = createForm.querySelector(`[name="${name}"]`);
+                if (field && typeof value !== "undefined") {
+                    field.value = value;
+                }
+            };
+
+            // Restore basic fields
+            [
+                "title",
+                "date",
+                "description",
+                "location",
+                "start_time",
+                "end_time",
+                "type",
+                "user_id",
+            ].forEach((name) => setIfExists(name, state[name]));
+
+            // Restore genre selections
+            if (Array.isArray(state.genres)) {
+                const selected = state.genres.map((value) => parseInt(value, 10));
+                document.querySelectorAll(genreCheckboxSelector).forEach(
+                    (checkbox) => {
+                        checkbox.checked = selected.includes(
+                            parseInt(checkbox.value, 10)
+                        );
+                    }
+                );
+            }
+
+            // Restore artist rows and their values
+            if (Array.isArray(state.artist_name) && artistRows) {
+                ensureRowCount(artistRows, state.artist_name.length);
+                Array.from(
+                    document.querySelectorAll('input[name="artist_name[]"]')
+                ).forEach((input, index) => {
+                    input.value = state.artist_name[index] || "";
+                });
+            }
+
+            // Restore artist set times
+            if (Array.isArray(state.artist_set_time)) {
+                Array.from(
+                    document.querySelectorAll('input[name="artist_set_time[]"]')
+                ).forEach((input, index) => {
+                    input.value = state.artist_set_time[index] || "";
+                });
+            }
+
+            // Restore ticket rows and their values
+            if (Array.isArray(state.ticket_tier) && ticketRows) {
+                ensureRowCount(ticketRows, state.ticket_tier.length);
+                Array.from(
+                    document.querySelectorAll('input[name="ticket_tier[]"]')
+                ).forEach((input, index) => {
+                    input.value = state.ticket_tier[index] || "";
+                });
+            }
+
+            // Restore ticket prices
+            if (Array.isArray(state.ticket_price)) {
+                Array.from(
+                    document.querySelectorAll('input[name="ticket_price[]"]')
+                ).forEach((input, index) => {
+                    input.value = state.ticket_price[index] || "";
+                });
+            }
+
+            // Restore ticket quantities
+            if (Array.isArray(state.ticket_quantity)) {
+                Array.from(
+                    document.querySelectorAll('input[name="ticket_quantity[]"]')
+                ).forEach((input, index) => {
+                    input.value = state.ticket_quantity[index] || "";
+                });
+            }
+        };
+
+    // On page load, restore any saved form state
+    restoreState();
+
+        // Save form state on any input or change, clear on submit
+        if (createForm) {
+            createForm.addEventListener("input", saveState);
+            createForm.addEventListener("change", saveState);
+            createForm.addEventListener("submit", () => {
+                localStorage.removeItem(STORAGE_KEY);
             });
+        }
+
+        // Add new artist row and save state
+        if (addMoreArtistsBtn && artistRows) {
+            addMoreArtistsBtn.addEventListener("click", function () {
+                artistRows.appendChild(
+                    cloneTemplateRow(artistRows.children[0])
+                );
+                saveState();
+            });
+        }
+
+        // Add new ticket row and save state
+        if (addMoreTicketBtn && ticketRows) {
+            addMoreTicketBtn.addEventListener("click", function () {
+                ticketRows.appendChild(
+                    cloneTemplateRow(ticketRows.children[0])
+                );
+                saveState();
+            });
+        }
+
+        // On genre form submit, update hidden field and save state
+        if (addGenreForm && selectedGenresField) {
+            addGenreForm.addEventListener("submit", () => {
+                const checkedValues = Array.from(
+                    document.querySelectorAll(genreCheckboxSelector)
+                )
+                    .filter((checkbox) => checkbox.checked)
+                    .map((checkbox) => checkbox.value);
+                selectedGenresField.value = checkedValues.join(",");
+                saveState();
+            });
+        }
     });
 </script>
 {% endblock %}

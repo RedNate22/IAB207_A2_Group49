@@ -81,4 +81,6 @@ def profile():
         db.session.refresh(current_user)
         editing = False
         populate_form_from_user()
+    elif request.method == 'POST':
+        editing = True
     return render_template('user/user.html', form=form, editing=editing, user=current_user)

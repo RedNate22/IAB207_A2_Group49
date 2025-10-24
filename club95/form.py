@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, IntegerField, HiddenField, TextAreaField
 from wtforms.validators import DataRequired, Length
 from flask_wtf.file import FileField, FileAllowed
-from wtforms.validators import NumberRange,Optional
+from wtforms.validators import NumberRange, Optional, EqualTo, Regexp, Email
 
 #Sets up forms for use thorughout the application using Flask-WTF and WTForms
 #https://wtforms.readthedocs.io/en/3.2.x/forms/ - Good read on WTForms
@@ -18,13 +18,22 @@ class LoginForm(FlaskForm):
 
 # adds forms for registration. Note that 15 is the max length for a phone number
 class RegisterForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email(message='Invalid email address.')])
     firstName = StringField('First Name', validators=[DataRequired()])
     lastName = StringField('Last Name', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    phonenumber = StringField('Phone No.', [Optional(), Length(min=4, max=25)])
-    bio = TextAreaField('Bio', validators=[Length(max=300)])
-    profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
+    password = PasswordField('Password', validators=[DataRequired(),
+                                                     Length(min=8,
+                                                     # Regex to ensure password complexity 
+                                                     message='Password must be at least 8 characters long.'),
+                                                     Regexp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+                                                     message='Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.'),
+                                                     EqualTo('confirm_password', message='Passwords must match')
+                                                     ])
+    confirm_password = PasswordField('Repeat Password', validators=[DataRequired()])
+    phonenumber = StringField('Phone No.', [Optional(), Length(min=10, max=15),
+                                            Regexp(r'^\+?\d{10,15}$', message='Enter a valid phone number.')])
+    bio = TextAreaField('Bio', validators=[Optional(), Length(max=300)])
+    profilePicture = FileField('Upload Image', validators=[Optional(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Register')
 
 # TODO: Ana - now that I have updated the database I need you to update these forms for me
@@ -72,16 +81,25 @@ class EventForm(FlaskForm):
 class AddGenreForm(FlaskForm):
     # A simple form that lets users add a new genre to the database
     new_genre = StringField('Add New Genre', validators=[Length(max=50), DataRequired()])
+    selected_genres = HiddenField('Selected Genres')
     submit = SubmitField('Add Genre')
 
 
 class UpdateProfileForm(FlaskForm):
     # Form for updating user account details on the profile page
-    email = StringField('Email')
-    firstName = StringField('First Name')
-    lastName = StringField('Last Name')
-    password = PasswordField('Password')
-    phonenumber = StringField('Phone No.', [Optional(), Length(min=4, max=25)])
+    email = StringField('Email', validators=[DataRequired(), Email(message='Invalid email address.')])
+    firstName = StringField('First Name', validators=[DataRequired()])
+    lastName = StringField('Last Name', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[Optional(),
+                                Length(min=8,
+                                    message='Password must be at least 8 characters long.'),
+                                Regexp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+                                    message='Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.'),
+                                EqualTo('confirm_password', message='Passwords must match')
+                                ])
+    confirm_password = PasswordField('Repeat Password', validators=[Optional(), EqualTo('password', message='Passwords must match')])
+    phonenumber = StringField('Phone No.', [Optional(), Length(min=10, max=15),
+                          Regexp(r'^\+?\d{10,15}$', message='Enter a valid phone number.')])
     bio = TextAreaField('Bio', validators=[Length(max=300)])
     profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Update Profile')
