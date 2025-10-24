@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import Event
 from . import db
 
@@ -12,10 +12,21 @@ def index():
 
 @home_bp.route('/search')
 def search():
-    if request.args.get('search') and request.args.get('search') != "":
-        print(request.args['search'])
-        query = "%" + request.args['search'] + "%"
-        events = db.session.scalars(db.select(Event).where(Event.title.like(query))).all()
-        return render_template('index.html', heading='Browse Events', events=events)
-    else:
+    term = (request.args.get('search') or '').strip()
+    if not term:
         return redirect(url_for('home_bp.index'))
+
+    query = f"%{term}%"
+    events = db.session.scalars(
+        db.select(Event).where(Event.title.ilike(query))
+    ).all()
+
+    if not events:
+        flash(f'No events found for "{term}". Try another title or keyword.', 'search_info')
+
+    return render_template(
+        'index.html',
+        heading='Browse Events',
+        events=events,
+        search_term=term
+    )
