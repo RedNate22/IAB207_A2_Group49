@@ -79,11 +79,11 @@ def login():
 
         if u1 is None:
             error = 'Incorrect email.'
-            flash(error)
+            flash(error, 'login_error')
             return redirect(url_for('auth_bp.login'))
         elif not check_password_hash(u1.password, password):
             error = 'Incorrect password.'
-            flash(error)
+            flash(error, 'login_error')
             return redirect(url_for('auth_bp.login'))
         if error is None:
             login_user(u1)
@@ -92,7 +92,7 @@ def login():
             return redirect(next_page or url_for('home_bp.index'))
         else:
             print(error)
-            flash(error)
+            flash(error, 'login_error')
     ## passed the gaunlets of checks and logged in
     return render_template('/auth/login.html', form=form, heading="Login")
 

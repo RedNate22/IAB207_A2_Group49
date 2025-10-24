@@ -394,10 +394,17 @@
                                 <br />
                                 <br />
                                 <strong>> ARTIST LINEUP:</strong>
-                                {% if event and event.artists %} {% for artist
-                                in event.artists %} {{ artist.artistName }}{% if
-                                not loop.last %}, {% endif %} {% endfor %} {%
-                                else %} Not available {% endif %}
+                                {% if event and event.artist_links %}
+                                    {% for link in event.artist_links %}
+                                        {{ link.artist.artistName }}{% if link.set_time %} ({{ link.set_time }}){% endif %}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% elif event and event.artists %}
+                                    {% for artist in event.artists %}
+                                        {{ artist.artistName }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Not available
+                                {% endif %}
                                 <br />
                                 <strong>> VENUE:</strong>
                                 {{ event.location if event and event.location

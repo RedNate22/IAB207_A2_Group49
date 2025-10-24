@@ -315,7 +315,7 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.start_time(class="form-control", type="time", step="60") }}
+                                    {{ form.start_time(class="form-control", type="time", step="60", min="00:00", max="23:59", title="Use 24hr format hh:mm") }}
                                     {% if form.start_time.errors %}
                                     <div class="alert alert-danger mt-2">
                                         {% for error in form.start_time.errors %}{{ error }}<br>{% endfor %}
@@ -359,7 +359,7 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.end_time(class="form-control", type="time", step="60") }}
+                                    {{ form.end_time(class="form-control", type="time", step="60", min="00:00", max="23:59", title="Use 24hr format hh:mm") }}
                                     {% if form.end_time.errors %}
                                     <div class="alert alert-danger mt-2">
                                         {% for error in form.end_time.errors %}{{ error }}<br>{% endfor %}
@@ -585,8 +585,12 @@
                                     <div class="sub-window">
                                         <input
                                             class="form-control"
-                                            type="text"
-                                            placeholder="Enter set start time in 24hr (hh:mm)"
+                                            type="time"
+                                            step="60"
+                                            min="00:00"
+                                            max="23:59"
+                                            title="Use 24hr format hh:mm"
+                                            placeholder="Enter set start time"
                                             name="artist_set_time[]"
                                         />
                                     </div>
@@ -613,6 +617,17 @@
                         </div>
                         <div class="col-3"></div>
                     </div>
+                    {% if artist_errors %}
+                    <div class="row mt-2">
+                        <div class="col-3"></div>
+                        <div class="col-6">
+                            <div class="alert alert-danger">
+                                {% for error in artist_errors %}{{ error }}<br>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                    {% endif %}
                 </section>
                 <!-- End of Artist Lineup Section -->
 
@@ -864,6 +879,7 @@
     // Create event form state management
     document.addEventListener("DOMContentLoaded", () => {
         const STORAGE_KEY = "createEventFormState";
+    const prefilledGenres = JSON.parse('{{ prefilled_genres|tojson|safe }}');
         const createForm = document.getElementById("create-event-form");
         const addGenreForm = document.getElementById("add-genre-form");
         const selectedGenresField = document.getElementById(
@@ -1005,6 +1021,20 @@
                 );
             }
 
+            if (Array.isArray(prefilledGenres) && prefilledGenres.length) {
+                document.querySelectorAll(genreCheckboxSelector).forEach(
+                    (checkbox) => {
+                        if (
+                            prefilledGenres.includes(
+                                parseInt(checkbox.value, 10)
+                            )
+                        ) {
+                            checkbox.checked = true;
+                        }
+                    }
+                );
+            }
+
             // Restore artist rows and their values
             if (Array.isArray(state.artist_name) && artistRows) {
                 ensureRowCount(artistRows, state.artist_name.length);
@@ -1053,8 +1083,28 @@
             }
         };
 
-    // On page load, restore any saved form state
-    restoreState();
+        // On page load, restore any saved form state
+        restoreState();
+
+        if (Array.isArray(prefilledGenres) && prefilledGenres.length) {
+            let updated = false;
+            document.querySelectorAll(genreCheckboxSelector).forEach(
+                (checkbox) => {
+                    if (
+                        prefilledGenres.includes(
+                            parseInt(checkbox.value, 10)
+                        ) &&
+                        !checkbox.checked
+                    ) {
+                        checkbox.checked = true;
+                        updated = true;
+                    }
+                }
+            );
+            if (updated) {
+                saveState();
+            }
+        }
 
         // Save form state on any input or change, clear on submit
         if (createForm) {

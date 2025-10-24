@@ -5,7 +5,7 @@
 <div class="centered-form">
 
     {# Flash message section #}
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(category_filter=['login_error']) %}
         {% if messages %}
             <div class="error">
                 {% for message in messages %}

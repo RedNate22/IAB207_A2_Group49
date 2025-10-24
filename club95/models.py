@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from . import db
+from sqlalchemy.ext.associationproxy import association_proxy
 
 
 
@@ -37,11 +38,15 @@ class User(db.Model, UserMixin):
 
 
 # Association table for many-to-many relationship between Event and Artist
-event_artist = db.Table(
-    'event_artist',
-    db.Column('event_id', db.Integer, db.ForeignKey('events.id'), primary_key=True),
-    db.Column('artist_id', db.Integer, db.ForeignKey('artists.id'), primary_key=True)
-)
+class EventArtist(db.Model):
+    __tablename__ = 'event_artist'
+
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), primary_key=True)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), primary_key=True)
+    set_time = db.Column(db.String(5), nullable=True)
+
+    event = db.relationship('Event', back_populates='artist_links')
+    artist = db.relationship('Artist', back_populates='event_links')
 
 # Association table for many-to-many relationship between Event and Genre
 event_genre = db.Table(
@@ -79,7 +84,8 @@ class Event(db.Model):
     # relationship to comments - one to many
     comments = db.relationship('Comment', backref='event')
     # many-to-many relationship with artists
-    artists = db.relationship('Artist', secondary='event_artist', back_populates='events')
+    artist_links = db.relationship('EventArtist', back_populates='event', cascade='all, delete-orphan')
+    artists = association_proxy('artist_links', 'artist')
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -173,7 +179,8 @@ class Artist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artistName = db.Column(db.String(150), unique=True, nullable=False)
     # many-to-many relationship with events
-    events = db.relationship('Event', secondary='event_artist', back_populates='artists')
+    event_links = db.relationship('EventArtist', back_populates='artist', cascade='all, delete-orphan')
+    events = association_proxy('event_links', 'event')
     # link artist to genre - one to many
     genres = db.relationship('Genre', backref='artist')
 
