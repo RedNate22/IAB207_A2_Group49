@@ -31,6 +31,7 @@ def eventdetails(event_id):
 
 # Create events page
 @events_bp.route('/events/createvent', methods=['GET', 'POST'])
+@login_required
 def createevent():
     # Build the two forms for this page
     form = EventForm()
@@ -200,6 +201,7 @@ def createevent():
         prefilled_genres=form.genres.data or []
     )
 @events_bp.route('/events/add_genre', methods=['POST'])
+@login_required
 def add_genre():
     add_genre_form = AddGenreForm()
     if add_genre_form.validate_on_submit():
