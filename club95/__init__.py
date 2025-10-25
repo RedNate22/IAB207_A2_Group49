@@ -102,9 +102,18 @@ def populate_database(app: Flask) -> None:
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
-      from .models import User, Event, Genre, Artist, Ticket, Venue
+      from .models import User, Event, Genre, Artist, Ticket, Venue, Type
 
       # Helper methods
+      def get_or_create_type(name: str) -> Type:
+         """Return an existing event type by name or create a new one if not found."""
+         type = Type.query.filter_by(eventType=name).first()
+         if not type:
+            type = Type(eventType=name)
+            db.sessionadd(type)
+            db.session.flush()
+         return type
+
       def get_or_create_genres(name: str) -> Genre:
          """Return an existing genre by name or create a new one if not found."""
          genre = Genre.query.filter_by(genreType=name).first()
@@ -114,7 +123,7 @@ def populate_database(app: Flask) -> None:
             db.session.flush()
          return genre
 
-      def get_or_create_artist(name: str) -> Artist:
+      def get_or_create_artists(name: str) -> Artist:
          """Return an existing artist by name or create a new one if not found."""
          artist = Artist.query.filter_by(artistName=name).first()
          if not artist:
@@ -268,7 +277,7 @@ def populate_database(app: Flask) -> None:
          if not event:
             event = Event(
                title=seed["title"],
-               type=seed["type"],
+               type=get_or_create_type(seed["type"]),
                status=seed["status"],
                date=seed["date"],
                description=seed["description"],
@@ -279,7 +288,7 @@ def populate_database(app: Flask) -> None:
                user=user,
                venue=venue,
                genres=[get_or_create_genres(n) for n in seed["genres"]],
-               artists=[get_or_create_artist(n) for n in seed["artists"]]
+               artists=[get_or_create_artists(n) for n in seed["artists"]]
             )
 
             # attach tickets

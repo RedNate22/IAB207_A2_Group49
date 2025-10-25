@@ -51,7 +51,7 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     genres = db.relationship('Genre', secondary=event_genre, backref='events')
-    type = db.Column(db.String(50), nullable=False)
+    # ! type = db.Column(db.String(50), nullable=False)  # TODO type should be a model
     status = db.Column(db.String(20), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=True)
@@ -70,6 +70,8 @@ class Event(db.Model):
     comments = db.relationship('Comment', backref='event')
     # many-to-many relationship with artists
     artists = db.relationship('Artist', secondary='event_artist', back_populates='events')
+    # link many-to-one relationship with event type
+    type = db.relationship('Type', back_populates='event')
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -185,9 +187,15 @@ class Venue(db.Model):
     def __repr__(self):
         return f"<Venue {self.venueName}>"
 
+class Type(db.Model):
+    # define the name of the table in the database
+    __tablename__ = 'type'
+    # define the columns of the table 
+    id = db.Column(db.String, primary_key=True)
+    eventType = db.Column(db.String(15), unique=True, nullable=False)
 
+    # link type to events - one to many
+    events = db.relationship('Event', back_populates='type')
 
-
-
-
-## add additional models if needed here
+    def __repr__(self):
+        return f"<Event {self.eventType}>"
