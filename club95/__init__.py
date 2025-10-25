@@ -150,112 +150,112 @@ def populate_database(app: Flask) -> None:
       events_seed = [
          # DJ Spreadsheet Live
          {
-            "title": "",
-            "type": "",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
+            "title": "DJ Spreadsheet Live",
+            "type": "DJ Set",
+            "status": "CANCELLED",
+            "date": "23/10/25",
+            "description": "Watch DJ Spreadsheet seamlessly mix quarterly reports into smooth beats. Free Wi-Fi included.",
+            "location": "Brisbane City",
+            "start_time": "w",
+            "end_time": "w",
+            "image": "w",
+            "venue": {"name": "Conference Room B, Novotel Brisbane", "location": ""},  # ? is location a FK?
+            "genres": ["w", "e", "f"],
+            "artists": ["w"],
             "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
+               {"tier": "w", "price": 0.00, "qty": 1}
             ], 
          },
          # Crescent City Players
-         {
-            "title": "",
-            "type": "",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
-            "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
-            ], 
-         },
+         # {
+         #    "title": "",
+         #    "type": "",
+         #    "status": "",
+         #    "date": "",
+         #    "description": "",
+         #    "location": "",
+         #    "start_time": "",
+         #    "end_time": "",
+         #    "image": "",
+         #    "venue": {"name": "", "location": ""},
+         #    "genres": ["", "", ""],
+         #    "artists": [""],
+         #    "tickets": [
+         #       {"tier": "", "price": 0.00, "qty": 0}
+         #    ], 
+         # },
          # Moonlight Resonance
-         {
-            "title": "",
-            "type": "",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
-            "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
-            ], 
-         },
+         # {
+         #    "title": "",
+         #    "type": "",
+         #    "status": "",
+         #    "date": "",
+         #    "description": "",
+         #    "location": "",
+         #    "start_time": "",
+         #    "end_time": "",
+         #    "image": "",
+         #    "venue": {"name": "", "location": ""},
+         #    "genres": ["", "", ""],
+         #    "artists": [""],
+         #    "tickets": [
+         #       {"tier": "", "price": 0.00, "qty": 0}
+         #    ], 
+         # },
          # The Overwhelming Festival
-         {
-            "title": "",
-            "type": "",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
-            "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
-            ], 
-         },
+         # {
+         #    "title": "",
+         #    "type": "",
+         #    "status": "",
+         #    "date": "",
+         #    "description": "",
+         #    "location": "",
+         #    "start_time": "",
+         #    "end_time": "",
+         #    "image": "",
+         #    "venue": {"name": "", "location": ""},
+         #    "genres": ["", "", ""],
+         #    "artists": [""],
+         #    "tickets": [
+         #       {"tier": "", "price": 0.00, "qty": 0}
+         #    ], 
+         # },
          # Optimistic Yeti: Doom Jazz
-         {
-            "title": "",
-            "type": "",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
-            "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
-            ], 
-         },
+         # {
+         #    "title": "",
+         #    "type": "",
+         #    "status": "",
+         #    "date": "",
+         #    "description": "",
+         #    "location": "",
+         #    "start_time": "",
+         #    "end_time": "",
+         #    "image": "",
+         #    "venue": {"name": "", "location": ""},
+         #    "genres": ["", "", ""],
+         #    "artists": [""],
+         #    "tickets": [
+         #       {"tier": "", "price": 0.00, "qty": 0}
+         #    ], 
+         # },
          # Sydney Indie Nights: Local Showcase
-         {
-            "title": "",
-            "type": "",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
-            "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
-            ], 
-         },
+         # {
+         #    "title": "",
+         #    "type": "",
+         #    "status": "",
+         #    "date": "",
+         #    "description": "",
+         #    "location": "",
+         #    "start_time": "",
+         #    "end_time": "",
+         #    "image": "",
+         #    "venue": {"name": "", "location": ""},
+         #    "genres": ["", "", ""],
+         #    "artists": [""],
+         #    "tickets": [
+         #       {"tier": "", "price": 0.00, "qty": 0}
+         #    ], 
+         # },
       ]
 
       # Seed events into db

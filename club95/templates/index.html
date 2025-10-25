@@ -391,7 +391,7 @@
                                 <br />
 
                                 {# Get artists #}
-                                <strong>> ARTIST LINEUP:</strong> <br />
+                                <strong>> ARTIST LINEUP:</strong>
                                 {% if event.artists %}
                                     {{ event.artists | map(attribute='artistName') | join(', ') }}
                                 {% else %}
@@ -399,7 +399,10 @@
                                 {% endif %}
                                 <br />
 
-                                <strong>> VENUE:</strong> {{ event.location or "TBA" }}
+                                <strong>> VENUE:</strong> {{ event.venue.venueName if event.venue else "TBA" }}
+                                <br />
+
+                                <strong>> LOCATION:</strong> {{ event.location or "TBA" }}
                                 <br />
                                 
                                 <strong>> DATE:</strong> {{ event.date or "TBA" }}
