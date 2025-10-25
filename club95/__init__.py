@@ -156,14 +156,14 @@ def populate_database(app: Flask) -> None:
             "date": "23/10/25",
             "description": "Watch DJ Spreadsheet seamlessly mix quarterly reports into smooth beats. Free Wi-Fi included.",
             "location": "Brisbane City",
-            "start_time": "w",
-            "end_time": "w",
-            "image": "w",
+            "start_time": "09:00",
+            "end_time": "17:00",
+            "image": "dj-1.jpg",
             "venue": {"name": "Conference Room B, Novotel Brisbane", "location": ""},  # ? is location a FK?
-            "genres": ["w", "e", "f"],
-            "artists": ["w"],
+            "genres": ["Electronic", "Techno", "Synthwave"],
+            "artists": ["DJ Spreadsheet"],
             "tickets": [
-               {"tier": "w", "price": 0.00, "qty": 1}
+               {"tier": "1", "price": 5.00, "qty": 30}
             ], 
          },
          # Crescent City Players
