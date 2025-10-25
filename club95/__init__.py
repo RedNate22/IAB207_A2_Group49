@@ -176,41 +176,48 @@ def populate_database(app: Flask) -> None:
             ], 
          },
          # Crescent City Players
-         # {
-         #    "title": "",
-         #    "type": "",
-         #    "status": "",
-         #    "date": "",
-         #    "description": "",
-         #    "location": "",
-         #    "start_time": "",
-         #    "end_time": "",
-         #    "image": "",
-         #    "venue": {"name": "", "location": ""},
-         #    "genres": ["", "", ""],
-         #    "artists": [""],
-         #    "tickets": [
-         #       {"tier": "", "price": 0.00, "qty": 0}
-         #    ], 
-         # },
+         {
+            "title": "Crescent City Players",
+            "type": "Live Concert",
+            "status": "OPEN",
+            "date": "30/09/25",
+            "description": 
+               "An intimate evening of smooth jazz and improvisation, featuring local hit talent, " + 
+               "Crescent City Players, joined by The Walters and Mojo Webb. Enjoy classic standards and modern tunes " + 
+               "in a cozy, relaxed setting",
+            "location": "92 Brisbane Terrace Goodna, QLD 4300",
+            "start_time": "13:00",
+            "end_time": "15:00",
+            "image": "crescent-city-players-poster-horizontal.jpg",
+            "venue": {"name": "Royal Mail Hotel", "location": "92 Brisbane Terrace Goodna, QLD 4300"},
+            "genres": ["Jazz", "Swing", "Fusion"],
+            "artists": ["Crescent City Players", "The Walters", "Mojo Webb"],
+            "tickets": [
+               {"tier": "1", "price": 0.00, "qty": 30},
+               {"tier": "2", "price": 7.99, "qty": 20},
+               {"tier": "3", "price": 14.99, "qty": 10},
+               {"tier": "4", "price": 24.99, "qty": 5},
+               {"tier": "5", "price": 49.99, "qty": 1},
+            ], 
+         },
          # Moonlight Resonance
-         # {
-         #    "title": "",
-         #    "type": "",
-         #    "status": "",
-         #    "date": "",
-         #    "description": "",
-         #    "location": "",
-         #    "start_time": "",
-         #    "end_time": "",
-         #    "image": "",
-         #    "venue": {"name": "", "location": ""},
-         #    "genres": ["", "", ""],
-         #    "artists": [""],
-         #    "tickets": [
-         #       {"tier": "", "price": 0.00, "qty": 0}
-         #    ], 
-         # },
+         {
+            "title": "Moonlight Resonance",
+            "type": "Orchestra",
+            "status": "",
+            "date": "",
+            "description": "",
+            "location": "",
+            "start_time": "",
+            "end_time": "",
+            "image": "",
+            "venue": {"name": "", "location": ""},
+            "genres": ["", "", ""],
+            "artists": [""],
+            "tickets": [
+               {"tier": "", "price": 0.00, "qty": 0}
+            ], 
+         },
          # The Overwhelming Festival
          # {
          #    "title": "",
