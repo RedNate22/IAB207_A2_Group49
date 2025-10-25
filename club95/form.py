@@ -1,10 +1,12 @@
+from datetime import datetime, date
+
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, SelectMultipleField, IntegerField, HiddenField, TextAreaField
 from wtforms.fields import DateField, TimeField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, ValidationError
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import NumberRange, Optional, EqualTo, Regexp, Email
 
@@ -85,6 +87,22 @@ class EventForm(FlaskForm):
 
     # Submit button to create the event
     submit = SubmitField('Create Event')
+
+    # Validate the event date to ensure it is not in the past
+    def validate_date(self, field):
+        if field.data and field.data < date.today():
+            raise ValidationError('Event date cannot be in the past.')
+
+    # Validate the start time to ensure it is not in the past
+    def validate_start_time(self, field):
+        event_date = self.date.data
+        if not event_date or not field.data:
+            return
+        event_start = datetime.combine(event_date, field.data)
+        now = datetime.now()
+        # if date is today, check time is later today
+        if event_date == date.today() and event_start <= now:
+            raise ValidationError('Start time must be later than the current time for events scheduled today.')
 
 
 class AddGenreForm(FlaskForm):

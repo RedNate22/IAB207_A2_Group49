@@ -8,7 +8,7 @@ import os
 from werkzeug.utils import secure_filename
 from .models import Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist
 from flask_login import current_user, login_required
-from datetime import datetime
+from datetime import datetime, date
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
 
@@ -36,6 +36,11 @@ def createevent():
     # Build the two forms for this page
     form = EventForm()
     add_genre_form = AddGenreForm()
+
+    # prevent selecting past dates on the picker
+    today_iso = date.today().isoformat()
+    form.date.render_kw = dict(form.date.render_kw or {}, min=today_iso)
+    min_date = form.date.render_kw.get('min', today_iso)
 
     # Fill the Genres multiselect with real options from the database
     form.genres.choices = [(g.id, g.genreType) for g in Genre.query.all()]
@@ -155,19 +160,52 @@ def createevent():
             tier_prices = request.form.getlist('ticket_price[]')
             tier_quantities = request.form.getlist('ticket_quantity[]')
 
+
+            # Collect problems and valid ticket data before saving anything
+            ticket_errors = []
+            pending_tickets = []
+            # Walk each tier row from the form so we can validate its fields
             for tname, pstr, qstr in zip(tier_names, tier_prices, tier_quantities):
                 name_value = (tname or '').strip()
+                # Skip rows where the tier name was left empty
                 if not name_value:
                     continue
+                # Ensure the price input can be read as a decimal number
                 try:
                     price_value = float(pstr)
+                except (TypeError, ValueError):
+                    ticket_errors.append(f"Ticket price for tier '{name_value}' must be a number.")
+                    continue
+                # Ensure the quantity input can be read as a whole number
+                try:
                     qty_value = int(qstr)
                 except (TypeError, ValueError):
-                    flash(f"Invalid ticket data for tier '{name_value}'.", "warning")
+                    ticket_errors.append(f"Ticket quantity for tier '{name_value}' must be a whole number.")
                     continue
-                if price_value < 0 or qty_value < 1:
-                    flash(f"Invalid price or quantity for tier '{name_value}'.", "warning")
-                    continue
+                # Track whether this row needs to be rejected after deeper checks
+                invalid_entry = False
+                # Reject negative prices
+                if price_value < 0:
+                    ticket_errors.append(f"Ticket price for tier '{name_value}' cannot be negative.")
+                    invalid_entry = True
+                # Reject zero or negative quantities
+                if qty_value < 1:
+                    ticket_errors.append(f"Ticket quantity for tier '{name_value}' must be at least 1.")
+                    invalid_entry = True
+                # Only queue valid rows for insertion
+                if not invalid_entry:
+                    pending_tickets.append((name_value, price_value, qty_value))
+
+            # If anything failed validation, abort and let the user know what to fix
+            # Likely won't reach here due to input constraints, but just in case
+            if ticket_errors:
+                db.session.rollback()
+                for message in ticket_errors:
+                    flash(message, "danger")
+                return redirect(url_for('events_bp.createevent'))
+
+            # Persist every validated ticket tier for the new event
+            for name_value, price_value, qty_value in pending_tickets:
                 ticket = Ticket(
                     ticketTier=name_value,
                     price=price_value,
@@ -198,7 +236,8 @@ def createevent():
         add_genre_form=add_genre_form,
         heading="Create Event",
         artist_errors=artist_errors,
-        prefilled_genres=form.genres.data or []
+        prefilled_genres=form.genres.data or [],
+        min_date=min_date
     )
 @events_bp.route('/events/add_genre', methods=['POST'])
 @login_required

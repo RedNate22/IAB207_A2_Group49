@@ -262,7 +262,7 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                                {{ form.date(class="form-control", type="date", placeholder="Enter date") }}
+                                                {{ form.date(class="form-control", type="date", placeholder="Enter date", min=min_date) }}
                                     {% if form.date.errors %}
                                     <div class="alert alert-danger mt-2">
                                         {% for error in form.date.errors %}{{ error }}<br>{% endfor %}
@@ -719,9 +719,14 @@
                                     <div class="sub-window">
                                         <input
                                             class="form-control"
-                                            type="text"
+                                            type="decimal"
                                             name="ticket_price[]"
                                             placeholder="Enter Ticket Price ($)"
+                                            min="0"
+                                            step="0.01"
+                                            inputmode="decimal"
+                                            oninput="this.value = this.value.replace(/[^0-9.]/g, ''); const parts = this.value.split('.'); if (parts.length > 2) { this.value = parts[0] + '.' + parts.slice(1).join(''); }"
+                                            onblur="if (this.value.includes('.')) { const [whole, fraction] = this.value.split('.'); this.value = fraction ? `${whole}.${fraction.slice(0,2)}` : whole; }"
                                         />
                                     </div>
                                 </div>
@@ -763,9 +768,14 @@
                                     <div class="sub-window">
                                         <input
                                             class="form-control"
-                                            type="text"
+                                            type="number"
                                             name="ticket_quantity[]"
                                             placeholder="Enter Ticket Quantity"
+                                            min="1"
+                                            step="1"
+                                            inputmode="numeric"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                            onblur="if (this.value === '' || parseInt(this.value) < 1) { this.value = 1; } else if (parseInt(this.value) > 150000) { this.value = 150000; }"
                                         />
                                     </div>
                                 </div>
@@ -876,10 +886,11 @@
 
 <!-- prettier-ignore -->
 <script>
-    // Create event form state management
+    // Everything here keeps the create event form tidy and remembers what I type
     document.addEventListener("DOMContentLoaded", () => {
         const STORAGE_KEY = "createEventFormState";
     const prefilledGenres = JSON.parse('{{ prefilled_genres|tojson|safe }}');
+        // Grab the bits of the page I need to poke later
         const createForm = document.getElementById("create-event-form");
         const addGenreForm = document.getElementById("add-genre-form");
         const selectedGenresField = document.getElementById(
@@ -897,6 +908,40 @@
             "add-more-ticket-tiers-btn"
         );
 
+        // Figure out if this is a fresh visit so I can bin any old draft
+        const shouldClearState = () => {
+            if (!window.performance) {
+                return true;
+            }
+            if (performance.getEntriesByType) {
+                const entries = performance.getEntriesByType("navigation");
+                if (entries && entries.length) {
+                    return entries[0].type === "navigate";
+                }
+            }
+            if (performance.navigation) {
+                const navType = performance.navigation.type;
+                const { TYPE_NAVIGATE, TYPE_RELOAD, TYPE_BACK_FORWARD } =
+                    performance.navigation;
+                if (
+                    navType === TYPE_RELOAD ||
+                    navType === TYPE_BACK_FORWARD
+                ) {
+                    return false;
+                }
+                if (navType === TYPE_NAVIGATE) {
+                    return true;
+                }
+            }
+            return true;
+        };
+
+        if (shouldClearState()) {
+            // Clean slate when I first open the page
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+        // Makes a fresh copy of a row without any old values sticking around
         const cloneTemplateRow = (template) => {
             const clone = template.cloneNode(true);
             clone.querySelectorAll("input").forEach((input) => {
@@ -905,6 +950,7 @@
             return clone;
         };
 
+        // Keeps adding rows until we have the amount we need
         const ensureRowCount = (container, desiredCount) => {
             if (!container || !container.children.length) {
                 return;
@@ -916,6 +962,45 @@
             }
         };
 
+        // Remember what a ticket tier block looks like so we can reuse it
+        const ticketTierTemplate = ticketRows
+            ? ticketRows.querySelector(".ticket-row")
+            : null;
+        const ticketDetailTemplate = ticketRows
+            ? ticketRows.querySelectorAll(".ticket-row")[1] || null
+            : null;
+
+        // Build a fresh ticket block with tier, price, and quantity stuck together
+        const createTicketBlock = () => {
+            const fragment = document.createDocumentFragment();
+            if (ticketTierTemplate) {
+                fragment.appendChild(cloneTemplateRow(ticketTierTemplate));
+            }
+            if (ticketDetailTemplate) {
+                fragment.appendChild(cloneTemplateRow(ticketDetailTemplate));
+            }
+            return fragment;
+        };
+
+        // Make sure we always have enough ticket blocks on the page
+        const ensureTicketBlocks = (desiredCount) => {
+            if (!ticketRows || !ticketTierTemplate) {
+                return;
+            }
+            let currentCount = ticketRows.querySelectorAll(
+                'input[name="ticket_tier[]"]'
+            ).length;
+            while (currentCount < desiredCount) {
+                const fragment = createTicketBlock();
+                if (!fragment.childNodes.length) {
+                    break;
+                }
+                ticketRows.appendChild(fragment);
+                currentCount += 1;
+            }
+        };
+
+        // Gather everything from the form so I can stash it away
         const collectFormState = () => {
             if (!createForm) {
                 return null;
@@ -966,6 +1051,7 @@
             return state;
         };
 
+        // Store the current snapshot in localStorage
         const saveState = () => {
             const state = collectFormState();
             // Save the current form state to localStorage
@@ -974,7 +1060,7 @@
             }
         };
 
-        // Restore the form state from localStorage if available
+        // Pull saved values back into the form if I left and came back
         const restoreState = () => {
             if (!createForm) {
                 return;
@@ -997,6 +1083,7 @@
                 }
             };
 
+            // Drop the basic inputs back where they were
             // Restore basic fields
             [
                 "title",
@@ -1009,7 +1096,7 @@
                 "user_id",
             ].forEach((name) => setIfExists(name, state[name]));
 
-            // Restore genre selections
+            // Tick any genres I already picked
             if (Array.isArray(state.genres)) {
                 const selected = state.genres.map((value) => parseInt(value, 10));
                 document.querySelectorAll(genreCheckboxSelector).forEach(
@@ -1035,7 +1122,7 @@
                 );
             }
 
-            // Restore artist rows and their values
+            // Bring back the artists I added before
             if (Array.isArray(state.artist_name) && artistRows) {
                 ensureRowCount(artistRows, state.artist_name.length);
                 Array.from(
@@ -1045,7 +1132,7 @@
                 });
             }
 
-            // Restore artist set times
+            // Match their set times too
             if (Array.isArray(state.artist_set_time)) {
                 Array.from(
                     document.querySelectorAll('input[name="artist_set_time[]"]')
@@ -1054,38 +1141,66 @@
                 });
             }
 
-            // Restore ticket rows and their values
-            if (Array.isArray(state.ticket_tier) && ticketRows) {
-                ensureRowCount(ticketRows, state.ticket_tier.length);
-                Array.from(
-                    document.querySelectorAll('input[name="ticket_tier[]"]')
-                ).forEach((input, index) => {
-                    input.value = state.ticket_tier[index] || "";
-                });
-            }
+            // Rebuild the ticket tiers and drop every saved value back in
+            if (ticketRows) {
+                const ticketCounts = [
+                    Array.isArray(state.ticket_tier)
+                        ? state.ticket_tier.length
+                        : 0,
+                    Array.isArray(state.ticket_price)
+                        ? state.ticket_price.length
+                        : 0,
+                    Array.isArray(state.ticket_quantity)
+                        ? state.ticket_quantity.length
+                        : 0,
+                ];
+                const desiredTicketCount = Math.max(1, ...ticketCounts);
+                ensureTicketBlocks(desiredTicketCount);
 
-            // Restore ticket prices
-            if (Array.isArray(state.ticket_price)) {
-                Array.from(
-                    document.querySelectorAll('input[name="ticket_price[]"]')
-                ).forEach((input, index) => {
-                    input.value = state.ticket_price[index] || "";
-                });
-            }
+                if (Array.isArray(state.ticket_tier)) {
+                    Array.from(
+                        document.querySelectorAll(
+                            'input[name="ticket_tier[]"]'
+                        )
+                    ).forEach((input, index) => {
+                        input.value = state.ticket_tier[index] || "";
+                    });
+                }
 
-            // Restore ticket quantities
-            if (Array.isArray(state.ticket_quantity)) {
-                Array.from(
-                    document.querySelectorAll('input[name="ticket_quantity[]"]')
-                ).forEach((input, index) => {
-                    input.value = state.ticket_quantity[index] || "";
-                });
+                if (Array.isArray(state.ticket_price)) {
+                    Array.from(
+                        document.querySelectorAll(
+                            'input[name="ticket_price[]"]'
+                        )
+                    ).forEach((input, index) => {
+                        input.value = state.ticket_price[index] || "";
+                    });
+                }
+
+                if (Array.isArray(state.ticket_quantity)) {
+                    Array.from(
+                        document.querySelectorAll(
+                            'input[name="ticket_quantity[]"]'
+                        )
+                    ).forEach((input, index) => {
+                        input.value = state.ticket_quantity[index] || "";
+                    });
+                }
+
+                if (
+                    Array.isArray(state.ticket_tier) ||
+                    Array.isArray(state.ticket_price) ||
+                    Array.isArray(state.ticket_quantity)
+                ) {
+                    saveState();
+                }
             }
         };
 
-        // On page load, restore any saved form state
+    // First thing, see if there is a draft I should reload
         restoreState();
 
+        // Keep any server-provided genres in sync with localStorage
         if (Array.isArray(prefilledGenres) && prefilledGenres.length) {
             let updated = false;
             document.querySelectorAll(genreCheckboxSelector).forEach(
@@ -1108,14 +1223,16 @@
 
         // Save form state on any input or change, clear on submit
         if (createForm) {
+            // Anytime I change something, stash it straight away
             createForm.addEventListener("input", saveState);
             createForm.addEventListener("change", saveState);
             createForm.addEventListener("submit", () => {
+                // Once the form goes through I want a clean start next time
                 localStorage.removeItem(STORAGE_KEY);
             });
         }
 
-        // Add new artist row and save state
+        // Let me add another artist while keeping the draft safe
         if (addMoreArtistsBtn && artistRows) {
             addMoreArtistsBtn.addEventListener("click", function () {
                 artistRows.appendChild(
@@ -1125,17 +1242,18 @@
             });
         }
 
-        // Add new ticket row and save state
+        // Same deal for ticket tiers so everything stays together
         if (addMoreTicketBtn && ticketRows) {
             addMoreTicketBtn.addEventListener("click", function () {
-                ticketRows.appendChild(
-                    cloneTemplateRow(ticketRows.children[0])
-                );
-                saveState();
+                const fragment = createTicketBlock();
+                if (fragment.childNodes.length) {
+                    ticketRows.appendChild(fragment);
+                    saveState();
+                }
             });
         }
 
-        // On genre form submit, update hidden field and save state
+        // When I add a genre, record the selection and keep the draft in sync
         if (addGenreForm && selectedGenresField) {
             addGenreForm.addEventListener("submit", () => {
                 const checkedValues = Array.from(
