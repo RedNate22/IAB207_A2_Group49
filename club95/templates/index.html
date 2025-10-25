@@ -5,7 +5,12 @@
     <section class="search-section">
         <div class="container" id="search-container">
             <!-- Search bar -->
-            <form class="d-flex" role="search" action="{{ url_for('home_bp.search') }}" method="get">
+            <form
+                class="d-flex"
+                role="search"
+                action="{{ url_for('home_bp.search') }}"
+                method="get"
+            >
                 <input
                     class="form-control me-2"
                     type="search"
@@ -325,11 +330,11 @@
 
     <!-- Events List Section -->
     <!-- Events are listed inside 'windows' that include all
-                 their promotional material. 3 event windows per row on large viewports. -->
+        their promotional material. 3 event windows per row on large viewports. -->
     <section class="events-list-page">
         <!-- Events Page Container -->
         <div class="container" id="events-page-container">
-
+            <div class="row align-items-center">
     {# Flash message section #}
     {% with messages = get_flashed_messages(category_filter=['login_success']) %}
         {% if messages %}
@@ -350,59 +355,108 @@
             </div>
         {% endif %}
     {% endwith %}
-         <!-- TODO: Ana - Add dynamic cards using database stuff.-->
-         <!-- Ana: dynamic event cards rendered from database -->
-            {% for event in events %}
-                <div class="window" id="event-{{ event.id }}">
-                    <div class="title-bar">
-                        <span class="window-title">{{ event.title }}</span>
-                        <div class="window-controls">
-                            <button type="button" class="btn" href="#!">_</button>
-                            <button type="button" class="btn" href="#!">☐</button>
-                            <button type="button" class="btn" id="closebtn" href="#!">X</button>
+            <div class="row align-items-center">
+                {% for event in events %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event-{{ event.id }}">
+                        <div class="title-bar">
+                            <span class="window-title">{{ event.title }}</span>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
+                                alt="{{ event.title }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                <span class="badge" id="event-type"
+                                    >{{ event.type }}</span
+                                >
+                                <span
+                                    class="badge"
+                                    id="event-status-{{ event.status|lower|replace(' ', '-') }}"
+                                >
+                                    {{ event.status }}
+                                </span>
+                            </section>
+                            <!-- prettier-ignore -->
+                            <p class="sub-window-content">
+                                {{ event.description or "Description coming
+                                soon." }}
+                                <br /><br />
+
+                                {# Get lowest priced ticket #}
+                                {% set min_ticket = event.tickets|min(attribute='price') if event.tickets else None %}
+                                <strong>> PRICE:</strong> 
+                                {% if min_ticket %}
+                                    {% if min_ticket.price == 0 %}
+                                        Free Entry
+                                    {% else %}
+                                        Starting at ${{ '%.2f'|format(min_ticket.price) }}
+                                    {% endif %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                                <br />
+
+                                {# Get artists #}
+                                <strong>> ARTIST LINEUP:</strong>
+                                {% if event.artists %}
+                                    {{ event.artists | map(attribute='artistName') | join(', ') }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
+                                <br />
+
+                                <strong>> VENUE:</strong> {{ event.venue.venueName if event.venue else "TBA" }}
+                                <br />
+
+                                <strong>> LOCATION:</strong> {{ event.location or "TBA" }}
+                                <br />
+                                
+                                <strong>> DATE:</strong> {{ event.date or "TBA" }}
+                                <br />
+
+                                <strong>> TIME:</strong> {{ event.start_time or
+                                "TBA" }}{% if event.end_time %}-{{
+                                event.end_time }}{% endif %}<br />
+                                <strong>> GENRES:</strong>
+                                {% if event.genres %} {% for g in event.genres
+                                %}
+                                <a href="#!">{{ g.genreType }}</a>{% if not
+                                loop.last %}, {% endif %} {% endfor %} {% else
+                                %}
+                                <span>N/A</span>
+                                {% endif %}
+                            </p>
+                            <a
+                                class="btn"
+                                id="view-details-btn"
+                                href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}"
+                            >
+                                View details
+                            </a>
                         </div>
                     </div>
-
-                    <div class="sub-window">
-                        <img
-                            src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
-                            alt="{{ event.title }}"
-                            class="window-img-top img-fit"
-                        />
-                        <section class="window-tags">
-                            <span class="badge" id="event-type">{{ event.type }}</span>
-                            <span class="badge" id="event-status-{{ event.status|lower|replace(' ', '-') }}">
-                                {{ event.status }}
-                            </span>
-                        </section>
-                        <p class="sub-window-content">
-                            {{ event.description or "Description coming soon." }}
-                            <br /><br />
-                            <strong>> VENUE:</strong> {{ event.location or "TBA" }}<br />
-                            <strong>> DATE:</strong> {{ event.date or "TBA" }}<br />
-                            <strong>> TIME:</strong> {{ event.start_time or "TBA" }}{% if event.end_time %}-{{ event.end_time }}{% endif %}<br />
-                            <strong>> GENRES:</strong>
-                            {% if event.genres %}
-                                {% for g in event.genres %}
-                                    <a href="#!">{{ g.genreType }}</a>{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                <span>N/A</span>
-                            {% endif %}
-                        </p>
-                        <a
-                            class="btn"
-                            id="view-details-btn"
-                            href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}"
-                        >
-                            View details
-                        </a>
-                    </div>
                 </div>
+            </div>
             {% endfor %}
-
-            <!-- Ana: the static demo grid below is commented out because real events render above -->
-            
 
             <div class="row align-items-center">
                 <!-- Event window 1 -->
@@ -413,11 +467,22 @@
                                 >DJ Spreadsheet Live</span
                             >
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">_</button>
-                                <button type="button" class="btn" href="#!">☐</button>
-                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
-                        </div> 
+                        </div>
 
                         <!-- window content -->
                         <div class="sub-window">
@@ -460,11 +525,7 @@
                                 <a href="#!">Techno</a>,
                                 <a href="#!">Synthwave</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
@@ -479,9 +540,20 @@
                                 >Crescent City Players</span
                             >
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">_</button>
-                                <button type="button" class="btn" href="#!">☐</button>
-                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -526,11 +598,7 @@
                                 <a href="#!">Jazz</a>, <a href="#!">Swing</a>,
                                 <a href="#!">Fusion</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
@@ -545,9 +613,20 @@
                                 >Moonlight Resonance</span
                             >
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">_</button>
-                                <button type="button" class="btn" href="#!">☐</button>
-                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -587,11 +666,7 @@
                                 <a href="#!">Classical</a>,
                                 <a href="#!">Contemporary Orchestral</a>,
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
@@ -606,9 +681,20 @@
                                 >The Overwhelming Festival</span
                             >
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">_</button>
-                                <button type="button" class="btn" href="#!">☐</button>
-                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -652,11 +738,7 @@
                                 <a href="#!">Techno</a>,
                                 <a href="#!">Indie</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
@@ -671,9 +753,20 @@
                                 >Optimistic Yeti: Doom Jazz</span
                             >
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">_</button>
-                                <button type="button" class="btn" href="#!">☐</button>
-                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -718,17 +811,13 @@
                                 <a href="#!">Jazz</a>,
                                 <a href="#!">Metal</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
                     </div>
                 </div>
-            
+
                 <!-- Event window 6 -->
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="window" id="event6">
@@ -737,9 +826,20 @@
                                 >Sydney Indie Nights: Local Showcase</span
                             >
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">_</button>
-                                <button type="button" class="btn" href="#!">☐</button>
-                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
+                                >
+                                    X
+                                </button>
                             </div>
                         </div>
 
@@ -782,18 +882,15 @@
                                 <a href="#!">Indie</a>, <a href="#!">Rock</a>,
                                 <a href="#!">Alternative</a>
                             </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="#!"
-                            >
+                            <a class="btn" id="view-details-btn" href="#!">
                                 View details
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
-        
+        </div>
+
         <!-- End of Events Page Container -->
     </section>
     <!-- End of Events List Section -->

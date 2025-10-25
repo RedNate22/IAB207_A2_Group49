@@ -55,7 +55,7 @@ event_genre = db.Table(
     db.Column('genre_id', db.Integer, db.ForeignKey('genres.id'), primary_key=True)
 )
 
-## setting this up to associate events with users in future
+# Event model
 class Event(db.Model):
     # define the name of the table in the database
     __tablename__ = 'events'
@@ -63,11 +63,11 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     genres = db.relationship('Genre', secondary=event_genre, backref='events')
-    type = db.Column(db.String(50), nullable=False)
+    # ! type = db.Column(db.String(50), nullable=False)  # TODO type should be a model
     status = db.Column(db.String(20), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    location = db.Column(db.String(100), nullable=True)
+    location = db.Column(db.String(100), nullable=True)  # ? should this be derived from Venue.location?
     image = db.Column(db.String(200), nullable=True)
 
     start_time = db.Column(db.String(10), nullable=True)
@@ -193,6 +193,7 @@ class Venue(db.Model):
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     venueName = db.Column(db.String(150), unique=True, nullable=False)
+    # ? should Event derive the location from here?
     location = db.Column(db.String(150), nullable=False)
 
     # link venue to events - one to many
@@ -208,9 +209,16 @@ class EventImage(db.Model):
     order_index = db.Column(db.Integer, nullable=True)
 
     event = db.relationship("Event", back_populates="images")
+    
+class Type(db.Model):
+    # define the name of the table in the database
+    __tablename__ = 'type'
+    # define the columns of the table 
+    id = db.Column(db.String, primary_key=True)
+    eventType = db.Column(db.String(15), unique=True, nullable=False)
 
+    # link type to events - one to many
+    events = db.relationship('Event', back_populates='type')
 
-
-
-
-## add additional models if needed here
+    def __repr__(self):
+        return f"<Event {self.eventType}>"
