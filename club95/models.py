@@ -55,7 +55,7 @@ class Event(db.Model):
     status = db.Column(db.String(20), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    location = db.Column(db.String(100), nullable=True)
+    location = db.Column(db.String(100), nullable=True)  # ? should this be derived from Venue.location?
     image = db.Column(db.String(200), nullable=True)
 
     start_time = db.Column(db.String(10), nullable=True)
@@ -176,6 +176,7 @@ class Venue(db.Model):
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     venueName = db.Column(db.String(150), unique=True, nullable=False)
+    # ? should Event derive the location from here?
     location = db.Column(db.String(150), nullable=False)
 
     # link venue to events - one to many
