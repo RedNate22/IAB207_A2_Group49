@@ -1,12 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
-from sqlalchemy import DateTime
-from club95 import db 
+from club95 import db
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
-from .models import Event
-from . import db
+from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist
 import os
 from werkzeug.utils import secure_filename
-from .models import Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist
 from flask_login import current_user, login_required
 from datetime import datetime, date
 
@@ -132,13 +129,15 @@ def createevent():
                 title=form.title.data,
                 description=form.description.data,
                 date=form.date.data.strftime('%Y-%m-%d') if form.date.data else None,
+                type=form.type.data,
                 location=form.location.data,
                 start_time=form.start_time.data.strftime('%H:%M') if form.start_time.data else None,
                 end_time=form.end_time.data.strftime('%H:%M') if form.end_time.data else None,
-                type=form.type.data,
                 status='OPEN',
                 image=image_filename
             )
+
+
 
             # Link the creator if the hidden field was present
             if form.user_id.data:

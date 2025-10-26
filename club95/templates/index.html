@@ -424,10 +424,7 @@
                                 {% endif %}
                                 <br />
 
-                                <strong>> VENUE:</strong> {{ event.venue.venueName if event.venue else "TBA" }}
-                                <br />
-
-                                <strong>> LOCATION:</strong> {{ event.location or "TBA" }}
+                                <strong>> VENUE:</strong> {{ event.location or "TBA" }}
                                 <br />
                                 
                                 <strong>> DATE:</strong> {{ event.date or "TBA" }}

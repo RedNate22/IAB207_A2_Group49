@@ -1,3 +1,4 @@
+# import flask - from 'package' import 'Class'
 from flask import Flask, session 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
@@ -19,21 +20,21 @@ def create_app():
    app.secret_key = 'group_49'
 
    ##Setting up sessions testing as per week 5 tutorial.
-   @app.route('/login')
-   def set_session():
-      session['username'] = 'Bryn'
-      return 'Session data set'
+   # @app.route('/login')
+   # def set_session():
+   #    session['username'] = 'Bryn'
+   #    return 'Session data set'
    
-   @app.route('/getsession')
-   def get_session():
-      if 'username' in session:
-         return session['username']
-      return 'no user logged in'
+   # @app.route('/getsession')
+   # def get_session():
+   #    if 'username' in session:
+   #       return session['username']
+   #    return 'no user logged in'
    
-   @app.route('/logout')
-   def clear_session():
-      session.pop('username', None)
-      return 'session cleared'
+   # @app.route('/logout')
+   # def clear_session():
+   #    session.pop('username', None)
+   #    return 'session cleared'
    ## end of session testing segement as per week 5 tutorial
 
    # ensure the instance folder exists for database storage
@@ -102,17 +103,7 @@ def populate_database(app: Flask) -> None:
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
-      from .models import User, Event, Genre, Artist, Ticket, Venue, Type
-
-      # Helper methods
-      def get_or_create_type(name: str) -> Type:
-         """Return an existing event type by name or create a new one if not found."""
-         type = Type.query.filter_by(eventType=name).first()
-         if not type:
-            type = Type(eventType=name)
-            db.sessionadd(type)
-            db.session.flush()
-         return type
+      from .models import User, Event, Genre, Artist, Ticket, Venue
 
       def get_or_create_genres(name: str) -> Genre:
          """Return an existing genre by name or create a new one if not found."""
@@ -140,6 +131,21 @@ def populate_database(app: Flask) -> None:
             db.session.add(venue)
             db.session.flush()
          return venue
+
+      def normalise_unique(values):
+         """Strip empty strings and return unique names preserving order."""
+         seen = set()
+         results = []
+         for value in values or []:
+            name = (value or "").strip()
+            if not name:
+               continue
+            key = name.lower()
+            if key in seen:
+               continue
+            seen.add(key)
+            results.append(name)
+         return results
       
       # Create base user for testing and to attach to seeded events
       sample_email = "sample@club95.com"
@@ -149,7 +155,8 @@ def populate_database(app: Flask) -> None:
          user = User(
             email=sample_email, 
             password=generate_password_hash("samplepassword", method='scrypt', salt_length=16),
-            name="Sample User"
+            firstName="John",
+            lastName="Doe"
          )
 
          db.session.add(user)
@@ -282,9 +289,11 @@ def populate_database(app: Flask) -> None:
          event = Event.query.filter_by(title=seed["title"]).first()
 
          if not event:
+            genre_names = normalise_unique(seed.get("genres", []))
+            artist_names = normalise_unique(seed.get("artists", []))
             event = Event(
                title=seed["title"],
-               type=get_or_create_type(seed["type"]),
+               type=seed["type"],
                status=seed["status"],
                date=seed["date"],
                description=seed["description"],
@@ -294,14 +303,15 @@ def populate_database(app: Flask) -> None:
                image=seed["image"],
                user=user,
                venue=venue,
-               genres=[get_or_create_genres(n) for n in seed["genres"]],
-               artists=[get_or_create_artists(n) for n in seed["artists"]]
+               genres=[get_or_create_genres(n) for n in genre_names],
+               artists=[get_or_create_artists(n) for n in artist_names]
             )
 
             # attach tickets
             event.tickets = [
                Ticket(ticketTier=t["tier"], price=float(t["price"]), availability=int(t["qty"]))
-               for t in seed["tickets"]  # cycle through every ticket defined in seed
+               for t in seed["tickets"]
+               if (t.get("tier") or "").strip()
             ]
 
             db.session.add(event)
@@ -360,4 +370,4 @@ def populate_database(app: Flask) -> None:
       #    db.session.add(new_event)  # stage event(s)
       #    db.session.flush()         # update/insert etc.
 
-      db.session.commit()        # commit to db
+      db.session.commit()        # commit to dbng static images and dummy data provided by Nate

@@ -63,8 +63,8 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     genres = db.relationship('Genre', secondary=event_genre, backref='events')
-    # ! type = db.Column(db.String(50), nullable=False)  # TODO type should be a model
     status = db.Column(db.String(20), nullable=False)
+    type = db.Column(db.String(50), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=True)
     location = db.Column(db.String(100), nullable=True)  # ? should this be derived from Venue.location?
@@ -85,7 +85,11 @@ class Event(db.Model):
     comments = db.relationship('Comment', backref='event')
     # many-to-many relationship with artists
     artist_links = db.relationship('EventArtist', back_populates='event', cascade='all, delete-orphan')
-    artists = association_proxy('artist_links', 'artist')
+    artists = association_proxy(
+        'artist_links',
+        'artist',
+        creator=lambda artist: EventArtist(artist=artist)
+    )
 
     def __repr__(self):
         return f"<Event {self.title}>"
@@ -147,7 +151,7 @@ class Ticket(db.Model):
         'Order',
         secondary='order_ticket',
         back_populates='tickets',
-        overlaps='order_links,line_items,order'
+        overlaps='order_links,line_items,order,ticket'
     )
     order_links = db.relationship(
         'OrderTicket',
@@ -180,7 +184,11 @@ class Artist(db.Model):
     artistName = db.Column(db.String(150), unique=True, nullable=False)
     # many-to-many relationship with events
     event_links = db.relationship('EventArtist', back_populates='artist', cascade='all, delete-orphan')
-    events = association_proxy('event_links', 'event')
+    events = association_proxy(
+        'event_links',
+        'event',
+        creator=lambda event: EventArtist(event=event)
+    )
     # link artist to genre - one to many
     genres = db.relationship('Genre', backref='artist')
 
@@ -209,16 +217,4 @@ class EventImage(db.Model):
     order_index = db.Column(db.Integer, nullable=True)
 
     event = db.relationship("Event", back_populates="images")
-    
-class Type(db.Model):
-    # define the name of the table in the database
-    __tablename__ = 'type'
-    # define the columns of the table 
-    id = db.Column(db.String, primary_key=True)
-    eventType = db.Column(db.String(15), unique=True, nullable=False)
 
-    # link type to events - one to many
-    events = db.relationship('Event', back_populates='type')
-
-    def __repr__(self):
-        return f"<Event {self.eventType}>"

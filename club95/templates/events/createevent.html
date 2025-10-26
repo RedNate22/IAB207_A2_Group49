@@ -888,7 +888,8 @@
 <script>
     // Everything here keeps the create event form tidy and remembers what I type
     document.addEventListener("DOMContentLoaded", () => {
-        const STORAGE_KEY = "createEventFormState";
+    const STORAGE_KEY = "createEventFormState";
+    const PRESERVE_KEY = "createEventFormPreserve";
     const prefilledGenres = JSON.parse('{{ prefilled_genres|tojson|safe }}');
         // Grab the bits of the page I need to poke later
         const createForm = document.getElementById("create-event-form");
@@ -910,6 +911,11 @@
 
         // Figure out if this is a fresh visit so I can bin any old draft
         const shouldClearState = () => {
+            const preserveStateFlag = sessionStorage.getItem(PRESERVE_KEY);
+            if (preserveStateFlag === "1") {
+                sessionStorage.removeItem(PRESERVE_KEY);
+                return false;
+            }
             if (!window.performance) {
                 return true;
             }
@@ -1256,6 +1262,7 @@
         // When I add a genre, record the selection and keep the draft in sync
         if (addGenreForm && selectedGenresField) {
             addGenreForm.addEventListener("submit", () => {
+                sessionStorage.setItem(PRESERVE_KEY, "1");
                 const checkedValues = Array.from(
                     document.querySelectorAll(genreCheckboxSelector)
                 )
