@@ -81,12 +81,12 @@ class Event(db.Model):
     # Fetch name or location of tied venue
     @property
     def location(self):
-        # * lets you use 'event.location'
+        # * lets you use 'event.location' to query event location
         return self.venue.location if self.venue else None
 
     @property
     def venueName(self):
-        # * lets you use 'event.venueName'
+        # * lets you use 'event.venueName' to query venue name
         return self.venue.venueName if self.venue else None
 
     # link event to event type
@@ -94,10 +94,38 @@ class Event(db.Model):
     event_type = db.relationship('EventType', back_populates='events')
 
     # Fetch type of event
-    # * event.type
     @property
-    def type(self):
+    def eventtype(self):
+        # * lets you use 'event.type' to query the event type
         return self.event_type.eventType if self.event_type else None
+
+    # Allow setting an Event's type via: Event(type="DJ Set") or Event(type=EventType(...))
+    @eventtype.setter
+    def type(self, value):
+        # Treat None or an empty/whitespace only string as None
+        if value is None or str(value).strip() == "":
+            self.event_type = None 
+            return
+
+        # If an EventType instance is provided, assign it directly
+        if isinstance(value, EventType):
+            self.event_type = value
+            return
+
+        # Otherwise, treat the input as the name of the event type
+        event_type_name = str(value).strip()
+
+        # Try to find an existing EventType with this name
+        existing_event_type = EventType.query.filter_by(eventType=event_type_name).first()
+
+        # If none exists, create and stage a new EventType row
+        if not existing_event_type:
+            existing_event_type = EventType(eventType=event_type_name)
+            db.session.add(existing_event_type)
+            db.session.flush()  # Assigns an ID without committing the transaction
+
+        # Link this Event to the found/created EventType
+        self.event_type = existing_event_type
 
     # link event to tickets - one to many
     tickets = db.relationship('Ticket', backref='event')

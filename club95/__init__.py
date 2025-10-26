@@ -108,10 +108,15 @@ def populate_database(app: Flask) -> None:
       # Helper methods
       def get_or_create_type(name: str) -> EventType:
          """Return an existing event type by name or create a new one if not found."""
-         event_type = EventType.query.filter_by(eventType=name).first()
+         # Remove trailing/leading whitespace 
+         cleaned = (name or "").strip()
+         if not cleaned:
+            return None
+         
+         event_type = EventType.query.filter_by(eventType=cleaned).first()
          if not event_type:
-            type = EventType(eventType=name)
-            db.session.add(type)
+            event_type = EventType(eventType=cleaned)
+            db.session.add(event_type)
             db.session.flush()
          return event_type
 
