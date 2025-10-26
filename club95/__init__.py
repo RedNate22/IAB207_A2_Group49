@@ -121,7 +121,7 @@ def populate_database(app: Flask) -> None:
          return event_type
 
       # Declare base event types
-      event_types = [
+      base_event_types = [
          "Live Concert",
          "Music Festival",
          "Orchestra",
@@ -130,8 +130,8 @@ def populate_database(app: Flask) -> None:
          ]
 
       # Add base types to db
-      for name in event_types:
-         get_or_create_type(name)
+      for typeName in base_event_types:
+         get_or_create_type(typeName)
 
       def get_or_create_genres(name: str) -> Genre:
          """Return an existing genre by name or create a new one if not found."""
@@ -141,6 +141,31 @@ def populate_database(app: Flask) -> None:
             db.session.add(genre)
             db.session.flush()
          return genre
+
+      # Declare base genres 
+      base_event_genres = [
+         "Alternative",
+         "Blues",
+         "Classical",
+         "Contemporary Orchestral",
+         "Electronic",
+         "Experimental",
+         "Funk",
+         "Fusion",
+         "Indie",
+         "Jazz",
+         "Metal",
+         "Pop",
+         "Punk",
+         "Rock",
+         "Swing",
+         "Synthwave",
+         "Techno",
+         ]
+
+      # Add base genres to db
+      for genreName in base_event_genres:
+         get_or_create_genres(genreName)
 
       def get_or_create_artists(name: str) -> Artist:
          """Return an existing artist by name or create a new one if not found."""
@@ -201,7 +226,7 @@ def populate_database(app: Flask) -> None:
             "title": "DJ Spreadsheet Live",
             "type": "DJ Set",
             "status": "CANCELLED",
-            "date": "23/10/25",
+            "date": "15/03/2025",
             "description": "Watch DJ Spreadsheet seamlessly mix quarterly reports into smooth beats. Free Wi-Fi included.",
             "start_time": "09:00",
             "end_time": "17:00",
@@ -218,7 +243,7 @@ def populate_database(app: Flask) -> None:
             "title": "Crescent City Players",
             "type": "Live Concert",
             "status": "OPEN",
-            "date": "30/09/25",
+            "date": "29/12/2025",
             "description": 
                "An intimate evening of smooth jazz and improvisation, featuring local hit talent, " + 
                "Crescent City Players, joined by The Walters and Mojo Webb. Enjoy classic standards and modern tunes " + 
@@ -238,73 +263,85 @@ def populate_database(app: Flask) -> None:
             ], 
          },
          # Moonlight Resonance
-         # {
-         #    "title": "Moonlight Resonance",
-         #    "type": "Orchestra",
-         #    "status": "",
-         #    "date": "",
-         #    "description": "",
-         #    "start_time": "",
-         #    "end_time": "",
-         #    "image": "",
-         #    "venue": {"name": "", "location": ""},
-         #    "genres": ["", "", ""],
-         #    "artists": [""],
-         #    "tickets": [
-         #       {"tier": "", "price": 0.00, "qty": 0}
-         #    ], 
-         # },
+         {
+            "title": "Moonlight Resonance",
+            "type": "Orchestra",
+            "status": "OPEN",
+            "date": "15/11/25",
+            "description": 
+               "A riverside orchestral showcase blending timeless symphonies " +
+               "with modern composition.",
+            "start_time": "19:00",
+            "end_time": "20:00",
+            "image": "orchestra.jpg",
+            "venue": {"name": "Riverside Pavilion", "location": "Brisbane QLD"},
+            "genres": ["Classical", "Contemporary", "Orchestral"],
+            "artists": ["Commonwealth Orchestra"],
+            "tickets": [
+               {"tier": "Standard", "price": 32.00, "qty": 130}
+            ], 
+         },
          # The Overwhelming Festival
-         # {
-         #    "title": "",
-         #    "type": "",
-         #    "status": "",
-         #    "date": "",
-         #    "description": "",
-         #    "start_time": "",
-         #    "end_time": "",
-         #    "image": "",
-         #    "venue": {"name": "", "location": ""},
-         #    "genres": ["", "", ""],
-         #    "artists": [""],
-         #    "tickets": [
-         #       {"tier": "", "price": 0.00, "qty": 0}
-         #    ], 
-         # },
+         {
+            "title": "The Overwhelming Festival",
+            "type": "Music Festival",
+            "status": "OPEN",
+            "date": "20/01/2026",
+            "description": 
+               "Three stages, 600 bands, 30 taco trucks, 1 working portaloo. " +
+               "An afternoon to remember (or forget).",
+            "start_time": "12:00",
+            "end_time": "24:00",
+            "image": "festival.jpg",
+            "venue": {"name": "Abandoned Bunnings Warehouse", "location": "Perth"},
+            "genres": ["Pop", "Electronic", "Techno", "Indie"],
+            "artists": ["Do I really need to list all 600?"],
+            "tickets": [
+               {"tier": "Portaloo Enjoyer", "price": 5.05, "qty": 5000},
+               {"tier": "Taco Tuesday (1 free taco!)", "price": 12.05, "qty": 100}
+            ], 
+         },
          # Optimistic Yeti: Doom Jazz
-         # {
-         #    "title": "",
-         #    "type": "",
-         #    "status": "",
-         #    "date": "",
-         #    "description": "",
-         #    "start_time": "",
-         #    "end_time": "",
-         #    "image": "",
-         #    "venue": {"name": "", "location": ""},
-         #    "genres": ["", "", ""],
-         #    "artists": [""],
-         #    "tickets": [
-         #       {"tier": "", "price": 0.00, "qty": 0}
-         #    ], 
-         # },
+         {
+            "title": "Optimistic Yeti: Doom Jazz",
+            "type": "Solo Artist Performance",
+            "status": "SOLD OUT",
+            "date": "21/06/2026",
+            "description": 
+               "The elusive Optimistic Yeti descends from the Blue Mountains once a year to " +
+               "perform a doom jazz set that critics describe as \"The kind of music you hear " +
+               "right before a haunted elevator drops.\" ",
+            "start_time": "00:00",
+            "end_time": "24:00",
+            "image": "yeti.jpg",
+            "venue": {"name": "Aisle 12 (frozen foods)", "location": "24/7 IGA"},
+            "genres": ["Experimental", "Jazz", "Metal"],
+            "artists": ["Optimistic Yeti"],
+            "tickets": [
+               {"tier": "Yeti fan", "price": 999.999, "qty": 0}
+            ], 
+         },
          # Sydney Indie Nights: Local Showcase
-         # {
-         #    "title": "",
-         #    "type": "",
-         #    "status": "",
-         #    "date": "",
-         #    "description": "",
-         #    "start_time": "",
-         #    "end_time": "",
-         #    "image": "",
-         #    "venue": {"name": "", "location": ""},
-         #    "genres": ["", "", ""],
-         #    "artists": [""],
-         #    "tickets": [
-         #       {"tier": "", "price": 0.00, "qty": 0}
-         #    ], 
-         # },
+         {
+            "title": "Sydney Indie Nights: Local Showcase",
+            "type": "Live Concert",
+            "status": "INACTIVE",
+            "date": "05/01/2025",
+            "description": "A lineup of Sydney's top emerging indie and alternative bands, " +
+            "offerning an energetic night of original music and live performances.",
+            "start_time": "20:00",
+            "end_time": "23:00",
+            "image": "indie-band.jpg",
+            "venue": {"name": "The Enmore Theatre", "location": "NSW"},
+            "genres": ["Indie", "Rock", "Alternative"],
+            "artists": [
+               "Finlay's Starlights", "Sour Tart", "Dead Gear", "Lead Donkeys",
+               "Bitter Sweet's", "and more!"],
+            "tickets": [
+               {"tier": "Basic", "price": 10.50, "qty": 100},
+               {"tier": "VIP", "price": 90.50, "qty": 5},
+            ], 
+         },
       ]
 
       # Seed events into db
