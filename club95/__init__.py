@@ -99,7 +99,7 @@ def _ensure_database(app: Flask) -> None:
 
 # Populate db with sample events
 def populate_database(app: Flask) -> None:
-   """Seed multiple sample events, artists, genres, venues, and tickets."""
+   """Seed database with a sample user, events, artists, genres, venues, tickets and event types."""
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
