@@ -2,8 +2,6 @@ from flask_login import UserMixin
 from . import db
 from sqlalchemy.ext.associationproxy import association_proxy
 
-
-
 ## define database models, in this case User is inheriting functionality from UserMixin
 ## UserMixin provides default implementations for the - 
 ## methods that Flask-Login expects user objects to have.
@@ -36,7 +34,6 @@ class User(db.Model, UserMixin):
         full_name = f"{first} {last}".strip()
         return f"<User {full_name}>"
 
-
 # Association table for many-to-many relationship between Event and Artist
 class EventArtist(db.Model):
     __tablename__ = 'event_artist'
@@ -64,10 +61,8 @@ class Event(db.Model):
     title = db.Column(db.String(100), nullable=False)
     genres = db.relationship('Genre', secondary=event_genre, backref='events')
     status = db.Column(db.String(20), nullable=False)
-    type = db.Column(db.String(50), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    location = db.Column(db.String(100), nullable=True)  # ? should this be derived from Venue.location?
     image = db.Column(db.String(200), nullable=True)
 
     start_time = db.Column(db.String(10), nullable=True)
@@ -78,11 +73,38 @@ class Event(db.Model):
 
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    
+    # link event to venue - many to one
+    # * Event location is the location of the venue
     venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'))
+
+    # Fetch name or location of tied venue
+    @property
+    def location(self):
+        # * lets you use 'event.location'
+        return self.venue.location if self.venue else None
+
+    @property
+    def venueName(self):
+        # * lets you use 'event.venueName'
+        return self.venue.venueName if self.venue else None
+
+    # link event to event type
+    event_type_id = db.Column(db.Integer, db.ForeignKey('event_types.id'), nullable=False)
+    event_type = db.relationship('EventType', back_populates='events')
+
+    # Fetch type of event
+    # * event.type
+    @property
+    def type(self):
+        return self.event_type.eventType if self.event_type else None
+
     # link event to tickets - one to many
     tickets = db.relationship('Ticket', backref='event')
+
     # relationship to comments - one to many
     comments = db.relationship('Comment', backref='event')
+
     # many-to-many relationship with artists
     artist_links = db.relationship('EventArtist', back_populates='event', cascade='all, delete-orphan')
     artists = association_proxy(
@@ -93,6 +115,19 @@ class Event(db.Model):
 
     def __repr__(self):
         return f"<Event {self.title}>"
+
+class EventType(db.Model):
+    # define the name of the table in the database
+    __tablename__ = 'event_types'
+    # define the columns of the table 
+    id = db.Column(db.Integer, primary_key=True)
+    eventType = db.Column(db.String(50), unique=True, nullable=False)
+
+    # link type to events - one to many
+    events = db.relationship('Event', back_populates='event_type')
+
+    def __repr__(self):
+        return f"<EventType {self.eventType}>"
 
 class Comment(db.Model):
     # define the name of the table in the database
@@ -201,7 +236,6 @@ class Venue(db.Model):
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
     venueName = db.Column(db.String(150), unique=True, nullable=False)
-    # ? should Event derive the location from here?
     location = db.Column(db.String(150), nullable=False)
 
     # link venue to events - one to many
@@ -209,6 +243,7 @@ class Venue(db.Model):
 
     def __repr__(self):
         return f"<Venue {self.venueName}>"
+
 class EventImage(db.Model):
     __tablename__ = "event_images"
     id = db.Column(db.Integer, primary_key=True)

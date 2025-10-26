@@ -103,7 +103,30 @@ def populate_database(app: Flask) -> None:
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
-      from .models import User, Event, Genre, Artist, Ticket, Venue
+      from .models import User, Event, Genre, Artist, Ticket, Venue, EventType
+
+      # Helper methods
+      def get_or_create_type(name: str) -> EventType:
+         """Return an existing event type by name or create a new one if not found."""
+         event_type = EventType.query.filter_by(eventType=name).first()
+         if not event_type:
+            type = EventType(eventType=name)
+            db.session.add(type)
+            db.session.flush()
+         return event_type
+
+      # Declare base event types
+      event_types = [
+         "Live Concert",
+         "Music Festival",
+         "Orchestra",
+         "DJ Set",
+         "Solo Artist Performance",
+         ]
+
+      # Add base types to db
+      for name in event_types:
+         get_or_create_type(name)
 
       def get_or_create_genres(name: str) -> Genre:
          """Return an existing genre by name or create a new one if not found."""
@@ -175,7 +198,6 @@ def populate_database(app: Flask) -> None:
             "status": "CANCELLED",
             "date": "23/10/25",
             "description": "Watch DJ Spreadsheet seamlessly mix quarterly reports into smooth beats. Free Wi-Fi included.",
-            "location": "Brisbane City",
             "start_time": "09:00",
             "end_time": "17:00",
             "image": "dj-1.jpg",
@@ -196,7 +218,6 @@ def populate_database(app: Flask) -> None:
                "An intimate evening of smooth jazz and improvisation, featuring local hit talent, " + 
                "Crescent City Players, joined by The Walters and Mojo Webb. Enjoy classic standards and modern tunes " + 
                "in a cozy, relaxed setting",
-            "location": "92 Brisbane Terrace Goodna, QLD 4300",
             "start_time": "13:00",
             "end_time": "15:00",
             "image": "crescent-city-players-poster-horizontal.jpg",
@@ -212,23 +233,22 @@ def populate_database(app: Flask) -> None:
             ], 
          },
          # Moonlight Resonance
-         {
-            "title": "Moonlight Resonance",
-            "type": "Orchestra",
-            "status": "",
-            "date": "",
-            "description": "",
-            "location": "",
-            "start_time": "",
-            "end_time": "",
-            "image": "",
-            "venue": {"name": "", "location": ""},
-            "genres": ["", "", ""],
-            "artists": [""],
-            "tickets": [
-               {"tier": "", "price": 0.00, "qty": 0}
-            ], 
-         },
+         # {
+         #    "title": "Moonlight Resonance",
+         #    "type": "Orchestra",
+         #    "status": "",
+         #    "date": "",
+         #    "description": "",
+         #    "start_time": "",
+         #    "end_time": "",
+         #    "image": "",
+         #    "venue": {"name": "", "location": ""},
+         #    "genres": ["", "", ""],
+         #    "artists": [""],
+         #    "tickets": [
+         #       {"tier": "", "price": 0.00, "qty": 0}
+         #    ], 
+         # },
          # The Overwhelming Festival
          # {
          #    "title": "",
@@ -236,7 +256,6 @@ def populate_database(app: Flask) -> None:
          #    "status": "",
          #    "date": "",
          #    "description": "",
-         #    "location": "",
          #    "start_time": "",
          #    "end_time": "",
          #    "image": "",
@@ -254,7 +273,6 @@ def populate_database(app: Flask) -> None:
          #    "status": "",
          #    "date": "",
          #    "description": "",
-         #    "location": "",
          #    "start_time": "",
          #    "end_time": "",
          #    "image": "",
@@ -272,7 +290,6 @@ def populate_database(app: Flask) -> None:
          #    "status": "",
          #    "date": "",
          #    "description": "",
-         #    "location": "",
          #    "start_time": "",
          #    "end_time": "",
          #    "image": "",
@@ -295,18 +312,19 @@ def populate_database(app: Flask) -> None:
          if not event:
             genre_names = normalise_unique(seed.get("genres", []))
             artist_names = normalise_unique(seed.get("artists", []))
+            event_type_name = (seed.get("type") or "").strip()
+
             event = Event(
                title=seed["title"],
-               type=seed["type"],
                status=seed["status"],
                date=seed["date"],
                description=seed["description"],
-               location=seed["location"],
                start_time=seed["start_time"],
                end_time=seed["end_time"],
                image=seed["image"],
                user=user,
                venue=venue,
+               event_type=get_or_create_type(event_type_name),
                genres=[get_or_create_genres(n) for n in genre_names],
                artists=[get_or_create_artists(n) for n in artist_names]
             )
