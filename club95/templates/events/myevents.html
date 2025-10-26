@@ -1,400 +1,425 @@
-{% extends "base.html" %} {% block body %}
+{% extends "base.html" %}
+{% from "partials/search_filters.html" import render_search_filters %}
+{% set status_options = ['OPEN', 'INACTIVE', 'SOLD OUT', 'CANCELLED'] %}
+{% set type_options = ['Live Concert', 'Music Festival', 'Orchestra', 'DJ Set', 'Solo Artist Performance'] %}
+{% block body %}
 
 <div class="main-window">
-    
+    {{ render_search_filters(search_term=search_term|default(''), search_url='events_bp.myevents') }}
 
-                <!-- TODO: Ana - Event Status filter button -->
-                <!-- This section adds a dropdown menu that lets users filter events based on their current status (e.g. Open, Sold Out, Cancelled). -->
-                <div class="filter-btn-wrapper">
-                    <button
-                        class="btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        type="submit"
-                        id="event-status-filter-btn"
-                    >
-                        Status
-                    </button>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        id="dropdown-menu"
-                    >
-                        <!-- Each checkbox below represents a possible event status users can filter by -->
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="event-checkbox"
-                                value=""
-                            />
-                            <span class="dropdown-text"> Open </span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="event-checkbox"
-                                value=""
-                            />
-                            <span class="dropdown-text"> Inactive </span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="event-checkbox"
-                                value=""
-                            />
-                            <span class="dropdown-text"> Sold Out </span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="event-checkbox"
-                                value=""
-                            />
-                            <span class="dropdown-text"> Cancelled </span>
-                        </li>
-                    </ul>
-                </div>
-                <!-- End of Event Status filter button -->
-            </div>
-            <!-- End of btn group -->
-        </div>
-        <!-- End of search container -->
-    </section>
-    <!-- End of Search Section -->
+    <section class="events-list-page">
+        <div class="container" id="events-page-container">
 
-    <!-- TODO: Nate please fix - My Tickets Section -->
-    <section class="my-tickets-page">
-        <!-- Events Page Container -->
-        <div class="container" id="my-tickets-page-container">
-            <div class="row justify-content-center gy-4">
-                {% for order in orders %} {% set primary_item =
-                order.line_items[0] if order.line_items else None %} {% set
-                event = primary_item.ticket.event if primary_item and
-                primary_item.ticket else None %}
-                <div class="col-12 col-lg-8 d-flex">
-                    <div class="window" id="order-{{ order.id }}">
+            {% with messages = get_flashed_messages(category_filter=['event_update_success']) %}
+                {% if messages %}
+                    <div class="alert alert-info mt-4" role="alert">
+                        {% for message in messages %}
+                            <span>{{ message }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="row align-items-start gy-4">
+                {% for event in events %}
+                <div class="col-sm-12 col-md-6 col-lg-4 event-card-column">
+                    <div class="window event-card" id="event-{{ event.id }}">
                         <div class="title-bar">
-                            <span class="window-title">
-                                (ORDER ID: #{{ '%08d' % order.id }}) {{
-                                event.title if event else 'Event Details' }}
-                            </span>
+                            <span class="window-title">{{ event.title }}</span>
                             <div class="window-controls">
-                                <button type="button" class="btn" href="#!">
-                                    _
-                                </button>
-                                <button type="button" class="btn" href="#!">
-                                    ☐
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn"
-                                    id="closebtn"
-                                    href="#!"
-                                >
-                                    X
-                                </button>
+                                <button type="button" class="btn" href="#!">_</button>
+                                <button type="button" class="btn" href="#!">☐</button>
+                                <button type="button" class="btn" id="closebtn" href="#!">X</button>
                             </div>
                         </div>
-
                         <div class="sub-window">
                             <img
-                                src="{{ url_for('static', filename='img/' ~ event.image) if event and event.image else url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
+                                src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
+                                alt="{{ event.title }}"
                                 class="window-img-top img-fit"
-                                alt="{{ event.title if event else 'Event poster' }}"
                             />
-                            <section class="window-tags">
-                                <span class="badge" id="event-type">
-                                    {{ event.type if event and event.type else
-                                    'Event' }}
-                                </span>
-                                <span class="badge" id="event-status-open">
-                                    {{ event.status if event and event.status
-                                    else 'OPEN' }}
-                                </span>
-                            </section>
-                            <p class="sub-window-content">
-                                <strong>> ORDER DATE:</strong>
-                                {{ order.order_date.strftime('%b %d, %Y') if
-                                order.order_date else 'Pending' }}
-                                <br />
-                                <strong>> PURCHASED TICKET(s):</strong>
-                                <br />
-                                {% for line_item in order.line_items %} {{
-                                line_item.quantity }}x {{
-                                line_item.ticket.ticketTier }} – ${{
-                                '%.2f'|format(line_item.price_at_purchase) }}
-                                <br />
-                                {% endfor %}
-                                <br />
-                                <strong>> DESCRIPTION: </strong>
-                                {{ event.description if event and
-                                event.description else 'No description
-                                available.' }}
-                                <br />
-                                <br />
-                                <strong>> ARTIST LINEUP:</strong>
-                                {% if event and event.artist_links %}
-                                    {% for link in event.artist_links %}
-                                        {{ link.artist.artistName }}{% if link.set_time %} ({{ link.set_time }}){% endif %}{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% elif event and event.artists %}
-                                    {% for artist in event.artists %}
-                                        {{ artist.artistName }}{% if not loop.last %}, {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    Not available
-                                {% endif %}
-                                <br />
-                                <strong>> VENUE:</strong>
-                                {{ event.location if event and event.location
-                                else 'TBA' }}
-                                <br />
-                                <strong>> DATE:</strong>
-                                {{ event.date if event and event.date else 'TBA'
-                                }}
-                                <br />
-                                <strong>> TIME:</strong>
-                                {{ event.start_time if event and
-                                event.start_time else 'TBA' }} {% if event and
-                                event.end_time %}-{{ event.end_time }}{% endif
-                                %}
-                                <br />
-                                <strong>> GENRES:</strong>
-                                {% if event and event.genres %} {% for genre in
-                                event.genres %}
-                                <a href="#!">{{ genre.genreType }}</a>{% if not
-                                loop.last %}, {% endif %} {% endfor %} {% else
-                                %}
-                                <span>N/A</span>
-                                {% endif %}
-                            </p>
-                            <a
-                                class="btn"
-                                id="view-details-btn"
-                                href="{{ url_for('events_bp.eventdetails', event_id=event.id) if event else '#!' }}"
-                            >
-                                View details
-                            </a>
+
+                            <div class="event-display">
+                                <section class="window-tags">
+                                    <span class="badge" id="event-type">{{ event.type }}</span>
+                                    <span class="badge" id="event-status-{{ event.status|lower|replace(' ', '-') }}">{{ event.status }}</span>
+                                </section>
+
+                                <p class="sub-window-content">
+                                    {{ event.description or "Description coming soon." }}
+                                    <br /><br />
+
+                                    {% set min_ticket = event.tickets|min(attribute='price') if event.tickets else None %}
+                                    <strong>> PRICE:</strong>
+                                    {% if min_ticket %}
+                                        {% if min_ticket.price == 0 %}
+                                            Free Entry
+                                        {% else %}
+                                            Starting at ${{ '%.2f'|format(min_ticket.price) }}
+                                        {% endif %}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                    <br />
+
+                                    <strong>> ARTIST LINEUP:</strong>
+                                    {% if event.artists %}
+                                        {{ event.artists | map(attribute='artistName') | join(', ') }}
+                                    {% else %}
+                                        TBA
+                                    {% endif %}
+                                    <br />
+
+                                    <strong>> VENUE:</strong> {{ event.location or "TBA" }}
+                                    <br />
+
+                                    <strong>> DATE:</strong> {{ event.date or "TBA" }}
+                                    <br />
+
+                                    <strong>> TIME:</strong> {{ event.start_time or "TBA" }}{% if event.end_time %}-{{ event.end_time }}{% endif %}
+                                    <br />
+
+                                    <strong>> GENRES:</strong>
+                                    {% if event.genres %}
+                                        {% for g in event.genres %}
+                                            <a href="#!">{{ g.genreType }}</a>{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <span>N/A</span>
+                                    {% endif %}
+                                </p>
+
+                                <button type="button" class="btn start-edit-btn" data-event-id="{{ event.id }}">
+                                    Update Event
+                                </button>
+                            </div>
+
+                            <div class="event-edit-form-wrapper d-none">
+                                <div class="image-edit-hint d-none">Click the poster above to upload a new image.</div>
+                                <form class="event-update-form" method="post" action="{{ url_for('events_bp.update_event', event_id=event.id) }}" enctype="multipart/form-data">
+                                    <input type="file" class="event-image-input d-none" name="image" accept="image/*" />
+                                    <div class="mb-3">
+                                        <label class="form-label" for="title-{{ event.id }}">Title</label>
+                                        <input type="text" class="form-control" id="title-{{ event.id }}" name="title" value="{{ event.title or '' }}" required />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="type-{{ event.id }}">Type</label>
+                                        <select class="form-select" id="type-{{ event.id }}" name="type" required>
+                                            {% for type_option in type_options %}
+                                                <option value="{{ type_option }}" {% if event.type == type_option %}selected{% endif %}>{{ type_option }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="status-{{ event.id }}">Status</label>
+                                        <select class="form-select" id="status-{{ event.id }}" name="status" required>
+                                            {% for status_option in status_options %}
+                                                <option value="{{ status_option }}" {% if event.status == status_option %}selected{% endif %}>{{ status_option }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3 genre-toggle-section">
+                                        <span class="form-label d-block mb-2">Genres</span>
+                                        <div class="genre-toggle-group" data-event-id="{{ event.id }}">
+                                            {% for genre in genre_options %}
+                                                {% set toggle_id = 'genre-' ~ event.id ~ '-' ~ loop.index %}
+                                                <input
+                                                    type="checkbox"
+                                                    class="btn-check"
+                                                    id="{{ toggle_id }}"
+                                                    name="genres"
+                                                    value="{{ genre.id }}"
+                                                    {% if genre in event.genres %}checked{% endif %}
+                                                />
+                                                <label class="btn genre-toggle" for="{{ toggle_id }}">
+                                                    {{ genre.genreType }}
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="genre-toggle-actions">
+                                            <button type="button" class="btn add-genre-btn" data-event-id="{{ event.id }}">
+                                                + Add Genre
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label" for="date-{{ event.id }}">Date</label>
+                                            <input type="date" class="form-control" id="date-{{ event.id }}" name="date" value="{{ event.date or '' }}" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label" for="start-{{ event.id }}">Start Time</label>
+                                            <input type="time" class="form-control" id="start-{{ event.id }}" name="start_time" value="{{ event.start_time or '' }}" />
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label" for="end-{{ event.id }}">End Time</label>
+                                            <input type="time" class="form-control" id="end-{{ event.id }}" name="end_time" value="{{ event.end_time or '' }}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label" for="location-{{ event.id }}">Venue / Location</label>
+                                        <input type="text" class="form-control" id="location-{{ event.id }}" name="location" value="{{ event.location or '' }}" />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="description-{{ event.id }}">Description</label>
+                                        <textarea class="form-control" id="description-{{ event.id }}" name="description" rows="4">{{ event.description or '' }}</textarea>
+                                    </div>
+
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        <button type="button" class="btn btn-secondary cancel-edit-btn" data-event-id="{{ event.id }}">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
                 {% else %}
-                <div class="col-12 col-lg-8 d-flex">
-                    <div class="window" id="no-orders-window">
-                        <div class="title-bar">
-                            <span class="window-title">No Orders Yet</span>
-                            <div class="window-controls">
-                                <button type="button" class="btn" href="#!">
-                                    _
-                                </button>
-                                <button type="button" class="btn" href="#!">
-                                    ☐
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn"
-                                    id="closebtn"
-                                    href="#!"
-                                >
-                                    X
-                                </button>
-                            </div>
-                        </div>
+                <div class="col-12">
+                    <div class="window">
                         <div class="sub-window">
-                            <p class="sub-window-content">
-                                Purchase tickets to see them listed here.
-                            </p>
+                            <p class="sub-window-content">{% if search_term %}No terms matched your search.{% else %}You have not created any events yet.{% endif %}</p>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <!-- End of row -->
-
-            <div class="row align-items-start">
-                <!-- Padding -->
-                <div class="col-sm-0 col-md-3"></div>
-
-                <!-- My Ticket 2 -->
-                <div class="col-sm-12 col-md-6">
-                    <div class="window" id="my-ticket-2">
-                        <div class="title-bar">
-                            <span class="window-title"
-                                >(ORDER ID: #5109751) The Overwhelming
-                                Festival</span
-                            >
-                            <div class="window-controls">
-                                <button type="button" class="btn" href="#!">
-                                    _
-                                </button>
-                                <button type="button" class="btn" href="#!">
-                                    ☐
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn"
-                                    id="closebtn"
-                                    href="#!"
-                                >
-                                    X
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <img
-                                src="{{ url_for('static', filename='img/festival.jpg') }}"
-                                class="window-img-top img-fit"
-                            />
-                            <section class="window-tags">
-                                <span class="badge" id="event-type"
-                                    >Music Festival</span
-                                >
-                                <span class="badge" id="event-status-open"
-                                    >OPEN</span
-                                >
-                            </section>
-                            <p class="sub-window-content">
-                                <strong>> ORDER DATE:</strong> Jan 1, 2025
-                                <br />
-                                <strong>> PURCHASED TICKET(s):</strong>
-                                <br />
-                                1x Tier 1: $9.00
-                                <br />
-                                <br />
-                                <strong>> DESCRIPTION: </strong>
-                                Three stages, 600 bands, 30 taco trucks, 1
-                                working portaloo. An afternoon to remember (or
-                                forget).
-                                <br />
-                                <br />
-                                <strong>> ARTIST LINEUP:</strong>
-                                Do I really need to list all 600?
-                                <br />
-                                <strong>> VENUE:</strong> Abandoned Bunnings
-                                Warehouse, Perth
-                                <br />
-                                <strong>> DATE:</strong>
-                                Dec 12, 2025
-                                <br />
-                                <strong>> TIME:</strong>
-                                12pm-12am
-                                <br />
-                                <strong>> GENRES:</strong>
-                                <a href="#!">Pop</a>,
-                                <a href="#!">Electronic</a>,
-                                <a href="#!">Techno</a>,
-                                <a href="#!">Indie</a>
-                            </p>
-                            <a class="btn" id="view-details-btn" href="#!">
-                                View details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End of My Ticket 2 -->
-
-                <!-- Padding -->
-                <div class="col-sm-0 col-md-3"></div>
-            </div>
-            <!-- End of row -->
-
-            <div class="row align-items-start">
-                <!-- Padding -->
-                <div class="col-sm-0 col-md-3"></div>
-
-                <!-- My ticket 3 -->
-                <div class="col-sm-12 col-md-6">
-                    <div class="window" id="my-ticket-3">
-                        <div class="title-bar">
-                            <span class="window-title"
-                                >(ORDER ID: #0915719) Optimistic Yeti: Doom
-                                Jazz</span
-                            >
-                            <div class="window-controls">
-                                <button type="button" class="btn" href="#!">
-                                    _
-                                </button>
-                                <button type="button" class="btn" href="#!">
-                                    ☐
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn"
-                                    id="closebtn"
-                                    href="#!"
-                                >
-                                    X
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- window content -->
-                        <div class="sub-window">
-                            <img
-                                src="{{ url_for('static', filename='img/yeti.jpg') }}"
-                                class="window-img-top img-fit"
-                            />
-                            <section class="window-tags">
-                                <span class="badge" id="event-type"
-                                    >Solo Artist Performance</span
-                                >
-                                <span class="badge" id="event-status-sold-out"
-                                    >SOLD OUT</span
-                                >
-                            </section>
-                            <p class="sub-window-content">
-                                <strong>> ORDER DATE:</strong> Sept 7, 2025
-                                <br />
-                                <strong>> PURCHASED TICKET(s):</strong>
-                                <br />
-                                5x Tier 5 (VIP): $109.99
-                                <br />
-                                <br />
-                                <strong>> DESCRIPTION: </strong>
-                                The elusive Optimistic Yeti descends from the
-                                Blue Mountains once a year to perform a doom
-                                jazz set that critics describe as "The kind of
-                                music you hear right before a haunted elevator
-                                drops".
-                                <br />
-                                <br />
-                                <strong>> ARTIST LINEUP:</strong>
-                                Optimistic Yeti
-                                <br />
-                                <strong>> VENUE:</strong> Aisle 12 (frozen
-                                foods), 24/7 IGA, Hobart
-                                <br />
-                                <strong>> DATE:</strong>
-                                The winter solstice
-                                <br />
-                                <strong>> TIME:</strong>
-                                6:30pm-10:50pm
-                                <br />
-                                <strong>> GENRES:</strong>
-                                <a href="#!">Experimental</a>,
-                                <a href="#!">Jazz</a>,
-                                <a href="#!">Metal</a>
-                            </p>
-                            <a class="btn" id="view-details-btn" href="#!">
-                                View details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End of My ticket 3 -->
-
-                <!-- Padding -->
-                <div class="col-sm-0 col-md-3"></div>
-            </div>
-            <!-- End of row -->
         </div>
-        <!-- End of Events Page Container -->
     </section>
-    <!-- End of Events List Section -->
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const genreCreateUrl = "{{ url_for('events_bp.create_genre') }}";
+    const cardColumns = document.querySelectorAll('.event-card-column');
+    const eventRow = document.querySelector('.events-list-page .row.align-items-start');
+
+    if (eventRow) {
+        Array.from(eventRow.children).forEach(function (column, index) {
+            if (column.classList.contains('event-card-column')) {
+                column.dataset.originalIndex = index;
+            }
+        });
+    }
+
+    function restoreOriginalOrder() {
+        if (!eventRow) {
+            return;
+        }
+        const sortedColumns = Array.from(eventRow.children)
+            .filter(function (child) { return child.classList && child.classList.contains('event-card-column'); })
+            .sort(function (a, b) {
+                return Number(a.dataset.originalIndex || 0) - Number(b.dataset.originalIndex || 0);
+            });
+        sortedColumns.forEach(function (column) {
+            eventRow.appendChild(column);
+        });
+    }
+
+    function moveColumnToFirst(column) {
+        if (!eventRow || !column) {
+            return;
+        }
+        eventRow.insertBefore(column, eventRow.firstElementChild);
+    }
+
+    function clearEditingState() {
+        restoreOriginalOrder();
+        cardColumns.forEach(function (column) {
+            column.classList.remove('editing-active');
+            const card = column.querySelector('.event-card');
+            if (!card) {
+                return;
+            }
+            card.classList.remove('editing');
+            const display = card.querySelector('.event-display');
+            const editWrapper = card.querySelector('.event-edit-form-wrapper');
+            if (display && editWrapper) {
+                display.classList.remove('d-none');
+                editWrapper.classList.add('d-none');
+            }
+            const hint = column.querySelector('.image-edit-hint');
+            if (hint) {
+                hint.classList.add('d-none');
+            }
+            const image = column.querySelector('.window-img-top');
+            if (image) {
+                if (image.dataset.originalSrc) {
+                    image.src = image.dataset.originalSrc;
+                }
+                image.classList.remove('image-editable-active');
+            }
+            const imageInput = column.querySelector('.event-image-input');
+            if (imageInput) {
+                imageInput.value = '';
+            }
+        });
+    }
+
+    function setupImagePicker(card) {
+        const image = card.querySelector('.window-img-top');
+        const input = card.querySelector('.event-image-input');
+        const hint = card.querySelector('.image-edit-hint');
+
+        if (!image || !input) {
+            return;
+        }
+
+        if (!image.dataset.originalSrc) {
+            image.dataset.originalSrc = image.src;
+        }
+
+        if (hint) {
+            hint.classList.remove('d-none');
+        }
+
+        if (!image.dataset.bindImagePicker) {
+            image.addEventListener('click', function () {
+                if (card.classList.contains('editing')) {
+                    input.click();
+                }
+            });
+
+            input.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        image.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                    image.classList.add('image-editable-active');
+                } else {
+                    image.src = image.dataset.originalSrc || image.src;
+                    image.classList.remove('image-editable-active');
+                }
+            });
+
+            image.dataset.bindImagePicker = 'true';
+            image.classList.add('image-editable');
+        }
+    }
+
+    document.querySelectorAll('.start-edit-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            clearEditingState();
+            const column = button.closest('.event-card-column');
+            const card = button.closest('.event-card');
+            if (!column || !card) {
+                return;
+            }
+            const display = card.querySelector('.event-display');
+            const editWrapper = card.querySelector('.event-edit-form-wrapper');
+            if (!display || !editWrapper) {
+                return;
+            }
+            moveColumnToFirst(column);
+            setupImagePicker(card);
+            column.classList.add('editing-active');
+            card.classList.add('editing');
+            display.classList.add('d-none');
+            editWrapper.classList.remove('d-none');
+            const image = card.querySelector('.window-img-top');
+            if (image) {
+                image.classList.add('image-editable-active');
+            }
+            column.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    document.querySelectorAll('.cancel-edit-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            clearEditingState();
+        });
+    });
+
+    function addGenreToggleToGroup(group, genreId, genreName, shouldSelect) {
+        if (!group) {
+            return;
+        }
+
+        const existingInput = group.querySelector('.btn-check[value="' + genreId + '"]');
+        if (existingInput) {
+            if (shouldSelect) {
+                existingInput.checked = true;
+            }
+            return;
+        }
+
+        const toggleCount = group.querySelectorAll('.btn-check').length + 1;
+        const eventId = group.dataset.eventId || 'global';
+        const toggleId = 'genre-' + eventId + '-' + genreId + '-' + toggleCount;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'btn-check';
+        input.id = toggleId;
+        input.name = 'genres';
+        input.value = genreId;
+        if (shouldSelect) {
+            input.checked = true;
+        }
+
+        const label = document.createElement('label');
+        label.className = 'btn genre-toggle';
+        label.setAttribute('for', toggleId);
+        label.textContent = genreName;
+
+        group.appendChild(input);
+        group.appendChild(label);
+    }
+
+    document.querySelectorAll('.add-genre-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const column = button.closest('.event-card-column');
+            const activeGroup = column ? column.querySelector('.genre-toggle-group') : null;
+            const rawInput = window.prompt('Enter a new genre name:');
+
+            if (rawInput === null) {
+                return;
+            }
+
+            const genreName = rawInput.trim();
+            if (!genreName) {
+                window.alert('Please enter a genre name.');
+                return;
+            }
+
+            fetch(genreCreateUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: genreName }),
+            })
+                .then(function (response) {
+                    return response.json().then(function (data) {
+                        return { ok: response.ok, data: data };
+                    });
+                })
+                .then(function (result) {
+                    if (!result.ok || !result.data || !result.data.success) {
+                        const message = (result.data && result.data.message) ? result.data.message : 'Unable to add genre right now.';
+                        window.alert(message);
+                        return;
+                    }
+
+                    document.querySelectorAll('.genre-toggle-group').forEach(function (group) {
+                        const shouldSelect = group === activeGroup;
+                        addGenreToggleToGroup(group, result.data.id, result.data.name, shouldSelect);
+                    });
+                })
+                .catch(function () {
+                    window.alert('Unable to add genre right now.');
+                });
+        });
+    });
+});
+</script>
 {% endblock %}

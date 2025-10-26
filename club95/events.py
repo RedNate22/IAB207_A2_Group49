@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from sqlalchemy import func
 from club95 import db
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
+from club95.home import _extract_price
 from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist
 import os
 from werkzeug.utils import secure_filename
@@ -25,6 +27,143 @@ def eventdetails(event_id):
         comments = comments,
         heading = 'Event Details'
     )
+
+
+@events_bp.route('/events/myevents', methods=['GET'])
+@login_required
+def myevents():
+    """List only the events created by the logged-in user."""
+    term = (request.args.get('search') or '').strip()
+
+    query = f"%{term}%"
+    price_value = _extract_price(term)
+
+    filters = [
+        Event.title.ilike(query),
+        Event.genres.any(Genre.genreType.ilike(query)),
+        Event.location.ilike(query),
+        Event.description.ilike(query),
+        Event.artists.any(Artist.artistName.ilike(query)),
+        Event.date.ilike(query)
+    ]
+
+    if price_value is not None:
+        min_price_ids = (
+            db.select(Ticket.event_id)
+            .group_by(Ticket.event_id)
+            .having(func.min(Ticket.price) == price_value)
+        )
+        filters.append(Event.id.in_(min_price_ids))
+
+    events = db.session.scalars(
+        db.select(Event)
+        .where(db.or_(*filters))
+    ).all()
+
+    genre_options = Genre.query.all()
+
+    return render_template(
+        'events/myevents.html',
+        heading='My Events',
+        events=events,
+        search_term=term,
+        genre_options=genre_options,
+    )
+
+# Update event endpoint
+
+@events_bp.route('/events/<int:event_id>/update', methods=['POST'])
+@login_required
+def update_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    if event.user_id != current_user.id:
+        flash('You can only update events you created.', 'warning')
+        return redirect(url_for('events_bp.myevents'))
+
+    title = (request.form.get('title') or '').strip()
+    event_type = (request.form.get('type') or '').strip()
+    status = (request.form.get('status') or '').strip()
+    date_value = (request.form.get('date') or '').strip()
+    start_time = (request.form.get('start_time') or '').strip()
+    end_time = (request.form.get('end_time') or '').strip()
+    location = (request.form.get('location') or '').strip()
+    description = (request.form.get('description') or '').strip()
+    submitted_genre_ids = request.form.getlist('genres')
+
+    if not title:
+        flash('Title is required to update an event.', 'warning')
+        return redirect(url_for('events_bp.myevents'))
+
+    event.title = title
+    if event_type:
+        event.type = event_type
+    if status:
+        event.status = status
+    if date_value:
+        event.date = date_value
+    if start_time:
+        event.start_time = start_time
+    else:
+        event.start_time = None
+    if end_time:
+        event.end_time = end_time
+    else:
+        event.end_time = None
+    event.location = location or None
+    event.description = description or None
+
+    image_file = request.files.get('image')
+    if image_file and image_file.filename:
+        image_filename = secure_filename(image_file.filename)
+        if image_filename:
+            timestamp = int(datetime.utcnow().timestamp())
+            unique_filename = f"event_{event_id}_{timestamp}_{image_filename}"
+            image_path = os.path.join('club95', 'static', 'img', unique_filename)
+            os.makedirs(os.path.dirname(image_path), exist_ok=True)
+            image_file.save(image_path)
+            event.image = unique_filename
+
+    if submitted_genre_ids is not None:
+        cleaned_ids = []
+        for raw_id in submitted_genre_ids:
+            raw_id = (raw_id or '').strip()
+            if not raw_id:
+                continue
+            try:
+                cleaned_ids.append(int(raw_id))
+            except ValueError:
+                continue
+
+        if cleaned_ids:
+            updated_genres = Genre.query.filter(Genre.id.in_(cleaned_ids)).all()
+            event.genres = updated_genres
+        else:
+            event.genres = []
+
+    db.session.commit()
+    flash('Event updated successfully.', 'success')
+    return redirect(url_for('events_bp.myevents'))
+
+
+@events_bp.route('/events/genres', methods=['POST'])
+@login_required
+def create_genre():
+    payload = request.get_json(silent=True) or {}
+    genre_name = (payload.get('name') or '').strip()
+
+    if not genre_name:
+        return jsonify(success=False, message='Please provide a genre name.'), 400
+
+    existing_genre = Genre.query.filter_by(genreType=genre_name).first()
+    if existing_genre:
+        return jsonify(success=True, id=existing_genre.id, name=existing_genre.genreType, created=False)
+
+    new_genre = Genre(genreType=genre_name)
+    db.session.add(new_genre)
+    db.session.commit()
+
+    return jsonify(success=True, id=new_genre.id, name=new_genre.genreType, created=True)
 
 # Create events page
 @events_bp.route('/events/createvent', methods=['GET', 'POST'])

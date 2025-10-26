@@ -156,7 +156,11 @@ def populate_database(app: Flask) -> None:
             email=sample_email, 
             password=generate_password_hash("samplepassword", method='scrypt', salt_length=16),
             firstName="John",
-            lastName="Doe"
+            lastName="Doe",
+            phoneNumber="0412345678",
+            streetAddress="123 Sample St, Brisbane QLD 4000",
+            bio="My Name is John Doe and I love attending events!",
+            
          )
 
          db.session.add(user)
