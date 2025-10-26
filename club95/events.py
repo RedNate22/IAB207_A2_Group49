@@ -266,17 +266,15 @@ def createevent():
             # Create the Event row from form fields
             new_event = Event(
                 title=form.title.data,
-                description=form.description.data,
+                status='OPEN',
                 date=form.date.data.strftime('%Y-%m-%d') if form.date.data else None,
-                type=form.type.data,
-                location=form.location.data,
+                description=form.description.data,
                 start_time=form.start_time.data.strftime('%H:%M') if form.start_time.data else None,
                 end_time=form.end_time.data.strftime('%H:%M') if form.end_time.data else None,
-                status='OPEN',
-                image=image_filename
+                image=image_filename,
+                type=form.type.data,
+                #! location=form.location.data,  nate: no longer needed since location isnt a column now
             )
-
-
 
             # Link the creator if the hidden field was present
             if form.user_id.data:
@@ -297,7 +295,6 @@ def createevent():
             tier_names = request.form.getlist('ticket_tier[]')
             tier_prices = request.form.getlist('ticket_price[]')
             tier_quantities = request.form.getlist('ticket_quantity[]')
-
 
             # Collect problems and valid ticket data before saving anything
             ticket_errors = []

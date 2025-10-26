@@ -100,6 +100,7 @@ class Event(db.Model):
         return self.event_type.eventType if self.event_type else None
 
     # Allow setting an Event's type via: Event(type="DJ Set") or Event(type=EventType(...))
+    # ! i have no clue if this actually works, copilot suggested it because apparently eventType is readonly
     @eventtype.setter
     def type(self, value):
         # Treat None or an empty/whitespace only string as None
