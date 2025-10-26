@@ -1,0 +1,141 @@
+{% macro render_search_filters(search_term='', search_url='home_bp.search', event_types=None, genres=None, statuses=None) %}
+    {% set default_event_types = [
+        'Live Concert',
+        'Music Festival',
+        'Orchestra',
+        'DJ Set',
+        'Solo Artist Performance'
+    ] %}
+    {% set _event_types = event_types if event_types is not none else default_event_types %}
+
+    {% set default_genres = [
+        'Alternative',
+        'Blues',
+        'Classical',
+        'Contemporary Orchestral',
+        'Electronic',
+        'Experimental',
+        'Funk',
+        'Fusion',
+        'Indie',
+        'Jazz',
+        'Metal',
+        'Pop',
+        'Punk',
+        'Rock',
+        'Swing',
+        'Synthwave',
+        'Techno'
+    ] %}
+    {% set _genres = genres if genres is not none else default_genres %}
+
+    {% set default_statuses = ['Open', 'Inactive', 'Sold Out', 'Cancelled'] %}
+    {% set _statuses = statuses if statuses is not none else default_statuses %}
+
+    <section class="search-section">
+        <div class="container" id="search-container">
+            <form
+                class="d-flex"
+                role="search"
+                action="{{ url_for(search_url) }}"
+                method="get"
+            >
+                <input
+                    class="form-control me-2"
+                    type="search"
+                    name="search"
+                    placeholder="Search for events..."
+                    aria-label="Search"
+                    id="search-bar"
+                    value="{{ search_term }}"
+                />
+                <button class="btn" type="submit" id="search-confirm-btn">
+                    Search
+                </button>
+            </form>
+
+            <div class="btn-group" id="filter-btn-group">
+                <div class="filter-btn-wrapper">
+                    <button
+                        class="btn dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        type="button"
+                        id="event-type-filter-btn"
+                    >
+                        Event Type
+                    </button>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        id="dropdown-menu"
+                    >
+                        {% for event_type in _event_types %}
+                        <li class="d-flex align-items-center">
+                            <input
+                                class="form-check-input mt-0 ms-2"
+                                type="checkbox"
+                                id="event-type-{{ loop.index }}"
+                                value="{{ event_type }}"
+                            />
+                            <span class="dropdown-text"> {{ event_type }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="filter-btn-wrapper">
+                    <button
+                        class="btn dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        type="button"
+                        id="genres-filter-btn"
+                    >
+                        Genres
+                    </button>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        id="dropdown-menu"
+                    >
+                        {% for genre in _genres %}
+                        <li class="d-flex align-items-center">
+                            <input
+                                class="form-check-input mt-0 ms-2"
+                                type="checkbox"
+                                id="genre-{{ loop.index }}"
+                                value="{{ genre }}"
+                            />
+                            <span class="dropdown-text"> {{ genre }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="filter-btn-wrapper">
+                    <button
+                        class="btn dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        type="button"
+                        id="event-status-filter-btn"
+                    >
+                        Status
+                    </button>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        id="dropdown-menu"
+                    >
+                        {% for status in _statuses %}
+                        <li class="d-flex align-items-center">
+                            <input
+                                class="form-check-input mt-0 ms-2"
+                                type="checkbox"
+                                id="status-{{ loop.index }}"
+                                value="{{ status }}"
+                            />
+                            <span class="dropdown-text"> {{ status }} </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endmacro %}
