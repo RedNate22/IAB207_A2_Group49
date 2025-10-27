@@ -462,7 +462,7 @@
                     </div>
                     <div class="row align-items-start">
                         <div class="col-sm-0 col-md-2 col-lg-3"></div>
-                        <div class="col-sm-12 col-md-5 col-lg-4">
+                        <div class="col-sm-12 col-md-4 col-lg-4">
                             <!-- prettier-ignore -->
                             {{ add_genre_form.new_genre(
                                     class="form-control", 
@@ -471,10 +471,7 @@
                                     form="add-genre-form") 
                                 }}
                         </div>
-                        <div
-                            class="col-sm-5 col-md-3 col-lg-2"
-                            id="new-genre-group"
-                        >
+                        <div class="col-sm-12 col-md-4 col-lg-2">
                             <!-- prettier-ignore -->
                             {{ add_genre_form.selected_genres(
                                     id="selected-genres-field",
@@ -482,12 +479,11 @@
                                     form="add-genre-form" )
                             }} 
                             {{ add_genre_form.submit( 
-                                class="btn w-100", 
+                                class="btn w-100 add-genre-confirm-btn", 
                                 form="add-genre-form")
                             }}
                         </div>
-                        <!-- <div class="col-3 col-lg-3"></div> -->
-                        <div class="col-sm-0 col-md-3 col-lg-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Enter Event Genres section -->
@@ -496,8 +492,8 @@
                 <section class="artist-lineup-section">
                     <div id="artist-lineup-rows">
                         <div class="row align-items-start artist-row">
-                            <div class="col-3"></div>
-                            <div class="col-3">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-artist-name-window"
@@ -541,7 +537,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-artist-set-time-window"
@@ -589,12 +585,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3"></div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
                     </div>
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="btn-group"
                                 id="add-more-artists-btn-group"
@@ -608,7 +604,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                     {% if artist_errors %}
                     <div class="row mt-2">
@@ -619,7 +615,7 @@
                                 endfor %}
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-2"></div>
                     </div>
                     {% endif %}
                 </section>
@@ -629,8 +625,8 @@
                 <section class="ticket-tiers-section">
                     <div id="ticket-tiers-rows">
                         <div class="row align-items-start ticket-row">
-                            <div class="col-3"></div>
-                            <div class="col-6">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-8 col-lg-6">
                                 <div
                                     class="window"
                                     id="enter-ticket-tier-window"
@@ -674,11 +670,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
 
                         <div class="row align-items-start ticket-row">
-                            <div class="col-3"></div>
-                            <div class="col-3">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-ticket-price-window"
@@ -725,7 +722,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-ticket-quantity-window"
@@ -774,12 +771,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3"></div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
                     </div>
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="btn-group"
                                 id="add-more-ticket-tiers-btn-group"
@@ -793,7 +790,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Ticket Tiers Section -->
@@ -801,8 +798,8 @@
                 <!-- Upload Additional Media Section -->
                 <section class="upload-additional-media-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="window"
                                 id="upload-additional-media-window"
@@ -853,7 +850,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Upload Additional Media Section -->
@@ -861,14 +858,14 @@
                 <!-- Post Event Section -->
                 <section class="post-event-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div class="btn-group" id="post-event-btn-group">
                                 {{ form.submit(class="btn btn-primary",
                                 id="post-event-btn") }}
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Post Event Section -->
