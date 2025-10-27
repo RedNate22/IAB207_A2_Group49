@@ -899,13 +899,34 @@ html::-webkit-scrollbar-button:hover,
 /* The page where a user can create an event by entering all the details. */
 
 /* EVENT NAME */
-/* The name of the event */
 #enter-event-name-window {
     margin-top: 3rem;
     margin-bottom: 1rem;
 
     height: 100%;
     width: 100%;
+}
+
+/* EVENT TYPE */
+#enter-event-type-window {
+    max-height: 250px;
+    width: 100%;
+}
+
+.event-type-field {
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+}
+
+.event-type-field:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px white;
+}
+
+.btn:active {
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
 }
 
 /* EVENT DESCRIPTION */

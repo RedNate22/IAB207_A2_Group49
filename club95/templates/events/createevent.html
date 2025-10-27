@@ -50,7 +50,8 @@
                                     {{ form.title(class="form-control form-control-lg", placeholder="Enter the name of the event") }}
                                     {% if form.title.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.title.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.title.errors %}{{
+                                        error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -106,10 +107,14 @@
                                             class="enter-comment"
                                             >Enter description:</label
                                         >
-                                        {{ form.description(class="form-control", id="description-text", rows="6") }}
-                                        {% if form.description.errors %}
+                                        {{
+                                        form.description(class="form-control",
+                                        id="description-text", rows="6") }} {%
+                                        if form.description.errors %}
                                         <div class="alert alert-danger mt-2">
-                                            {% for error in form.description.errors %}{{ error }}<br>{% endfor %}
+                                            {% for error in
+                                            form.description.errors %}{{ error
+                                            }}<br />{% endfor %}
                                         </div>
                                         {% endif %}
                                     </div>
@@ -218,7 +223,8 @@
                                     {{ form.location(class="form-control", placeholder="Enter the location of the event") }}
                                     {% if form.location.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.location.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.location.errors
+                                        %}{{ error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -262,10 +268,12 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                                {{ form.date(class="form-control", type="date", placeholder="Enter date", min=min_date) }}
-                                    {% if form.date.errors %}
+                                    {{ form.date(class="form-control",
+                                    type="date", placeholder="Enter date",
+                                    min=min_date) }} {% if form.date.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.date.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.date.errors %}{{
+                                        error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -315,10 +323,13 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.start_time(class="form-control", type="time", step="60", min="00:00", max="23:59", title="Use 24hr format hh:mm") }}
-                                    {% if form.start_time.errors %}
+                                    {{ form.start_time(class="form-control",
+                                    type="time", step="60", min="00:00",
+                                    max="23:59", title="Use 24hr format hh:mm")
+                                    }} {% if form.start_time.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.start_time.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.start_time.errors
+                                        %}{{ error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -359,10 +370,13 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.end_time(class="form-control", type="time", step="60", min="00:00", max="23:59", title="Use 24hr format hh:mm") }}
-                                    {% if form.end_time.errors %}
+                                    {{ form.end_time(class="form-control",
+                                    type="time", step="60", min="00:00",
+                                    max="23:59", title="Use 24hr format hh:mm")
+                                    }} {% if form.end_time.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.end_time.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.end_time.errors
+                                        %}{{ error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -406,11 +420,15 @@
                                         </button>
                                     </div>
                                 </div>
+                                <!-- prettier-ignore -->
                                 <div class="sub-window">
-                                    {{ form.type(class="form-control") }}
+                                    {{ form.type(class="form-control event-type-field") }} 
                                     {% if form.type.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.type.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.type.errors %} 
+                                            {{ error }}
+                                            <br />
+                                        {% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
@@ -468,10 +486,10 @@
                                             {{ name }}
                                         </span>
                                     </li>
-                                    {% endfor %}
-                                    {% if form.genres.errors %}
+                                    {% endfor %} {% if form.genres.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.genres.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.genres.errors %}{{
+                                        error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </ul>
@@ -485,10 +503,8 @@
                                 id="new-genre", placeholder="Add new genre",
                                 form="add-genre-form") }} {{
                                 add_genre_form.selected_genres(
-                                    id="selected-genres-field",
-                                    type="hidden",
-                                    form="add-genre-form"
-                                ) }} {{
+                                id="selected-genres-field", type="hidden",
+                                form="add-genre-form" ) }} {{
                                 add_genre_form.submit(class="btn btn-secondary",
                                 form="add-genre-form") }}
                             </div>
@@ -622,7 +638,8 @@
                         <div class="col-3"></div>
                         <div class="col-6">
                             <div class="alert alert-danger">
-                                {% for error in artist_errors %}{{ error }}<br>{% endfor %}
+                                {% for error in artist_errors %}{{ error }}<br />{%
+                                endfor %}
                             </div>
                         </div>
                         <div class="col-3"></div>
