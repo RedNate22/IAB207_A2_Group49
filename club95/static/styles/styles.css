@@ -907,28 +907,6 @@ html::-webkit-scrollbar-button:hover,
     width: 100%;
 }
 
-/* EVENT TYPE */
-#enter-event-type-window {
-    max-height: 250px;
-    width: 100%;
-}
-
-.event-type-field {
-    border: var(--border);
-    color: var(--font-colour-primary);
-    background: var(--button-colour-4);
-}
-
-.event-type-field:hover {
-    cursor: pointer;
-    box-shadow: 1px 1px white;
-}
-
-.btn:active {
-    box-shadow: 1px 1px white; /* highlight on press */
-    transform: translateY(2px); /* move on press */
-}
-
 /* EVENT DESCRIPTION */
 /* The description of the event */
 #enter-event-description-window {
@@ -943,6 +921,16 @@ html::-webkit-scrollbar-button:hover,
         margin-left: 10px;
         margin-bottom: 5px;
     }
+}
+
+.event-type-field:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px white;
+}
+
+.btn:active {
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
 }
 
 /* EVENT POSTER */
@@ -1001,17 +989,31 @@ be used on the event listing page */
 #enter-event-start-time-window,
 #enter-event-end-time-window {
     margin-top: 0rem;
+    margin-bottom: 4rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* EVENT TYPE */
+/* The type of event (e.g. 'Concert', 'DJ Set' etc. */
+.event-type-field {
+    margin-top: 0rem;
     margin-bottom: 1rem;
 
     height: 100%;
     width: 100%;
+
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
 }
 
 /* EVENT GENRES */
 /* The genres performed by the artists during the event */
 #enter-event-genres-btn-group {
     margin-top: 0rem;
-    margin-bottom: 4rem; /* add spacing between genres btn and artist lineup */
+    margin-bottom: 1rem;
 
     height: 100%;
     width: 100%;
@@ -1021,6 +1023,17 @@ be used on the event listing page */
     color: var(--font-colour-primary);
     border: var(--border);
     background-color: var(--button-colour-3);
+}
+
+#new-genre {
+    font: var(--font-colour-primary);
+    border: var(--border);
+    width: 100%;
+}
+
+#new-genre-group {
+    margin-top: 0rem;
+    margin-bottom: 4rem;
 }
 
 /* ARTIST LINEUP */
@@ -1036,8 +1049,6 @@ be used on the event listing page */
 
 /* ADD MORE ARTISTS BUTTON */
 /* A button to add more artists to the lineup */
-/* TODO: future implementation; pressing this button would generate x amount
-of rows for 'artist name' and 'set time' windows */
 #add-more-artists-btn-group {
     margin-top: 0rem;
     margin-bottom: 4rem; /* add spacing between add more artists btn and tickets */

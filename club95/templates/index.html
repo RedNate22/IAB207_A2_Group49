@@ -27,52 +27,50 @@ render_search_filters %} {% block body %}
                     <span>{{ message }}</span>
                     {% endfor %}
                 </div>
-                {% endif %} {% endwith %}
-                <div class="row align-items-center">
-                    {% for event in events %}
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-                        <div class="window" id="event-{{ event.id }}">
-                            <div class="title-bar">
-                                <span class="window-title"
-                                    >{{ event.title }}</span
+                {% endif %} {% endwith %} {% for event in events %}
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="window" id="event-{{ event.id }}">
+                        <div class="title-bar">
+                            <span class="window-title">{{ event.title }}</span>
+                            <div class="window-controls">
+                                <button type="button" class="btn" href="#!">
+                                    _
+                                </button>
+                                <button type="button" class="btn" href="#!">
+                                    ☐
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn"
+                                    id="closebtn"
+                                    href="#!"
                                 >
-                                <div class="window-controls">
-                                    <button type="button" class="btn" href="#!">
-                                        _
-                                    </button>
-                                    <button type="button" class="btn" href="#!">
-                                        ☐
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="btn"
-                                        id="closebtn"
-                                        href="#!"
-                                    >
-                                        X
-                                    </button>
-                                </div>
+                                    X
+                                </button>
                             </div>
-                            <div class="sub-window">
-                                <img
-                                    src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
-                                    alt="{{ event.title }}"
-                                    class="window-img-top img-fit"
-                                />
-                                <section class="window-tags">
-                                    {% set event_type_label = event.event_type.typeName if event.event_type else 'Unassigned' %}
-                                    <span class="badge" id="event-type"
-                                        >{{ event_type_label }}</span
-                                    >
-                                    <span
-                                        class="badge"
-                                        id="event-status-{{ event.status|lower|replace(' ', '-') }}"
-                                    >
-                                        {{ event.status }}
-                                    </span>
-                                </section>
-                                <!-- prettier-ignore -->
-                                <p class="sub-window-content">
+                        </div>
+                        <div class="sub-window">
+                            <img
+                                src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
+                                alt="{{ event.title }}"
+                                class="window-img-top img-fit"
+                            />
+                            <section class="window-tags">
+                                {% set event_type_label =
+                                event.event_type.typeName if event.event_type
+                                else 'Unassigned' %}
+                                <span class="badge" id="event-type"
+                                    >{{ event_type_label }}</span
+                                >
+                                <span
+                                    class="badge"
+                                    id="event-status-{{ event.status|lower|replace(' ', '-') }}"
+                                >
+                                    {{ event.status }}
+                                </span>
+                            </section>
+                            <!-- prettier-ignore -->
+                            <p class="sub-window-content">
                                 {{ event.description or "Description coming
                                 soon." }}
                                 <br /><br />
@@ -119,19 +117,17 @@ render_search_filters %} {% block body %}
                                 <span>N/A</span>
                                 {% endif %}
                             </p>
-                                <a
-                                    class="btn"
-                                    id="view-details-btn"
-                                    href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}"
-                                >
-                                    View details
-                                </a>
-                            </div>
+                            <a
+                                class="btn"
+                                id="view-details-btn"
+                                href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}"
+                            >
+                                View details
+                            </a>
                         </div>
                     </div>
-
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
         </div>
 
