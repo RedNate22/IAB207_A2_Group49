@@ -1,15 +1,45 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from sqlalchemy import func
+from urllib.parse import quote_plus
 from club95 import db
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
 from club95.home import _extract_price
-from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist
+from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist, Venue, EventType
 import os
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
 from datetime import datetime, date
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
+
+
+def _build_map_embed_url(address: str) -> str:
+    ## Return a Google Maps embed URL for a provided address string.
+    cleaned = (address or '').strip()
+    if not cleaned:
+        return ''
+    query = quote_plus(cleaned)
+    return f"https://www.google.com/maps?q={query}&output=embed"
+
+
+def _get_or_create_venue(address: str):
+    ## Fetch an existing venue or create a new one for the supplied address.
+    cleaned = (address or '').strip()
+    if not cleaned:
+        return None
+    # Check if the venue already exists
+    venue = Venue.query.filter(func.lower(Venue.location) == cleaned.lower()).first()
+    embed_url = _build_map_embed_url(cleaned)
+    # Create a new venue if not found
+    if not venue:
+        venue = Venue(location=cleaned, venueMap=embed_url)
+        db.session.add(venue)
+        db.session.flush()
+        # else if venue exists but has no map, update it
+    elif not venue.venueMap and embed_url:
+        venue.venueMap = embed_url
+    # return a venue object
+    return venue
 
 # Event details page
 @events_bp.route('/events/eventdetails/<int:event_id>', methods=['GET'])
@@ -41,7 +71,7 @@ def myevents():
     filters = [
         Event.title.ilike(query),
         Event.genres.any(Genre.genreType.ilike(query)),
-        Event.location.ilike(query),
+        Event.venue.has(Venue.location.ilike(query)),
         Event.description.ilike(query),
         Event.artists.any(Artist.artistName.ilike(query)),
         Event.date.ilike(query)
@@ -57,10 +87,12 @@ def myevents():
 
     events = db.session.scalars(
         db.select(Event)
+        .where(Event.user_id == current_user.id)
         .where(db.or_(*filters))
     ).all()
 
     genre_options = Genre.query.all()
+    event_type_options = EventType.query.order_by(EventType.typeName).all()
 
     return render_template(
         'events/myevents.html',
@@ -68,6 +100,7 @@ def myevents():
         events=events,
         search_term=term,
         genre_options=genre_options,
+        event_type_options=event_type_options,
     )
 
 # Update event endpoint
@@ -82,7 +115,7 @@ def update_event(event_id):
         return redirect(url_for('events_bp.myevents'))
 
     title = (request.form.get('title') or '').strip()
-    event_type = (request.form.get('type') or '').strip()
+    event_type_raw = (request.form.get('type') or '').strip()
     status = (request.form.get('status') or '').strip()
     date_value = (request.form.get('date') or '').strip()
     start_time = (request.form.get('start_time') or '').strip()
@@ -96,8 +129,21 @@ def update_event(event_id):
         return redirect(url_for('events_bp.myevents'))
 
     event.title = title
-    if event_type:
-        event.type = event_type
+
+    selected_event_type = None
+    if event_type_raw:
+        try:
+            event_type_id = int(event_type_raw)
+        except ValueError:
+            flash('Please select a valid event type.', 'warning')
+            return redirect(url_for('events_bp.myevents'))
+
+        selected_event_type = EventType.query.get(event_type_id)
+        if not selected_event_type:
+            flash('Selected event type does not exist.', 'warning')
+            return redirect(url_for('events_bp.myevents'))
+
+    event.event_type = selected_event_type
     if status:
         event.status = status
     if date_value:
@@ -110,7 +156,6 @@ def update_event(event_id):
         event.end_time = end_time
     else:
         event.end_time = None
-    event.location = location or None
     event.description = description or None
 
     image_file = request.files.get('image')
@@ -123,6 +168,11 @@ def update_event(event_id):
             os.makedirs(os.path.dirname(image_path), exist_ok=True)
             image_file.save(image_path)
             event.image = unique_filename
+
+    if location:
+        event.venue = _get_or_create_venue(location)
+    else:
+        event.venue = None
 
     if submitted_genre_ids is not None:
         cleaned_ids = []
@@ -180,6 +230,8 @@ def createevent():
 
     # Fill the Genres multiselect with real options from the database
     form.genres.choices = [(g.id, g.genreType) for g in Genre.query.all()]
+    event_type_choices = [(et.id, et.typeName) for et in EventType.query.order_by(EventType.typeName).all()]
+    form.type.choices = event_type_choices
 
     # Preselect genres passed via query string (e.g. after adding a new genre)
     if request.method == 'GET':
@@ -264,6 +316,13 @@ def createevent():
                 artist_links.append(EventArtist(artist=artist_obj, set_time=normalized_time))
 
             # Create the Event row from form fields
+            selected_event_type = None
+            if form.type.data:
+                selected_event_type = EventType.query.get(form.type.data)
+                if not selected_event_type:
+                    flash("Selected event type is invalid.", "danger")
+                    return redirect(url_for('events_bp.createevent'))
+
             new_event = Event(
                 title=form.title.data,
                 status='OPEN',
@@ -272,9 +331,14 @@ def createevent():
                 start_time=form.start_time.data.strftime('%H:%M') if form.start_time.data else None,
                 end_time=form.end_time.data.strftime('%H:%M') if form.end_time.data else None,
                 image=image_filename,
-                type=form.type.data,
-                #! location=form.location.data,  nate: no longer needed since location isnt a column now
             )
+
+            venue_record = _get_or_create_venue(form.location.data)
+            if venue_record:
+                new_event.venue = venue_record
+
+            if selected_event_type:
+                new_event.event_type = selected_event_type
 
             # Link the creator if the hidden field was present
             if form.user_id.data:

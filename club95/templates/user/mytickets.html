@@ -364,9 +364,9 @@
                                 alt="{{ event.title if event else 'Event poster' }}"
                             />
                             <section class="window-tags">
+                                {% set event_type_label = (event.event_type.typeName if event and event.event_type else 'Event') %}
                                 <span class="badge" id="event-type">
-                                    {{ event.type if event and event.type else
-                                    'Event' }}
+                                    {{ event_type_label }}
                                 </span>
                                 <span class="badge" id="event-status-open">
                                     {{ event.status if event and event.status
@@ -407,8 +407,7 @@
                                 {% endif %}
                                 <br />
                                 <strong>> VENUE:</strong>
-                                {{ event.location if event and event.location
-                                else 'TBA' }}
+                                {{ event.venue.location if event and event.venue else 'TBA' }}
                                 <br />
                                 <strong>> DATE:</strong>
                                 {{ event.date if event and event.date else 'TBA'

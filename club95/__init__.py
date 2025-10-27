@@ -4,6 +4,8 @@ from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
+from sqlalchemy import func
+from urllib.parse import quote_plus
 
 DATABASE_FILENAME = 'sitedata.sqlite'
 
@@ -113,9 +115,9 @@ def populate_database(app: Flask) -> None:
          if not cleaned:
             return None
          
-         event_type = EventType.query.filter_by(eventType=cleaned).first()
+         event_type = EventType.query.filter_by(typeName=cleaned).first()
          if not event_type:
-            event_type = EventType(eventType=cleaned)
+            event_type = EventType(typeName=cleaned)
             db.session.add(event_type)
             db.session.flush()
          return event_type
@@ -176,13 +178,27 @@ def populate_database(app: Flask) -> None:
             db.session.flush()
          return artist
 
+      def build_map_embed(address: str) -> str:
+         cleaned = (address or "").strip()
+         if not cleaned:
+            return ""
+         return f"https://www.google.com/maps?q={quote_plus(cleaned)}&output=embed"
+
       def get_or_create_venue(name: str, location: str) -> Venue:
-         """Return an existing venue by name or create a new one if not found."""
-         venue = Venue.query.filter_by(venueName=name).first()
+         """Return an existing venue for the supplied name/location, creating one if needed."""
+         primary_location = (location or "").strip()
+         fallback_name = (name or "").strip()
+         lookup_value = primary_location or fallback_name
+         if not lookup_value:
+            return None
+
+         venue = Venue.query.filter(func.lower(Venue.location) == lookup_value.lower()).first()
          if not venue:
-            venue = Venue(venueName=name, location=location)
+            venue = Venue(location=lookup_value, venueMap=build_map_embed(lookup_value))
             db.session.add(venue)
             db.session.flush()
+         elif not venue.venueMap:
+            venue.venueMap = build_map_embed(lookup_value)
          return venue
 
       def normalise_unique(values):

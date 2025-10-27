@@ -68,14 +68,8 @@ class EventForm(FlaskForm):
     # Allows users to add a new genre if the one they want is not listed
     new_genre = StringField('Add New Genre', validators=[Length(max=50)])
 
-    # Dropdown menu for selecting what kind of event it is
-    type = SelectField('Type', choices=[
-        ('Live Concert', 'Live Concert'),
-        ('Music Festival', 'Music Festival'),
-        ('Orchestra', 'Orchestra'),
-        ('DJ Set', 'DJ Set'),
-        ('Solo Artist Performance', 'Solo Artist Performance')
-    ], validators=[DataRequired()])
+    # Dropdown menu for selecting what kind of event it is (choices populated at runtime)
+    type = SelectField('Type', choices=[], coerce=int, validators=[DataRequired()])
 
 
 
@@ -206,14 +200,8 @@ class updateEvent(FlaskForm):
     # Allows users to add a new genre if the one they want is not listed
     new_genre = StringField('Add New Genre', validators=[Length(max=50)])
 
-    # Dropdown menu for selecting what kind of event it is
-    type = SelectField('Type', choices=[
-        ('Live Concert', 'Live Concert'),
-        ('Music Festival', 'Music Festival'),
-        ('Orchestra', 'Orchestra'),
-        ('DJ Set', 'DJ Set'),
-        ('Solo Artist Performance', 'Solo Artist Performance')
-    ], validators=[DataRequired()])
+    # Dropdown menu for selecting what kind of event it is (choices populated at runtime)
+    type = SelectField('Type', choices=[], coerce=int, validators=[DataRequired()])
 
     # Image upload field for the event poster
     image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])

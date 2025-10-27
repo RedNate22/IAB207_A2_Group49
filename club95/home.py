@@ -1,7 +1,7 @@
 import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from sqlalchemy import func
-from .models import Artist, Event, Genre, Ticket
+from .models import Artist, Event, Genre, Ticket, Venue
 from . import db
 
 home_bp = Blueprint('home_bp', __name__, template_folder='templates')
@@ -24,7 +24,7 @@ def search():
     filters = [
         Event.title.ilike(query),
         Event.genres.any(Genre.genreType.ilike(query)),
-        Event.location.ilike(query),
+        Event.venue.has(Venue.location.ilike(query)),
         Event.description.ilike(query),
         Event.artists.any(Artist.artistName.ilike(query)),
         Event.date.ilike(query)

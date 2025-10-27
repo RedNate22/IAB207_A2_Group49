@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% from "partials/search_filters.html" import render_search_filters %}
 {% set status_options = ['OPEN', 'INACTIVE', 'SOLD OUT', 'CANCELLED'] %}
-{% set type_options = ['Live Concert', 'Music Festival', 'Orchestra', 'DJ Set', 'Solo Artist Performance'] %}
 {% block body %}
 
 <div class="main-window">
@@ -41,7 +40,8 @@
 
                             <div class="event-display">
                                 <section class="window-tags">
-                                    <span class="badge" id="event-type">{{ event.type }}</span>
+                                    {% set event_type_label = event.event_type.typeName if event.event_type else 'Unassigned' %}
+                                    <span class="badge" id="event-type">{{ event_type_label }}</span>
                                     <span class="badge" id="event-status-{{ event.status|lower|replace(' ', '-') }}">{{ event.status }}</span>
                                 </section>
 
@@ -70,7 +70,7 @@
                                     {% endif %}
                                     <br />
 
-                                    <strong>> VENUE:</strong> {{ event.location or "TBA" }}
+                                    <strong>> VENUE:</strong> {{ event.venue.location if event.venue else "TBA" }}
                                     <br />
 
                                     <strong>> DATE:</strong> {{ event.date or "TBA" }}
@@ -106,8 +106,9 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="type-{{ event.id }}">Type</label>
                                         <select class="form-select" id="type-{{ event.id }}" name="type" required>
-                                            {% for type_option in type_options %}
-                                                <option value="{{ type_option }}" {% if event.type == type_option %}selected{% endif %}>{{ type_option }}</option>
+                                            <option value="" disabled {% if not event.event_type_id %}selected{% endif %}>Select an event type</option>
+                                            {% for type_option in event_type_options %}
+                                                <option value="{{ type_option.id }}" {% if event.event_type_id == type_option.id %}selected{% endif %}>{{ type_option.typeName }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -163,7 +164,7 @@
 
                                     <div class="mb-3 mt-3">
                                         <label class="form-label" for="location-{{ event.id }}">Venue / Location</label>
-                                        <input type="text" class="form-control" id="location-{{ event.id }}" name="location" value="{{ event.location or '' }}" />
+                                        <input type="text" class="form-control" id="location-{{ event.id }}" name="location" value="{{ event.venue.location if event.venue else '' }}" />
                                     </div>
 
                                     <div class="mb-3">

@@ -164,11 +164,13 @@
                         <!-- window content -->
                         <div class="sub-window">
                             <section class="window-tags">
+                                {% set event_type_label = event.event_type.typeName if event.event_type else 'Unassigned' %}
+                                {% set status_label = event.status or 'OPEN' %}
                                 <span class="badge" id="event-type"
-                                    >Live Concert</span
+                                    >{{ event_type_label }}</span
                                 >
-                                <span class="badge" id="event-status-open"
-                                    >OPEN</span
+                                <span class="badge" id="event-status-{{ status_label|lower|replace(' ', '-') }}"
+                                    >{{ status_label }}</span
                                 >
                             </section>
                         </div>
@@ -244,15 +246,22 @@
 
                         <!-- window content -->
                         <div class="sub-window">
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4557.585727553991!2d152.90289687637085!3d-27.60649677624054!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b914c092af2ac3d%3A0xdca2f583d78471c7!2sRoyal%20Mail%20Hotel!5e1!3m2!1sen!2sau!4v1757136725190!5m2!1sen!2sau"
-                                width="100%"
-                                height="100%"
-                                style="border: 0"
-                                allowfullscreen=""
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                            ></iframe>
+                            {% set venue_map_url = event.venue.venueMap if event.venue and event.venue.venueMap else None %}
+                            {% if venue_map_url %}
+                                <iframe
+                                    src="{{ venue_map_url }}"
+                                    width="100%"
+                                    height="100%"
+                                    style="border: 0"
+                                    allowfullscreen=""
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                ></iframe>
+                            {% else %}
+                                <p class="sub-window-content">
+                                    Map preview unavailable for this venue.
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

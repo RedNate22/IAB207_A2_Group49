@@ -2,6 +2,8 @@ from flask_login import UserMixin
 from . import db
 from sqlalchemy.ext.associationproxy import association_proxy
 
+
+
 ## define database models, in this case User is inheriting functionality from UserMixin
 ## UserMixin provides default implementations for the - 
 ## methods that Flask-Login expects user objects to have.
@@ -33,6 +35,7 @@ class User(db.Model, UserMixin):
         last = self.lastName or ''
         full_name = f"{first} {last}".strip()
         return f"<User {full_name}>"
+
 
 # Association table for many-to-many relationship between Event and Artist
 class EventArtist(db.Model):
@@ -73,67 +76,11 @@ class Event(db.Model):
 
     # link event to user - many to one 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    
-    # link event to venue - many to one
-    # * Event location is the location of the venue
     venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'))
-
-    # Fetch name or location of tied venue
-    @property
-    def location(self):
-        # * lets you use 'event.location' to query event location
-        return self.venue.location if self.venue else None
-
-    @property
-    def venueName(self):
-        # * lets you use 'event.venueName' to query venue name
-        return self.venue.venueName if self.venue else None
-
-    # link event to event type
-    event_type_id = db.Column(db.Integer, db.ForeignKey('event_types.id'), nullable=False)
-    event_type = db.relationship('EventType', back_populates='events')
-
-    # Fetch type of event
-    @property
-    def eventtype(self):
-        # * lets you use 'event.type' to query the event type
-        return self.event_type.eventType if self.event_type else None
-
-    # Allow setting an Event's type via: Event(type="DJ Set") or Event(type=EventType(...))
-    # ! i have no clue if this actually works, copilot suggested it because apparently eventType is readonly
-    @eventtype.setter
-    def type(self, value):
-        # Treat None or an empty/whitespace only string as None
-        if value is None or str(value).strip() == "":
-            self.event_type = None 
-            return
-
-        # If an EventType instance is provided, assign it directly
-        if isinstance(value, EventType):
-            self.event_type = value
-            return
-
-        # Otherwise, treat the input as the name of the event type
-        event_type_name = str(value).strip()
-
-        # Try to find an existing EventType with this name
-        existing_event_type = EventType.query.filter_by(eventType=event_type_name).first()
-
-        # If none exists, create and stage a new EventType row
-        if not existing_event_type:
-            existing_event_type = EventType(eventType=event_type_name)
-            db.session.add(existing_event_type)
-            db.session.flush()  # Assigns an ID without committing the transaction
-
-        # Link this Event to the found/created EventType
-        self.event_type = existing_event_type
-
     # link event to tickets - one to many
     tickets = db.relationship('Ticket', backref='event')
-
     # relationship to comments - one to many
     comments = db.relationship('Comment', backref='event')
-
     # many-to-many relationship with artists
     artist_links = db.relationship('EventArtist', back_populates='event', cascade='all, delete-orphan')
     artists = association_proxy(
@@ -141,22 +88,23 @@ class Event(db.Model):
         'artist',
         creator=lambda artist: EventArtist(artist=artist)
     )
+    # link event to event type - many to one
+    event_type_id = db.Column(db.Integer, db.ForeignKey('event_types.id'), nullable=True)
+    
 
     def __repr__(self):
         return f"<Event {self.title}>"
 
 class EventType(db.Model):
-    # define the name of the table in the database
     __tablename__ = 'event_types'
-    # define the columns of the table 
     id = db.Column(db.Integer, primary_key=True)
-    eventType = db.Column(db.String(50), unique=True, nullable=False)
+    typeName = db.Column(db.String(100), nullable=False)
 
-    # link type to events - one to many
-    events = db.relationship('Event', back_populates='event_type')
+
+    events = db.relationship('Event', backref='event_type')
 
     def __repr__(self):
-        return f"<EventType {self.eventType}>"
+        return f"<EventType {self.typeName}>"
 
 class Comment(db.Model):
     # define the name of the table in the database
@@ -264,15 +212,14 @@ class Venue(db.Model):
     __tablename__ = 'venues'
     # define the columns of the table
     id = db.Column(db.Integer, primary_key=True)
-    venueName = db.Column(db.String(150), unique=True, nullable=False)
+    venueMap = db.Column(db.String(150), nullable=False)
     location = db.Column(db.String(150), nullable=False)
 
     # link venue to events - one to many
     events = db.relationship('Event', backref='venue')
 
     def __repr__(self):
-        return f"<Venue {self.venueName}>"
-
+        return f"<Venue {self.location}>"
 class EventImage(db.Model):
     __tablename__ = "event_images"
     id = db.Column(db.Integer, primary_key=True)

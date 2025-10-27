@@ -60,8 +60,9 @@ render_search_filters %} {% block body %}
                                     class="window-img-top img-fit"
                                 />
                                 <section class="window-tags">
+                                    {% set event_type_label = event.event_type.typeName if event.event_type else 'Unassigned' %}
                                     <span class="badge" id="event-type"
-                                        >{{ event.type }}</span
+                                        >{{ event_type_label }}</span
                                     >
                                     <span
                                         class="badge"
@@ -99,7 +100,8 @@ render_search_filters %} {% block body %}
                                 {% endif %}
                                 <br />
 
-                                <strong>> VENUE:</strong> {{ event.venueName or "TBA" }} ({{ event.location }})
+                                {% set venue_label = event.venue.location if event.venue else 'TBA' %}
+                                <strong>> VENUE:</strong> {{ venue_label }}
                                 <br />
                                 
                                 <strong>> DATE:</strong> {{ event.date or "TBA" }}
