@@ -1094,9 +1094,11 @@ tickets belonging to that tier. */
     * Ticket tier: Can be entered in any format, e.g. "Tier X: VIP", "VIP", "10" etc.
     * Price: Must be entered in decimal form: xx.xx, e.g. "50.00", "29.99", "01.00" etc.
     * Quantity: Must be enetered in whole integer form: e.g. "100", "5", "9000" etc.
+    * Perks: Optional field where the user can enter any perks/benefits that come with tier: e.g. "Free Drink"
 */
 
 #enter-ticket-tier-window,
+#enter-ticket-perks-window,
 #enter-ticket-price-window,
 #enter-ticket-quantity-window {
     margin-top: 0rem;

@@ -678,6 +678,54 @@
                             <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
+                                    id="enter-ticket-perks-window"
+                                >
+                                    <div class="title-bar">
+                                        <span class="window-title">Perks</span>
+                                        <div class="window-controls">
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                _
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                href="#!"
+                                            >
+                                                ☐
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn"
+                                                id="closebtn"
+                                                href="#!"
+                                            >
+                                                X
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="sub-window">
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            name="ticket_perks[]"
+                                            placeholder="Water, Wi-Fi, Pizza, etc."
+                                            maxlength="50"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        </div>
+
+                        <div class="row align-items-start ticket-row">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-4 col-lg-3">
+                                <div
+                                    class="window"
                                     id="enter-ticket-price-window"
                                 >
                                     <div class="title-bar">
@@ -959,29 +1007,23 @@
             }
         };
 
-        // Remember what a ticket tier block looks like so we can reuse it
-        const ticketTierTemplate = ticketRows
-            ? ticketRows.querySelector(".ticket-row")
-            : null;
-        const ticketDetailTemplate = ticketRows
-            ? ticketRows.querySelectorAll(".ticket-row")[1] || null
-            : null;
+        // Remember what each ticket tier block looks like so we can reuse it
+        const ticketTemplates = ticketRows
+            ? Array.from(ticketRows.querySelectorAll(".ticket-row"))
+            : [];
 
-        // Build a fresh ticket block with tier, price, and quantity stuck together
+        // Build a fresh ticket block with tier, perks, price, and quantity stuck together
         const createTicketBlock = () => {
             const fragment = document.createDocumentFragment();
-            if (ticketTierTemplate) {
-                fragment.appendChild(cloneTemplateRow(ticketTierTemplate));
-            }
-            if (ticketDetailTemplate) {
-                fragment.appendChild(cloneTemplateRow(ticketDetailTemplate));
-            }
+            ticketTemplates.forEach((template) => {
+                fragment.appendChild(cloneTemplateRow(template));
+            });
             return fragment;
         };
 
         // Make sure we always have enough ticket blocks on the page
         const ensureTicketBlocks = (desiredCount) => {
-            if (!ticketRows || !ticketTierTemplate) {
+            if (!ticketRows || !ticketTemplates.length) {
                 return;
             }
             let currentCount = ticketRows.querySelectorAll(
@@ -1043,6 +1085,10 @@
 
             state.ticket_quantity = Array.from(
                 document.querySelectorAll('input[name="ticket_quantity[]"]')
+            ).map((input) => input.value);
+
+            state.ticket_perks = Array.from(
+                document.querySelectorAll('input[name="ticket_perks[]"]')
             ).map((input) => input.value);
 
             return state;
@@ -1150,6 +1196,9 @@
                     Array.isArray(state.ticket_quantity)
                         ? state.ticket_quantity.length
                         : 0,
+                    Array.isArray(state.ticket_perks)
+                        ? state.ticket_perks.length
+                        : 0,
                 ];
                 const desiredTicketCount = Math.max(1, ...ticketCounts);
                 ensureTicketBlocks(desiredTicketCount);
@@ -1184,10 +1233,21 @@
                     });
                 }
 
+                if (Array.isArray(state.ticket_perks)) {
+                    Array.from(
+                        document.querySelectorAll(
+                            'input[name="ticket_perks[]"]'
+                        )
+                    ).forEach((input, index) => {
+                        input.value = state.ticket_perks[index] || "";
+                    });
+                }
+
                 if (
                     Array.isArray(state.ticket_tier) ||
                     Array.isArray(state.ticket_price) ||
-                    Array.isArray(state.ticket_quantity)
+                    Array.isArray(state.ticket_quantity) ||
+                    Array.isArray(state.ticket_perks)
                 ) {
                     saveState();
                 }

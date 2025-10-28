@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from sqlalchemy import func
 from urllib.parse import quote_plus
+from itertools import zip_longest
 from club95 import db
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
 from club95.home import _extract_price
@@ -359,16 +360,18 @@ def createevent():
             tier_names = request.form.getlist('ticket_tier[]')
             tier_prices = request.form.getlist('ticket_price[]')
             tier_quantities = request.form.getlist('ticket_quantity[]')
+            tier_perks = request.form.getlist('ticket_perks[]')
 
             # Collect problems and valid ticket data before saving anything
             ticket_errors = []
             pending_tickets = []
             # Walk each tier row from the form so we can validate its fields
-            for tname, pstr, qstr in zip(tier_names, tier_prices, tier_quantities):
+            for tname, pstr, qstr, perks_raw in zip_longest(tier_names, tier_prices, tier_quantities, tier_perks, fillvalue=''):
                 name_value = (tname or '').strip()
                 # Skip rows where the tier name was left empty
                 if not name_value:
                     continue
+                perks_value = (perks_raw or '').strip()
                 # Ensure the price input can be read as a decimal number
                 try:
                     price_value = float(pstr)
@@ -391,9 +394,12 @@ def createevent():
                 if qty_value < 1:
                     ticket_errors.append(f"Ticket quantity for tier '{name_value}' must be at least 1.")
                     invalid_entry = True
+                if perks_value and len(perks_value) > 50:
+                    ticket_errors.append(f"Ticket perks for tier '{name_value}' must be 50 characters or fewer.")
+                    invalid_entry = True
                 # Only queue valid rows for insertion
                 if not invalid_entry:
-                    pending_tickets.append((name_value, price_value, qty_value))
+                    pending_tickets.append((name_value, price_value, qty_value, perks_value or None))
 
             # If anything failed validation, abort and let the user know what to fix
             # Likely won't reach here due to input constraints, but just in case
@@ -404,11 +410,12 @@ def createevent():
                 return redirect(url_for('events_bp.createevent'))
 
             # Persist every validated ticket tier for the new event
-            for name_value, price_value, qty_value in pending_tickets:
+            for name_value, price_value, qty_value, perks_value in pending_tickets:
                 ticket = Ticket(
                     ticketTier=name_value,
                     price=price_value,
                     availability=qty_value,
+                    perks=perks_value,
                     event_id=new_event.id
                 )
                 db.session.add(ticket)

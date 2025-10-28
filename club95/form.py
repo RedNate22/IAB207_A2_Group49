@@ -147,9 +147,9 @@ class TicketPurchaseForm(FlaskForm):
             # create unique field name based on ticket ID
             field_name = f"quantity_{ticket.id}"
 
-            # Set format for ticket prices and add $
-            # format price to floating point with 2 decimal places
-            label = f"{ticket.ticketTier.capitalize()} (${'{:.2f}'.format(ticket.price)})"
+            # Build a descriptive label including price and any perks
+            perks_suffix = f" – {ticket.perks}" if getattr(ticket, "perks", None) else ""
+            label = f"{ticket.ticketTier.capitalize()} (${'{:.2f}'.format(ticket.price)}){perks_suffix}"
 
             # (fields are built dynamically)
             unbound_field = IntegerField(
@@ -164,7 +164,8 @@ class TicketPurchaseForm(FlaskForm):
                     "max": ticket.availability,
                     "id": f"quantity-{ticket.id}",
                     "data-tier": ticket.ticketTier,
-                    "data-price": ticket.price    
+                    "data-price": ticket.price,
+                    "data-perks": ticket.perks or ""
                     }
                 )
 
