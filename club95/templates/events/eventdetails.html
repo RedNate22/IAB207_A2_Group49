@@ -330,7 +330,8 @@
                                                 {{ ticket.ticketTier }} – ${{
                                                 '%.2f'|format(ticket.price) }}
                                                 ({{ ticket.availability }}
-                                                available)
+                                                available){% if ticket.perks %}
+                                                – {{ ticket.perks }}{% endif %}
                                             </label>
                                             {{ purchase_form['quantity_' ~
                                             ticket.id] }}
