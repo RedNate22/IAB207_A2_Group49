@@ -1,0 +1,13 @@
+/* static/styles/styles.css */
+@import "variables.css";
+@import "base.css";
+
+/* components */
+@import "components/buttons.css";
+@import "components/searchbar.css";
+
+/* pages */
+@import "pages/createevent.css";
+@import "pages/eventdetails.css";
+@import "pages/myevents.css";
+@import "pages/mytickets.css";
