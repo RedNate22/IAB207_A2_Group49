@@ -1,0 +1,68 @@
+/* GLOBAL VARIABLES */
+/* * it's best to declare and tweak any variables (i.e. colours) that will be used
+across multiple sections/pages here. This ensures proper consistency in styling and behaviour. */
+:root {
+    /* Font variables */
+    --font-family: "W95FA", Arial, Helvetica, sans-serif;
+    --font-colour-primary: rgb(239, 239, 239);
+    --font-colour-seconday: #000000;
+
+    /* Border variables */
+    --border-colour: #000000;
+    --border: 3px solid var(--border-colour);
+
+    /* Colour scheme */
+    --primary-colour: rgb(0, 75, 90);
+    --secondary-colour: rgb(124, 157, 140);
+    --tertiary-colour: rgb(96, 115, 96);
+    --quaternary-colour: rgb(96, 115, 96, 0.5);
+
+    --accent-colour-1: rgba(53, 135, 164);
+    --accent-colour-2: rgb(104, 143, 146); /* unused */
+    --accent-colour-3: rgb(71, 194, 130);
+    --accent-colour-4: rgb(192, 66, 57);
+
+    --button-colour-1: rgb(126, 159, 142);
+    --button-colour-2: rgb(189, 115, 110);
+
+    --button-colour-3: rgb(192, 66, 57);
+    --button-colour-4: rgba(53, 135, 164);
+    --button-colour-5: rgba(61, 190, 233, 0.484); /* unused */
+
+    --button-pressed-colour: rgba(255, 255, 255, 0.7);
+
+    /* Main page background */
+    --background: radial-gradient(
+        ellipse at bottom,
+        var(--primary-colour) 0%,
+        var(--secondary-colour) 100%
+    );
+
+    --navbar-background: var(--tertiary-colour);
+
+    /* Styling for 'windows' */
+    --window-main-colour: var(--secondary-colour);
+    --window-sub-colour: var(--quaternary-colour);
+    --window-title-colour: var(--tertiary-colour);
+    --window-button-colour: var(--button-colour-1);
+    --window-close-button-colour: var(--button-colour-2);
+
+    --window-button-border: 2px solid var(--border-colour);
+    --window-border-radius: 9px;
+
+    /* Event status badges */
+    --event-status-open-colour: var(--accent-colour-3);
+    --event-status-sold-out-colour: var(--accent-colour-4);
+    --event-status-cancelled-colour: var(--accent-colour-4);
+    --event-status-inactive-colour: var(--accent-colour-2);
+
+    /* Footer colours */
+    --social-container-bg-colour: var(--primary-colour);
+    --copyright-bg-colour: rgba(0, 0, 0, 0.5);
+
+    /* Scrollbar shadow */
+    --scrollbar-thumb-btn-colour: var(--primary-colour);
+    --scrollbar-track-colour: var(--button-pressed-colour);
+    --scrollbar-hover-colour: darkgray;
+    --scrollbar-box-shadow: inset 0 0 2px white;
+}

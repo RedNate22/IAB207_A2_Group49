@@ -1,0 +1,43 @@
+/* SEARCH BAR */
+/* Holds the search bar, search button, and genre/type filters */
+/* * dropdown menu properties are defined in global properties */
+
+/* Override these if necessary:
+    - .dropdown-menu { color, background, border }
+    - .dropdown-text { padding, cursor }
+*/
+.search-section {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+
+    /* Apply border to search bar */
+    #search-bar {
+        border: var(--border);
+    }
+
+    /* Confirm search button */
+    #search-confirm-btn {
+        color: var(--font-colour-primary);
+        background-color: var(--button-colour-4);
+    }
+
+    /* 'Event Type', 'Genres', & 'Status' filter buttons */
+    #filter-btn-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    #event-type-filter-btn,
+    #genres-filter-btn,
+    #event-status-filter-btn {
+        color: var(--font-colour-primary);
+        background-color: var(--button-colour-4);
+
+        /* Center */
+        margin-right: 1rem;
+        margin-left: 1rem;
+        width: 7rem;
+    }
+}

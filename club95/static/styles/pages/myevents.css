@@ -1,0 +1,98 @@
+/* TODO: (Nate) imma have to redo all this smh */
+
+/* Events window styling */
+.event-card-column.editing-active {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.event-card.editing {
+    height: auto;
+}
+
+.event-card.editing .sub-window {
+    height: auto;
+}
+
+.event-card.editing .event-update-form {
+    margin: 1.5rem auto 0;
+    max-width: 720px;
+}
+
+.event-card.editing .event-update-form .form-control,
+.event-card.editing .event-update-form .form-select,
+.event-card.editing .event-update-form textarea {
+    border-radius: 6px;
+}
+
+.event-card.editing .event-update-form .genre-toggle-section {
+    text-align: center;
+}
+
+.event-card.editing .event-update-form .genre-toggle-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.event-card.editing .event-update-form .genre-toggle {
+    border: 2px solid var(--border-colour);
+    background-color: var(--window-sub-colour);
+    color: var(--font-colour-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.9rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.event-card.editing .event-update-form .genre-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 0 0 var(--border-colour);
+}
+
+.event-card.editing .event-update-form .btn-check:checked + .genre-toggle {
+    background-color: var(--accent-colour-3);
+    color: var(--font-colour-seconday);
+    box-shadow: inset 0 0 0 2px var(--border-colour);
+}
+
+.event-card.editing .event-update-form .genre-toggle-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.75rem;
+}
+
+.event-card.editing .event-update-form .add-genre-btn {
+    border: var(--border);
+    background-color: var(--button-colour-4);
+    color: var(--font-colour-primary);
+    padding: 0.35rem 1.25rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.event-card.editing .event-update-form .add-genre-btn:hover {
+    background-color: var(--accent-colour-1);
+    color: var(--font-colour-primary);
+}
+
+.event-card .image-edit-hint {
+    color: var(--font-colour-primary);
+    font-size: 0.85rem;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    margin-top: 0.75rem;
+}
+
+.window-img-top.image-editable {
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.window-img-top.image-editable-active {
+    cursor: pointer;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+    transform: scale(1.01);
+}

@@ -1,0 +1,457 @@
+/* FONTS */
+@font-face {
+    font-family: "W95FA";
+    src: url("../fonts/W95FA/w95fa.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* MAIN/BODY */
+main {
+    flex: 1; /* pushes footer to bottom */
+}
+
+/* Apply base font and themes */
+body {
+    font-family: var(--font-family);
+    background: var(--background);
+
+    min-height: 100vh; /* body always fills full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* DROPDOWN MENUS */
+/* Dropdown menu itself */
+.dropdown-menu {
+    color: var(--font-colour-primary);
+    background: var(--primary-colour);
+    border: var(--border);
+}
+
+/* Text inside dropdown menus */
+.dropdown-text {
+    padding: 0.25rem 0.5rem;
+    cursor: default;
+}
+
+/* NAVBAR */
+/* Base nav styling */
+nav {
+    font-size: 18px;
+    background: var(--navbar-background);
+    border-bottom: 3px solid var(--border-colour);
+}
+
+/* Change colour of nav items */
+.nav-item a {
+    color: white !important; /* override bootstrap default */
+}
+
+.nav-item a:hover {
+    color: black !important; /* override bootstrap default */
+}
+
+/* 'Help' dropdown menu */
+#navbar-nav .dropdown-menu {
+    /* Links inside dropdown menu */
+    a {
+        color: var(--font-colour-primary);
+    }
+}
+
+/* Container for navbar title */
+.navbar-title {
+    overflow: visible; /* keep animation visible */
+    top: 0%;
+    animation: noise 0.2s linear infinite; /* main flicker effect */
+    color: var(--font-colour-seconday);
+}
+
+/* <a> element inside navbar title */
+.navbar-title a {
+    font-size: 40px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* Elements to create glitch effect */
+.navbar-title:before,
+.navbar-title:after {
+    content: "Club95";
+    font-size: 41px;
+    font-style: italic;
+    font-weight: bold;
+    position: absolute; /* keep animation on top */
+    opacity: 0;
+}
+
+/* First glitch effect */
+.navbar-title:before {
+    color: red;
+    animation: noise-1 0.5s linear infinite; /* horizontal flicker layer */
+}
+
+/* Second glitch effect */
+.navbar-title:after {
+    color: blue;
+    animation: noise-2 0.5s linear infinite; /* opposite (direction) flicker */
+}
+
+/* Glitch effects */
+@keyframes noise {
+    0%,
+    3%,
+    5%,
+    42%,
+    44%,
+    100% {
+        opacity: 1;
+        transform: scaleY(1);
+    } /* vertical stretch */
+    4.3% {
+        opacity: 1;
+        transform: scaleY(1.7);
+    } /* horizontal stretch */
+    43% {
+        opacity: 1;
+        transform: scaleX(1.5);
+    } /* horizontal stretch */
+}
+
+@keyframes noise-1 {
+    0%,
+    20%,
+    40%,
+    60%,
+    70%,
+    90% {
+        opacity: 0;
+    } /* mostly invisible */
+    10% {
+        opacity: 0.1;
+    } /* brief flicker */
+    50% {
+        opacity: 0.5;
+        left: 6px;
+    } /* visible and displaced right */
+    80% {
+        opacity: 0.3;
+    } /* intermediate opacity */
+    100% {
+        opacity: 0.6;
+        left: -2px;
+    } /* visible and displaced left at end */
+}
+
+@keyframes noise-2 {
+    0%,
+    20%,
+    40%,
+    60%,
+    70%,
+    90% {
+        opacity: 0;
+    } /* mostly invisible */
+    10% {
+        opacity: 0.1;
+    } /* brief flicker */
+    50% {
+        opacity: 0.5;
+        left: -6px;
+    } /* visible and displaced left */
+    80% {
+        opacity: 0.3;
+    } /* intermediate opacity */
+    100% {
+        opacity: 0.6;
+        left: 2px;
+    } /* visible and displaced right at end */
+}
+
+/* heading */
+/* Indicates the purpose of the page */
+#heading {
+    font-size: 30px;
+    font-style: italic;
+    font-weight: bold;
+    color: var(--font-colour-seconday);
+    position: relative;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* FOOTER */
+/* Base footer properties */
+footer {
+    color: var(--font-colour-primary);
+    font-style: italic;
+    letter-spacing: 0.05em;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Holds the social link buttons */
+#social-container {
+    background-color: var(--social-container-bg-colour);
+    border-top: var(--border);
+    border-bottom: var(--border);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .btn-floating {
+        padding: 0; /* remove default padding */
+        border-radius: 50%;
+    }
+}
+
+/* Holds the copyright information */
+#copyright-bar {
+    text-align: center;
+    background-color: var(--copyright-bg-colour);
+}
+
+/* SCROLLBAR */
+/* * not visible on Firefox, sadly. */
+html::-webkit-scrollbar,
+.sub-window-content::-webkit-scrollbar {
+    border: var(--border);
+    /* ? transform: scale() to adjust border for viewport */
+}
+
+html::-webkit-scrollbar-track,
+.sub-window-content::-webkit-scrollbar-track {
+    border: var(--border);
+    background-color: var(--scrollbar-track-colour);
+    box-shadow: var(--box-shadow);
+}
+
+html::-webkit-scrollbar-thumb,
+.sub-window-content::-webkit-scrollbar-thumb {
+    border: var(--border);
+    background-color: var(--scrollbar-thumb-btn-colour);
+    box-shadow: var(--scrollbar-box-shadow);
+}
+
+html::-webkit-scrollbar-thumb:hover,
+.sub-window-content::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-hover-colour);
+    box-shadow: var(--box-shadow);
+}
+
+html::-webkit-scrollbar-button,
+.sub-window-content::-webkit-scrollbar-button {
+    border: var(--border);
+    background-color: var(--scrollbar-thumb-btn-colour);
+    box-shadow: var(--scrollbar-box-shadow);
+    border-bottom: none;
+    border-top: none;
+    display: flex;
+    height: 20px;
+}
+
+html::-webkit-scrollbar-button:hover,
+.sub-window-content::-webkit-scrollbar-button:hover {
+    background-color: var(--scrollbar-hover-colour);
+}
+
+/* 'WINDOW' STYLING */
+/* 
+    The 'windows' are the base of most elements. They hold things like the event cards
+    or individual forms...Most elements are contained inside a 'window' to feed the illusion that the user
+    has opened multiple Windows 95 era windows at once and moved them around their screen, in an orderly fashion. 
+ 
+    * Note: Any page-specific styling should be done by assigning unique ID's to the specific elements you want to change,
+    this way the base styling remains.
+*/
+.window {
+    position: relative;
+
+    /* Add spacing between each window. */
+    /* - useful for smaller viewports when windows are stacked vertically */
+    /* - also accounts for spacing between header and footer */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    /* Fixed height to keep windows consistent */
+    height: 500px;
+
+    color: var(--font-colour-primary);
+    background: var(--window-main-colour);
+    border: var(--border);
+    border-radius: var(--window-border-radius);
+    padding: 3px; /* fix padding between content and container */
+
+    /* Grow to fit different window sizes */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    /* Title bar to hold the title and window buttons */
+    .title-bar {
+        display: flex;
+        justify-content: space-between; /* keep space between title and buttons */
+        align-items: center;
+        padding: 2px 5px;
+        background-color: var(--window-title-colour);
+        border-radius: 6px;
+        font-size: larger;
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    /* Aesthetic window control buttons */
+    /* (The buttons are purely for aesthetics and fun) */
+    .window-controls {
+        display: flex;
+        gap: 2px;
+
+        /* Global properties for all three window buttons */
+        .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            height: 25px;
+            width: 25px;
+            border: var(--window-button-border);
+            border-radius: 2px;
+            background-color: var(--window-button-colour);
+            box-shadow: 1px 1px;
+        }
+
+        #btn:hover {
+            color: var(--font-colour-primary);
+            box-shadow: 1px 1px white;
+        }
+
+        /* Close ('X') button is red */
+        #closebtn {
+            background-color: var(--window-close-button-colour);
+        }
+
+        /* Animate on press */
+        .btn:active {
+            background: var(--button-pressed-colour);
+            transform: translateY(1px); /* * Try pressing one of the buttons */
+        }
+
+        #closebtn:active {
+            background: var(--button-pressed-colour);
+            transform: translateY(1px);
+        }
+    }
+
+    /* window tags */
+    /* Holds a badge to display the event type, and a badge to indicate the status */
+    .window-tags {
+        display: flex;
+        flex-direction: row;
+        overflow: auto;
+        justify-content: space-between;
+        background-color: var(--tertiary-colour);
+
+        /* Divider between tags and description */
+        border-bottom: var(--border);
+
+        .badge {
+            font-size: 15px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            margin-left: 6px;
+            margin-right: 6px;
+            border: var(--border);
+            user-select: none; /* stop text highlighting on press */
+        }
+
+        /* Badge that indicates the type of event */
+        #event-type {
+            background-color: var(--accent-colour-1);
+        }
+
+        /* Badge that indicates the event is OPEN for purchasing tickets */
+        /* Used when tickets are still available */
+        #event-status-open {
+            background-color: var(--event-status-open-colour);
+        }
+
+        /* Badge that indicates the event is INACTIVE */
+        /* Used when an event is no longer active - i.e. a past event */
+        #event-status-inactive {
+            background-color: var(--event-status-inactive-colour);
+        }
+
+        /* Badge that that indicates the event is SOLD OUT */
+        /* Used when tickets have been sold out */
+        #event-status-sold-out {
+            background-color: var(--event-status-sold-out-colour);
+        }
+
+        /* Badge that indicates the event has been CANCELLED */
+        #event-status-cancelled {
+            background-color: var(--event-status-cancelled-colour);
+        }
+
+        /* ? Future implementations could allow the badges to be clickable to quickly filter */
+        .badge:hover {
+            cursor: pointer;
+            box-shadow: 1px 1px white;
+        }
+
+        .badge:active {
+            background-color: var(--button-pressed-colour);
+            box-shadow: 1px 1px white;
+            transform: translateY(1px);
+        }
+    }
+
+    /* Inner content window */
+    /* Holds the promotional image, status, description, and "view details" button */
+    .sub-window {
+        color: var(--font-colour-primary);
+        border: var(--border);
+        border-radius: var(--window-border-radius);
+        background-color: var(--window-sub-colour);
+
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        /* Allows scrolling if text exceeds available window space */
+        overflow: auto;
+
+        /* Keep window images the same ratio */
+        .img-fit {
+            aspect-ratio: 16 / 9;
+            object-fit: fill;
+            object-position: center;
+            width: 100%; /* Stretch to full width of .sub-window container */
+            border-bottom: var(
+                --border
+            ); /* Divider between image and text box */
+        }
+
+        .sub-window-content {
+            text-align: left;
+            padding: 0.2rem 0.5rem;
+
+            /* Hide behind view details button when overflowing */
+            overflow-y: scroll;
+            margin-bottom: 0px;
+            flex: 1; /* push view details button down */
+        }
+
+        #view-details-btn {
+            margin-left: 3px;
+            margin-right: 3px;
+            margin-bottom: 3px;
+            color: var(--font-colour-primary);
+            background: var(--button-colour-3);
+            border: solid 3px var(--border-colour);
+            font-weight: bold;
+        }
+    }
+}
