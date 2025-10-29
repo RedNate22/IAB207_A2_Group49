@@ -19,6 +19,7 @@
     #search-confirm-btn {
         color: var(--font-colour-primary);
         background-color: var(--button-colour-4);
+        border: var(--border);
     }
 
     /* 'Event Type', 'Genres', & 'Status' filter buttons */
@@ -39,5 +40,22 @@
         margin-right: 1rem;
         margin-left: 1rem;
         width: 7rem;
+    }
+
+    #search-confirm-btn:hover,
+    #event-type-filter-btn:hover,
+    #genres-filter-btn:hover,
+    #event-status-filter-btn:hover {
+        cursor: pointer; /* ensure cursor is showed as pointer on hover */
+        box-shadow: 1px 1px white; /* highlight on hover */
+        border: var(--border);
+    }
+
+    #search-confirm-btn:active,
+    #event-type-filter-btn:active,
+    #genres-filter-btn:active,
+    #event-status-filter-btn:active {
+        box-shadow: 1px 1px white; /* highlight on press */
+        transform: translateY(2px); /* move on press */
     }
 }

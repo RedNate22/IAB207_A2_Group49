@@ -1,8 +1,9 @@
 {% extends "base.html" %} {% from "partials/search_filters.html" import
 render_search_filters %} {% block body %}
 
+<!-- prettier-ignore -->
 <div class="main-window">
-   {{ render_search_filters(
+    {{ render_search_filters(
     search_term=search_term|default(''),
     search_url='home_bp.search',
     event_types=(filter_event_types | map(attribute='typeName') | list),
