@@ -277,9 +277,7 @@ html::-webkit-scrollbar-button:hover,
     margin-bottom: 2rem;
 
     /* Fixed height to keep windows consistent */
-    /* height: 500px; */
     height: 600px;
-    min-height: 500px;
 
     color: var(--font-colour-primary);
     background: var(--window-main-colour);

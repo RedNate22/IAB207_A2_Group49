@@ -4,8 +4,32 @@
 
     text-align: center;
 
-    color: var(--font-colour-seconday);
+    color: var(--font-colour-primary);
     border: var(--border);
     border-radius: 6px;
     background-color: var(--accent-colour-3);
+}
+
+.danger {
+    height: 100%;
+    width: 100%;
+
+    text-align: center;
+
+    color: var(--font-colour-primary);
+    border: var(--border);
+    border-radius: 6px;
+    background-color: var(--accent-colour-4);
+}
+
+.error {
+    height: 100%;
+    width: 100%;
+
+    text-align: center;
+
+    color: var(--font-colour-primary);
+    border: var(--border);
+    border-radius: 6px;
+    background-color: var(--accent-colour-4);
 }
