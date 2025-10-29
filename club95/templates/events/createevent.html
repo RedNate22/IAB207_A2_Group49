@@ -101,21 +101,24 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
+                                    <!-- prettier-ignore -->
                                     <div class="mb-3" id="post-comment-form">
                                         <label
                                             for="description-text"
                                             class="enter-comment"
-                                            >Enter description:</label
-                                        >
-                                        {{
-                                        form.description(class="form-control",
-                                        id="description-text", rows="6") }} {%
-                                        if form.description.errors %}
-                                        <div class="alert alert-danger mt-2">
-                                            {% for error in
-                                            form.description.errors %}{{ error
-                                            }}<br />{% endfor %}
-                                        </div>
+                                            >Enter description:</label>
+                                        {{ form.description(
+                                            class="form-control",
+                                            id="description-text", 
+                                            rows="6") 
+                                        }} 
+                                        {% if form.description.errors %}
+                                            <div class="alert alert-danger mt-2">
+                                                {% for error in form.description.errors %}
+                                                    {{ error }}
+                                                    <br />
+                                                {% endfor %}
+                                            </div>
                                         {% endif %}
                                     </div>
                                     <div

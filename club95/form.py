@@ -178,8 +178,6 @@ class CommentForm(FlaskForm):
     content = TextAreaField('Comment', validators=[DataRequired(), Length(max=300)])
     submit = SubmitField('Post')
 
-
-
 class updateEvent(FlaskForm):
     title = StringField('Event Title', validators=[DataRequired()])  # Name of the event
     date = StringField('Event Date', validators=[DataRequired()])  # Date when the event will be held
