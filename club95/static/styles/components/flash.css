@@ -1,0 +1,11 @@
+.success {
+    height: 100%;
+    width: 100%;
+
+    text-align: center;
+
+    color: var(--font-colour-seconday);
+    border: var(--border);
+    border-radius: 6px;
+    background-color: var(--accent-colour-3);
+}
