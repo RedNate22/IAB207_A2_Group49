@@ -22,10 +22,14 @@ render_search_filters %} {% block body %}
                 {# Flash message section #} 
                 {% with messages = get_flashed_messages(category_filter=['login_success']) %} 
                     {% if messages %}
-                    <div class="success">
-                        {% for message in messages %}
-                            <span>{{ message }}</span>
-                        {% endfor %}
+                    <div class="flash-hover">
+                        <div class="flash-container">
+                            <div class="success">
+                                {% for message in messages %}
+                                    <span>{{ message }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                     {% endif %} 
                 {% endwith %} 
