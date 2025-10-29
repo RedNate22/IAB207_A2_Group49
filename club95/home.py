@@ -15,37 +15,81 @@ def index():
 @home_bp.route('/search')
 def search():
     term = (request.args.get('search') or '').strip()
-    if not term:
-        return redirect(url_for('home_bp.index'))
 
-    query = f"%{term}%"
-    price_value = _extract_price(term)
+    # accept both [] and non-[] parameter names
+    type_vals   = request.args.getlist('event_type[]') + request.args.getlist('event_type')
+    genre_vals  = request.args.getlist('genre[]')      + request.args.getlist('genre')
+    status_vals = request.args.getlist('status[]')     + request.args.getlist('status')
 
-    filters = [
-        Event.title.ilike(query),
-        Event.genres.any(Genre.genreType.ilike(query)),
-        Event.venue.has(Venue.location.ilike(query)),
-        Event.description.ilike(query),
-        Event.artists.any(Artist.artistName.ilike(query)),
-        Event.date.ilike(query)
-    ]
+    # start with a base selectable
+    q = db.select(Event)
 
-    if price_value is not None:
-        min_price_ids = (
-            db.select(Ticket.event_id)
-            .group_by(Ticket.event_id)
-            .having(func.min(Ticket.price) == price_value)
-        )
-        filters.append(Event.id.in_(min_price_ids))
+    # ---- text & price search (only if term provided) ----
+    if term:
+        query = f"%{term}%"
+        filters = [
+            Event.title.ilike(query),
+            Event.description.ilike(query),
+            Event.date.ilike(query),
+            Event.venue.has(Venue.location.ilike(query)),
+            Event.genres.any(Genre.genreType.ilike(query)),
+            Event.artists.any(Artist.artistName.ilike(query)),
+        ]
 
-    events = db.session.scalars(
-        db.select(Event)
-        .where(db.or_(*filters))
-    ).all()
-    
+        price_value = _extract_price(term)
+        if price_value is not None:
+            min_price_ids = (
+                db.select(Ticket.event_id)
+                .group_by(Ticket.event_id)
+                .having(func.min(Ticket.price) == price_value)
+            )
+            filters.append(Event.id.in_(min_price_ids))
+
+        q = q.where(db.or_(*filters))
+
+    # ---- event type filter (ids or names) ----
+    if type_vals:
+        from .models import EventType
+        type_ids, type_names = [], []
+        for v in type_vals:
+            v = (v or '').strip()
+            if not v:
+                continue
+            if v.isdigit():
+                type_ids.append(int(v))
+            else:
+                type_names.append(v.lower())
+        if type_ids:
+            q = q.where(Event.event_type_id.in_(type_ids))
+        if type_names:
+            q = q.where(Event.event_type.has(func.lower(EventType.typeName).in_(type_names)))
+
+    # ---- genre filter (ids or names) ----
+    if genre_vals:
+        genre_ids, genre_names = [], []
+        for v in genre_vals:
+            v = (v or '').strip()
+            if not v:
+                continue
+            if v.isdigit():
+                genre_ids.append(int(v))
+            else:
+                genre_names.append(v.lower())
+        if genre_ids:
+            q = q.where(Event.genres.any(Genre.id.in_(genre_ids)))
+        if genre_names:
+            q = q.where(Event.genres.any(func.lower(Genre.genreType).in_(genre_names)))
+
+    # ---- status filter (normalize to UPPER) ----
+    if status_vals:
+        wanted = [s.strip().upper() for s in status_vals if s.strip()]
+        if wanted:
+            q = q.where(func.upper(Event.status).in_(wanted))
+
+    events = db.session.scalars(q).all()
 
     if not events:
-        flash(f'No events found for "{term}". Try another title or keyword.', 'search_info')
+        flash('No events matched your filters. Try different filters or a keyword.', 'search_info')
 
     return render_template(
         'index.html',
