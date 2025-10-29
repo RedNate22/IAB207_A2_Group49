@@ -87,6 +87,45 @@ def create_app():
    # checks for and then creates database
    _ensure_database(app)
    
+ # -------------------------------------------------------------
+   # Context Processor for Dynamic Filter Options
+   # -------------------------------------------------------------
+   # This function runs before every template render and injects
+   # shared data into all templates (similar to a global variable).
+   # In this case, it provides the list of event types, genres,
+   # and statuses directly from the database. 
+   #
+   # This allows dropdown filters in the HTML (e.g. homepage, 
+   # My Events, My Tickets) to display dynamic options 
+   # based on the data actually stored in the database, 
+   # rather than hardcoding them.
+   #
+   # Reference: https://flask.palletsprojects.com/en/3.0.x/templating/#context-processors
+   # -------------------------------------------------------------
+
+   from .models import Genre, EventType  # import models used to fetch data
+
+   @app.context_processor
+   def inject_filter_options():
+       try:
+           # Query all event types and genres from the database
+           event_types = EventType.query.order_by(EventType.typeName).all()
+           genres = Genre.query.order_by(Genre.genreType).all()
+       except Exception:
+           # If tables are missing or database not yet created, avoid errors
+           event_types, genres = [], []
+
+       # Define a static list of possible event statuses for filtering
+       statuses = ['OPEN', 'INACTIVE', 'SOLD OUT', 'CANCELLED']
+
+       # Return these as a dictionary so they are available to every template
+       return {
+           'filter_event_types': event_types,
+           'filter_genres': genres,
+           'filter_statuses': statuses
+       }
+
+
    return app
 
 def _ensure_database(app: Flask) -> None:

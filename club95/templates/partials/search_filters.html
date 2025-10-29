@@ -1,32 +1,8 @@
 {% macro render_search_filters(search_term='', search_url='home_bp.search', event_types=None, genres=None, statuses=None) %}
-    {% set default_event_types = [
-        'Live Concert',
-        'Music Festival',
-        'Orchestra',
-        'DJ Set',
-        'Solo Artist Performance'
-    ] %}
+    {% set default_event_types = ['Live Concert','Music Festival','Orchestra','DJ Set','Solo Artist Performance'] %} 
     {% set _event_types = event_types if event_types is not none else default_event_types %}
 
-    {% set default_genres = [
-        'Alternative',
-        'Blues',
-        'Classical',
-        'Contemporary Orchestral',
-        'Electronic',
-        'Experimental',
-        'Funk',
-        'Fusion',
-        'Indie',
-        'Jazz',
-        'Metal',
-        'Pop',
-        'Punk',
-        'Rock',
-        'Swing',
-        'Synthwave',
-        'Techno'
-    ] %}
+    {% set default_genres = ['Alternative','Blues','Classical','Contemporary Orchestral','Electronic','Experimental','Funk','Fusion','Indie','Jazz','Metal','Pop','Punk','Rock','Swing','Synthwave','Techno'] %}
     {% set _genres = genres if genres is not none else default_genres %}
 
     {% set default_statuses = ['Open', 'Inactive', 'Sold Out', 'Cancelled'] %}
@@ -35,7 +11,7 @@
     <section class="search-section">
         <div class="container" id="search-container">
             <form
-                class="d-flex"
+                class="d-flex flex-column gap-3"
                 role="search"
                 action="{{ url_for(search_url) }}"
                 method="get"
@@ -51,10 +27,10 @@
                 />
                 <button class="btn" type="submit" id="search-confirm-btn">
                     Search
-                </button>
-            </form>
+                 </div>
 
             <div class="btn-group" id="filter-btn-group">
+                   <!-- Event Type -->             
                 <div class="filter-btn-wrapper">
                     <button
                         class="btn dropdown-toggle"
@@ -68,74 +44,74 @@
                         class="dropdown-menu dropdown-menu-end"
                         id="dropdown-menu"
                     >
-                        {% for event_type in _event_types %}
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="event-type-{{ loop.index }}"
-                                value="{{ event_type }}"
-                            />
-                            <span class="dropdown-text"> {{ event_type }} </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% set selected_types = request.args.getlist('event_type[]') %}
+                {% for event_type in _event_types %}
+                <li class="d-flex align-items-center">
+                 <input
+                     class="form-check-input mt-0 ms-2"
+                     type="checkbox"
+                     id="event-type-{{ loop.index }}"
+                     name="event_type[]"
+                     value="{{ event_type.id if event_type.__class__.__name__ != 'str' else event_type }}"
+                 {% if event_type in selected_types %}checked{% endif %}
+                 />
+                  <span class="dropdown-text">
+                   {{ event_type.typeName if event_type.__class__.__name__ != 'str' else event_type }}
+               </span> 
+           </li>
+            {% endfor %}
+         </ul>
+      </div>
 
-                <div class="filter-btn-wrapper">
-                    <button
-                        class="btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        type="button"
-                        id="genres-filter-btn"
-                    >
-                        Genres
-                    </button>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        id="dropdown-menu"
-                    >
-                        {% for genre in _genres %}
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="genre-{{ loop.index }}"
-                                value="{{ genre }}"
-                            />
-                            <span class="dropdown-text"> {{ genre }} </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                <!-- Genres -->
+                    <div class="filter-btn-wrapper">
+                        <button class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button" id="genres-filter-btn">
+                            Genres
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="dropdown-menu">
+                            {% set selected_genres = request.args.getlist('genre[]') %}
+                            {% for genre in _genres %}
+                            <li class="d-flex align-items-center">
+                                <input
+                                    class="form-check-input mt-0 ms-2"
+                                    type="checkbox"
+                                    name="genre[]"
+                                    id="genre-{{ loop.index }}"
+                                    value="{{ genre.id if genre.__class__.__name__ != 'str' else genre }}"
+                                    {% if genre in selected_genres %}checked{% endif %}
+                                />
+                                <span class="dropdown-text">
+                                    {{ genre.genreType if genre.__class__.__name__ != 'str' else genre }}
+                                </span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
-                <div class="filter-btn-wrapper">
-                    <button
-                        class="btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        type="button"
-                        id="event-status-filter-btn"
-                    >
-                        Status
-                    </button>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        id="dropdown-menu"
-                    >
-                        {% for status in _statuses %}
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="status-{{ loop.index }}"
-                                value="{{ status }}"
-                            />
-                            <span class="dropdown-text"> {{ status }} </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                    <!-- Status -->
+                    <div class="filter-btn-wrapper">
+                        <button class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button" id="event-status-filter-btn">
+                            Status
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="dropdown-menu">
+                            {% set selected_statuses = request.args.getlist('status[]') %}
+                            {% for status in _statuses %}
+                            <li class="d-flex align-items-center">
+                                <input
+                                    class="form-check-input mt-0 ms-2"
+                                    type="checkbox"
+                                    name="status[]"
+                                    id="status-{{ loop.index }}"
+                                    value="{{ status }}"
+                                    {% if status in selected_statuses %}checked{% endif %}
+                                />
+                                <span class="dropdown-text">{{ status }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </section>
 {% endmacro %}

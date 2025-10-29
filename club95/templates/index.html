@@ -2,7 +2,13 @@
 render_search_filters %} {% block body %}
 
 <div class="main-window">
-    {{ render_search_filters(search_term=search_term|default('')) }}
+   {{ render_search_filters(
+    search_term=search_term|default(''),
+    search_url='home_bp.search',
+    event_types=(filter_event_types | map(attribute='typeName') | list),
+    genres=(filter_genres | map(attribute='genreType') | list),
+    statuses=filter_statuses
+) }}
 
     <!-- Events List Section -->
     <!-- Events are listed inside 'windows' that include all
