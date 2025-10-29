@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask_login import current_user
 from sqlalchemy import func
 from urllib.parse import quote_plus
 from itertools import zip_longest
@@ -58,50 +59,51 @@ def eventdetails(event_id):
         comments = comments,
         heading = 'Event Details'
     )
-
-
 @events_bp.route('/events/myevents', methods=['GET'])
 @login_required
 def myevents():
-    """List only the events created by the logged-in user."""
+    """Display and filter events created by the logged-in user."""
+
     term = (request.args.get('search') or '').strip()
 
-    query = f"%{term}%"
-    price_value = _extract_price(term)
+    # Base query: only the current user's events
+    q = db.select(Event).where(Event.user_id == current_user.id)
 
-    filters = [
-        Event.title.ilike(query),
-        Event.genres.any(Genre.genreType.ilike(query)),
-        Event.venue.has(Venue.location.ilike(query)),
-        Event.description.ilike(query),
-        Event.artists.any(Artist.artistName.ilike(query)),
-        Event.date.ilike(query)
-    ]
+    # Keyword-based search
+    if term:
+        query = f"%{term}%"
+        q = q.where(db.or_(
+            Event.title.ilike(query),
+            Event.description.ilike(query),
+            Event.date.ilike(query),
+            Event.venue.has(Venue.location.ilike(query)),
+            Event.genres.any(Genre.genreType.ilike(query)),
+            Event.artists.any(Artist.artistName.ilike(query))
+        ))
 
-    if price_value is not None:
-        min_price_ids = (
-            db.select(Ticket.event_id)
-            .group_by(Ticket.event_id)
-            .having(func.min(Ticket.price) == price_value)
-        )
-        filters.append(Event.id.in_(min_price_ids))
+    # Checkbox filters
+    event_types = request.args.getlist('event_type[]')
+    genres = request.args.getlist('genre[]')
+    statuses = request.args.getlist('status[]')
 
-    events = db.session.scalars(
-        db.select(Event)
-        .where(Event.user_id == current_user.id)
-        .where(db.or_(*filters))
-    ).all()
+    if event_types:
+        q = q.where(Event.event_type.has(EventType.typeName.in_(event_types)))
+    if genres:
+        q = q.where(Event.genres.any(Genre.genreType.in_(genres)))
+    if statuses:
+        q = q.where(Event.status.in_(statuses))
 
-    genre_options = Genre.query.all()
-    event_type_options = EventType.query.order_by(EventType.typeName).all()
+    # Execute the query
+    events = db.session.scalars(q).all()
+
+    if not events:
+        flash('No events matched your filters. Try a different search term or filter.', 'search_info')
 
     return render_template(
         'events/myevents.html',
         heading='My Events',
         events=events,
-        search_term=term,
-        genre_options=genre_options,
-        event_type_options=event_type_options,
+        search_term=term
     )
 
 # Update event endpoint
