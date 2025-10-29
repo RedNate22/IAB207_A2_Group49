@@ -277,7 +277,9 @@ html::-webkit-scrollbar-button:hover,
     margin-bottom: 2rem;
 
     /* Fixed height to keep windows consistent */
-    height: 500px;
+    /* height: 500px; */
+    height: 600px;
+    min-height: 500px;
 
     color: var(--font-colour-primary);
     background: var(--window-main-colour);
@@ -301,12 +303,24 @@ html::-webkit-scrollbar-button:hover,
         font-size: larger;
         font-weight: bold;
         margin-bottom: 2px;
+
+        overflow: hidden;
+
+        /* Title itself */
+        .window-title {
+            /* take remaining space */
+            flex: 1 1 auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
-    /* Aesthetic window control buttons */
     /* (The buttons are purely for aesthetics and fun) */
     .window-controls {
+        /* fixed size */
         display: flex;
+        flex: 0 0 auto;
         gap: 2px;
 
         /* Global properties for all three window buttons */
