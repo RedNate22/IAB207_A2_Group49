@@ -106,6 +106,10 @@
 
 /* EVENT TYPE */
 /* The type of event (e.g. 'Concert', 'DJ Set' etc. */
+#event-type-label {
+    color: var(--font-colour-primary);
+}
+
 .event-type-field {
     margin-top: 0rem;
     margin-bottom: 1rem;
@@ -113,6 +117,27 @@
     height: 100%;
     width: 100%;
 
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+}
+
+.event-type-field:hover {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+}
+
+.event-type-field:active {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+}
+
+.event-type-field:focus {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
     border: var(--border);
     color: var(--font-colour-primary);
     background: var(--button-colour-4);
@@ -154,6 +179,9 @@
 
 .add-genre-confirm-btn:hover {
     cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    background-color: var(--button-colour-3);
+    color: var(--font-colour-primary);
     box-shadow: 1px 1px white; /* highlight on hover */
 }
 

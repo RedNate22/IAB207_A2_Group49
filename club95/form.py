@@ -1,5 +1,4 @@
 from datetime import datetime, date
-
 from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
@@ -24,14 +23,17 @@ class RegisterForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(message='Invalid email address.')])
     firstName = StringField('First Name', validators=[DataRequired()])
     lastName = StringField('Last Name', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired(),
-                                                     Length(min=8,
-                                                     # Regex to ensure password complexity 
-                                                     message='Password must be at least 8 characters long.'),
-                                                     Regexp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
-                                                     message='Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.'),
-                                                     EqualTo('confirm_password', message='Passwords must match')
-                                                     ])
+    password = PasswordField(
+        'Password', validators=[
+            DataRequired(),
+            Length(
+                min=8,
+                # Regex to ensure password complexity 
+                message='Password must be at least 8 characters long.'),
+            Regexp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+                message='Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.'),
+            EqualTo('confirm_password', message='Passwords must match')
+            ])
     confirm_password = PasswordField('Repeat Password', validators=[DataRequired()])
     phonenumber = StringField(
         'Phone No.',
@@ -46,10 +48,6 @@ class RegisterForm(FlaskForm):
     bio = TextAreaField('Bio', validators=[Optional(), Length(max=300)])
     profilePicture = FileField('Upload Image', validators=[Optional(), FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Register')
-
-# TODO: Ana - now that I have updated the database I need you to update these forms for me
-# note keep FileField for image upload
-# adds forms for creating events
 
 class EventForm(FlaskForm):
     # This form is used when creating a new event in the system
@@ -70,8 +68,6 @@ class EventForm(FlaskForm):
 
     # Dropdown menu for selecting what kind of event it is (choices populated at runtime)
     type = SelectField('Type', choices=[], coerce=int, validators=[DataRequired()])
-
-
 
     # Image upload field for the event poster
     image = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
@@ -98,13 +94,11 @@ class EventForm(FlaskForm):
         if event_date == date.today() and event_start <= now:
             raise ValidationError('Start time must be later than the current time for events scheduled today.')
 
-
 class AddGenreForm(FlaskForm):
     # A simple form that lets users add a new genre to the database
     new_genre = StringField('Add New Genre', validators=[Length(max=50), DataRequired()])
     selected_genres = HiddenField('Selected Genres')
     submit = SubmitField('Add Genre')
-
 
 class UpdateProfileForm(FlaskForm):
     # Form for updating user account details on the profile page
@@ -133,7 +127,6 @@ class UpdateProfileForm(FlaskForm):
     profilePicture = FileField('Upload Image', validators=[FileAllowed(['jpg', 'png', 'gif'], 'Images only!')])
     submit = SubmitField('Update Profile')
 
-# TODO: Nate - Ticket buying forms and creating new ticket tiers for events
 class TicketPurchaseForm(FlaskForm):
     submit = SubmitField('Purchase')
 
@@ -212,4 +205,3 @@ class updateEvent(FlaskForm):
 
     # Submit button to create the event
     submit = SubmitField('Update Event')
- 
