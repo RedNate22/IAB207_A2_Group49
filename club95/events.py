@@ -136,11 +136,16 @@ def myevents():
     if not events:
         flash('No events matched your filters. Try a different search term or filter.', 'search_info')
 
+    event_type_options = EventType.query.order_by(EventType.typeName).all()
+    genre_options = Genre.query.order_by(Genre.genreType).all()
+
     return render_template(
         'events/myevents.html',
         heading='My Events',
         events=events,
-        search_term=term
+        search_term=term,
+        event_type_options=event_type_options,
+        genre_options=genre_options
     )
 
 # Update event endpoint
@@ -230,6 +235,53 @@ def update_event(event_id):
             event.genres = updated_genres
         else:
             event.genres = []
+
+    # Prepare to replace or remove existing carousel media before adding new files
+    media_folder = os.path.join('club95', 'static', 'img', 'event_media')
+
+    for media in list(event.images):
+        # Replace an existing event media image if the user supplied a new file
+        replacement_file = request.files.get(f'replace_image_{media.id}')
+        if replacement_file and replacement_file.filename:
+            safe_name = secure_filename(replacement_file.filename)
+            if safe_name:
+                os.makedirs(media_folder, exist_ok=True)
+                timestamp = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
+                unique_name = f"event_{event.id}_{timestamp}_{media.id}_{safe_name}"
+                destination = os.path.join(media_folder, unique_name)
+                replacement_file.save(destination)
+
+                if media.filename:
+                    # Remove the obsolete file from disk when possible
+                    old_path = os.path.join('club95', 'static', 'img', media.filename)
+                    if os.path.exists(old_path):
+                        try:
+                            os.remove(old_path)
+                        except OSError:
+                            pass
+
+                media.filename = f"event_media/{unique_name}"
+
+    # Gather any media IDs flagged for deletion from the form submission
+    delete_ids_raw = request.form.getlist('delete_media_ids')
+    delete_ids = []
+    for raw_id in delete_ids_raw:
+        try:
+            delete_ids.append(int(raw_id))
+        except (TypeError, ValueError):
+            continue
+
+    if delete_ids:
+        images_to_delete = EventImage.query.filter(EventImage.event_id == event.id, EventImage.id.in_(delete_ids)).all()
+        for media in images_to_delete:
+            if media.filename:
+                media_path = os.path.join('club95', 'static', 'img', media.filename)
+                if os.path.exists(media_path):
+                    try:
+                        os.remove(media_path)
+                    except OSError:
+                        pass
+            db.session.delete(media)
 
     additional_media_files = request.files.getlist('additional_media')
     _save_event_media(event, additional_media_files)

@@ -98,6 +98,52 @@
                                 <div class="image-edit-hint d-none">Click the poster above to upload a new image.</div>
                                 <form class="event-update-form" method="post" action="{{ url_for('events_bp.update_event', event_id=event.id) }}" enctype="multipart/form-data">
                                     <input type="file" class="event-image-input d-none" name="image" accept="image/*" />
+                                    {% set media_items = event.images|sort(attribute='order_index') %}
+                                    {% if media_items %}
+                                    <div class="event-media-edit-section mb-3">
+                                        <p class="text-muted small mb-2">Click an image below to replace it or mark it for deletion.</p>
+                                        <div id="event-media-carousel-{{ event.id }}" class="carousel slide media-edit-carousel" data-bs-interval="false">
+                                            {% if media_items|length > 1 %}
+                                            <div class="carousel-indicators">
+                                                {% for media in media_items %}
+                                                <button type="button" data-bs-target="#event-media-carousel-{{ event.id }}" data-bs-slide-to="{{ loop.index0 }}" class="{% if loop.first %}active{% endif %}" {% if loop.first %}aria-current="true"{% endif %} aria-label="Slide {{ loop.index }}"></button>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
+                                            <div class="carousel-inner">
+                                                {% for media in media_items %}
+                                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                    <div class="media-edit-item position-relative p-2 border rounded">
+                                                        {% set media_src = url_for('static', filename='img/' ~ media.filename) if media.filename else url_for('static', filename='img/fallback.jpg') %}
+                                                        <img src="{{ media_src }}" class="d-block w-100 img-fit edit-media-preview rounded" alt="{{ event.title }} media {{ loop.index }}" data-original-src="{{ media_src }}" data-input-id="replace-image-{{ media.id }}" />
+                                                        <div class="media-delete-overlay d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-danger bg-opacity-75 text-white fw-semibold rounded">Marked for removal</div>
+                                                        <div class="media-edit-controls mt-2 d-flex gap-2 justify-content-center">
+                                                            <button type="button" class="btn btn-outline-secondary btn-sm replace-media-btn" data-input-id="replace-image-{{ media.id }}">Replace</button>
+                                                            <button type="button" class="btn btn-outline-danger btn-sm delete-media-btn" data-checkbox-id="delete-media-{{ media.id }}">Delete</button>
+                                                        </div>
+                                                        <input type="file" class="replace-media-input d-none" id="replace-image-{{ media.id }}" name="replace_image_{{ media.id }}" accept="image/*" />
+                                                        <input type="checkbox" class="delete-media-checkbox d-none" id="delete-media-{{ media.id }}" name="delete_media_ids" value="{{ media.id }}" />
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            {% if media_items|length > 1 %}
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#event-media-carousel-{{ event.id }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#event-media-carousel-{{ event.id }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div class="mb-3">
+                                        <label class="form-label" for="additional-media-{{ event.id }}">Add New Media</label>
+                                        <input class="form-control additional-media-input" type="file" id="additional-media-{{ event.id }}" name="additional_media" accept="image/*" multiple />
+                                    </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="title-{{ event.id }}">Title</label>
                                         <input type="text" class="form-control" id="title-{{ event.id }}" name="title" value="{{ event.title or '' }}" required />
@@ -196,11 +242,13 @@
 </div>
 
 <script>
+// Main controller for handling the inline edit state on My Events cards
 document.addEventListener('DOMContentLoaded', function () {
     const genreCreateUrl = "{{ url_for('events_bp.create_genre') }}";
     const cardColumns = document.querySelectorAll('.event-card-column');
     const eventRow = document.querySelector('.events-list-page .row.align-items-start');
 
+    // Cache starting column order so edit mode can preserve layout on exit
     if (eventRow) {
         Array.from(eventRow.children).forEach(function (column, index) {
             if (column.classList.contains('event-card-column')) {
@@ -209,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Restore cards to their initial ordering after edits finish
     function restoreOriginalOrder() {
         if (!eventRow) {
             return;
@@ -223,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Surface the active edit card at the top of the grid
     function moveColumnToFirst(column) {
         if (!eventRow || !column) {
             return;
@@ -230,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventRow.insertBefore(column, eventRow.firstElementChild);
     }
 
+    // Reset all controls and previews when leaving edit mode
     function clearEditingState() {
         restoreOriginalOrder();
         cardColumns.forEach(function (column) {
@@ -260,9 +311,37 @@ document.addEventListener('DOMContentLoaded', function () {
             if (imageInput) {
                 imageInput.value = '';
             }
+            column.querySelectorAll('.media-edit-item').forEach(function (item) {
+                const preview = item.querySelector('.edit-media-preview');
+                if (preview && preview.dataset.originalSrc) {
+                    preview.src = preview.dataset.originalSrc;
+                }
+                const fileInput = item.querySelector('.replace-media-input');
+                if (fileInput) {
+                    fileInput.value = '';
+                }
+                const deleteCheckbox = item.querySelector('.delete-media-checkbox');
+                if (deleteCheckbox) {
+                    deleteCheckbox.checked = false;
+                }
+                const deleteOverlay = item.querySelector('.media-delete-overlay');
+                if (deleteOverlay) {
+                    deleteOverlay.classList.add('d-none');
+                }
+                const deleteBtn = item.querySelector('.delete-media-btn');
+                if (deleteBtn) {
+                    deleteBtn.textContent = 'Delete';
+                }
+                item.classList.remove('marked-for-deletion');
+            });
+            const additionalInput = column.querySelector('.additional-media-input');
+            if (additionalInput) {
+                additionalInput.value = '';
+            }
         });
     }
 
+    // Hook the main poster image up to the hidden file input
     function setupImagePicker(card) {
         const image = card.querySelector('.window-img-top');
         const input = card.querySelector('.event-image-input');
@@ -307,6 +386,90 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Attach replace/delete behavior to each carousel image slide
+    function setupMediaCarousel(card) {
+        if (card.dataset.mediaBound === 'true') {
+            return;
+        }
+
+        const mediaItems = card.querySelectorAll('.media-edit-item');
+        if (!mediaItems.length) {
+            card.dataset.mediaBound = 'true';
+            return;
+        }
+
+        mediaItems.forEach(function (item) {
+            const preview = item.querySelector('.edit-media-preview');
+            const fileInput = item.querySelector('.replace-media-input');
+            const replaceBtn = item.querySelector('.replace-media-btn');
+            const deleteBtn = item.querySelector('.delete-media-btn');
+            const deleteCheckbox = item.querySelector('.delete-media-checkbox');
+            const deleteOverlay = item.querySelector('.media-delete-overlay');
+
+            if (preview && !preview.dataset.originalSrc) {
+                preview.dataset.originalSrc = preview.getAttribute('src');
+            }
+
+            // Show or hide the delete overlay and keep form inputs in sync
+            function toggleDeleteState(active) {
+                if (deleteCheckbox) {
+                    deleteCheckbox.checked = active;
+                }
+                if (deleteBtn) {
+                    deleteBtn.textContent = active ? 'Undo Delete' : 'Delete';
+                }
+                if (deleteOverlay) {
+                    deleteOverlay.classList.toggle('d-none', !active);
+                }
+                item.classList.toggle('marked-for-deletion', active);
+                if (active && fileInput) {
+                    fileInput.value = '';
+                }
+                if (active && preview && preview.dataset.originalSrc) {
+                    preview.src = preview.dataset.originalSrc;
+                }
+            }
+
+            // Route clicks from the preview or button to the hidden file input
+            function openFilePicker() {
+                if (card.classList.contains('editing') && fileInput) {
+                    fileInput.click();
+                }
+            }
+
+            if (preview) {
+                preview.addEventListener('click', openFilePicker);
+            }
+            if (replaceBtn) {
+                replaceBtn.addEventListener('click', openFilePicker);
+            }
+            if (fileInput) {
+                fileInput.addEventListener('change', function (event) {
+                    const file = event.target.files[0];
+                    if (file && preview) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            preview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                        toggleDeleteState(false);
+                    } else if (preview && preview.dataset.originalSrc) {
+                        preview.src = preview.dataset.originalSrc;
+                    }
+                });
+            }
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function () {
+                    const shouldDelete = !(deleteCheckbox && deleteCheckbox.checked);
+                    toggleDeleteState(shouldDelete);
+                });
+            }
+        });
+
+        card.dataset.mediaBound = 'true';
+    }
+
+    // Kick off edit mode when the Update Event button is pressed
     document.querySelectorAll('.start-edit-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             clearEditingState();
@@ -322,6 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             moveColumnToFirst(column);
             setupImagePicker(card);
+            setupMediaCarousel(card);
             column.classList.add('editing-active');
             card.classList.add('editing');
             display.classList.add('d-none');
