@@ -13,7 +13,7 @@
     otherwise they can run into a glitch where the border is overriden by the hover & active box shadows.
     */
     border: var(--border) !important;
-    background-color: var(--button-colour-3) !important; /* default colour */
+    background-color: var(--button-colour-3); /* default colour */
 }
 
 .btn:hover .btn-primary:hover,
