@@ -1,7 +1,9 @@
+<!-- prettier-ignore -->
 {% extends "base.html" %}
 {% from "bootstrap5/form.html" import render_form %}
 
 {% block body %}
+<!-- prettier-ignore -->
 <div class="centered-form">
 
     {# Flash message section #}
@@ -15,7 +17,7 @@
         {% endif %}
     {% endwith %}
 
-        {# Flash message section #}
+    {# Flash message section #}
     {% with messages = get_flashed_messages(category_filter=['registration_success']) %}
         {% if messages %}
             <div class="success">

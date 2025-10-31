@@ -1,23 +1,33 @@
 /* BUTTONS */
 /* Global styling & behaviour for all buttons */
 /* Individual behaviour is defined via id's or classes */
+/* 
+    * '!important' is required to override WTFForms/Bootstrap defaults
+    in the case of render_form or any other form macros
+*/
 
-.btn {
+.btn,
+.btn-primary,
+.btn-secondary {
     /* * button borders may need to be defined locally, 
     otherwise they can run into a glitch where the border is overriden by the hover & active box shadows.
     */
-
-    border: var(--border);
-    /* Default button colour */
-    background-color: var(--button-colour-3);
+    border: var(--border) !important;
+    background-color: var(--button-colour-3) !important; /* default colour */
 }
 
-.btn:hover {
-    cursor: pointer; /* ensure cursor is showed as pointer on hover */
-    box-shadow: 1px 1px white; /* highlight on hover */
+.btn:hover .btn-primary:hover,
+.btn-secondary:hover {
+    border: var(--border) !important;
+
+    box-shadow: 1px 1px white !important; /* highlight on hover */
+    cursor: pointer !important; /* ensure cursor is showed as pointer on hover */
 }
 
-.btn:active {
-    box-shadow: 1px 1px white; /* highlight on press */
-    transform: translateY(2px); /* move on press */
+.btn:active .btn-primary:active,
+.btn-secondary:active {
+    border: var(--border) !important;
+
+    box-shadow: 1px 1px white !important; /* highlight on press */
+    transform: translateY(2px) !important; /* move on press */
 }
