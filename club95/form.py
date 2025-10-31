@@ -55,7 +55,7 @@ class EventForm(FlaskForm):
 
     title = StringField('Event Title', validators=[DataRequired()])  # Name of the event
     date = DateField('Event Date', format='%Y-%m-%d', validators=[DataRequired()])  # Date when the event will be held
-    description = StringField('Event Description', validators=[DataRequired()])  # Short description of the event
+    description = TextAreaField('Event Description', validators=[DataRequired(), Length(min=20, max=500)])  # Short description of the event (20-250 chars)
     location = StringField('Event Location', validators=[DataRequired()])  # Where the event takes place
     start_time = TimeField('Start Time', format='%H:%M', validators=[DataRequired()])  # When the event begins
     end_time = TimeField('End Time', format='%H:%M', validators=[DataRequired()])  # When the event ends
