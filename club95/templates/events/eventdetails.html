@@ -164,12 +164,16 @@
                         <!-- window content -->
                         <div class="sub-window">
                             <section class="window-tags">
-                                {% set event_type_label = event.event_type.typeName if event.event_type else 'Unassigned' %}
-                                {% set status_label = event.status or 'OPEN' %}
+                                {% set event_type_label =
+                                event.event_type.typeName if event.event_type
+                                else 'Unassigned' %} {% set status_label =
+                                event.status or 'OPEN' %}
                                 <span class="badge" id="event-type"
                                     >{{ event_type_label }}</span
                                 >
-                                <span class="badge" id="event-status-{{ status_label|lower|replace(' ', '-') }}"
+                                <span
+                                    class="badge"
+                                    id="event-status-{{ status_label|lower|replace(' ', '-') }}"
                                     >{{ status_label }}</span
                                 >
                             </section>
@@ -246,21 +250,22 @@
 
                         <!-- window content -->
                         <div class="sub-window">
-                            {% set venue_map_url = event.venue.venueMap if event.venue and event.venue.venueMap else None %}
-                            {% if venue_map_url %}
-                                <iframe
-                                    src="{{ venue_map_url }}"
-                                    width="100%"
-                                    height="100%"
-                                    style="border: 0"
-                                    allowfullscreen=""
-                                    loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"
-                                ></iframe>
+                            {% set venue_map_url = event.venue.venueMap if
+                            event.venue and event.venue.venueMap else None %} {%
+                            if venue_map_url %}
+                            <iframe
+                                src="{{ venue_map_url }}"
+                                width="100%"
+                                height="100%"
+                                style="border: 0"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                            ></iframe>
                             {% else %}
-                                <p class="sub-window-content">
-                                    Map preview unavailable for this venue.
-                                </p>
+                            <p class="sub-window-content">
+                                Map preview unavailable for this venue.
+                            </p>
                             {% endif %}
                         </div>
                     </div>
@@ -747,8 +752,11 @@
                         <div class="sub-window">
                             <p class="sub-window-content">
                                 <strong>Poster:</strong>
-                                {% set commenter_name = ((comment.user.firstName ~ ' ' ~ (comment.user.lastName or '')) | trim) if comment.user else '' %}
-                                {{ commenter_name or (comment.user.email if comment.user and comment.user.email else 'Anonymous') }}
+                                {% set commenter_name = ((comment.user.firstName
+                                ~ ' ' ~ (comment.user.lastName or '')) | trim)
+                                if comment.user else '' %} {{ commenter_name or
+                                (comment.user.email if comment.user and
+                                comment.user.email else 'Anonymous') }}
                                 <br />
                                 <strong>DateTime:</strong>
                                 {{ comment.commentDateTime.strftime('%d/%m/%y

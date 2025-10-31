@@ -292,6 +292,10 @@ html::-webkit-scrollbar-button:hover,
 
     /* Title bar to hold the title and window buttons */
     .title-bar {
+        /* Keep title-bar height consistent */
+        min-height: 30px;
+        max-height: 30px;
+
         display: flex;
         justify-content: space-between; /* keep space between title and buttons */
         align-items: center;

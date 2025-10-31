@@ -1,0 +1,43 @@
+.btn-primary {
+    border: var(--border);
+    background-color: var(--button-colour-3);
+}
+
+.btn-primary:hover {
+    border: var(--border);
+    background-color: var(--button-colour-3);
+
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    box-shadow: 1px 1px white; /* highlight on hover */
+}
+
+.btn-primary:active {
+    border: var(--border) !important;
+    background-color: var(--button-colour-3) !important;
+
+    transform: translateY(2px) !important; /* move on press */
+    box-shadow: 1px 1px white !important; /* highlight on press */
+}
+
+#login-window {
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+
+    height: 100%;
+    width: 100%;
+
+    /* Add padding between content and window */
+    .sub-window {
+        padding: 15px;
+    }
+
+    /* Add border to input form */
+    .form-control {
+        border: var(--border);
+    }
+
+    #no-account-q {
+        margin-top: 1rem;
+        margin-bottom: 0rem;
+    }
+}

@@ -1,4 +1,9 @@
 .flash-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+
     border: var(--border);
     border-radius: 6px;
 
@@ -8,30 +13,24 @@
     max-height: 30px; /* collapsed height */
     width: 300px;
 
-    transition: max-height 0.3s ease;
+    /* transition: max-height 0.3s ease; */
+    transition: max-height 1.5s ease-in-out 0.2s;
     cursor: pointer;
+
+    user-select: none; /* prevent selecting text */
 }
 
-.flash-hover {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    border-radius: 6px;
-}
-
-.flash-hover:hover .flash-container {
-    /* expand on hover */
+.flash-container.expand {
     max-height: 300px;
 }
 
-.flash-hover:hover {
+.flash-container.expand:hover {
     box-shadow: 1px 1px white; /* highlight on hover */
 }
 
-.flash-hover:active {
-    box-shadow: 1px 1px white; /* highlight on press */
-    transform: translateY(2px); /* move on press */
+.flash-container.expand:active {
+    box-shadow: 1px 1px white; /* highlight on hover */
+    transform: translateY(2px);
 }
 
 .success {

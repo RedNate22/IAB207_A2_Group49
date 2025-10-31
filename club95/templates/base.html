@@ -79,17 +79,23 @@
                             <!-- welcome message for logged in user-->
                             {% if current_user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('user_bp.profile') }}"
-                                    >{{ (current_user.firstName ~ ' ' ~ (current_user.lastName or '')) | trim }}
-                                </a
-                                >
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('user_bp.profile') }}"
+                                    >{{ (current_user.firstName ~ ' ' ~
+                                    (current_user.lastName or '')) | trim }}
+                                </a>
                             </li>
                             {% else %}
-                            
+
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Account</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('auth_bp.login') }}"
+                                    >Account</a
+                                >
                             </li>
-                            
+
                             {% endif %}
                             <!-- Help menu -->
                             <li class="nav-item dropdown">
@@ -147,13 +153,21 @@
                                     >My Tickets</a
                                 >
                             </li>
-                            {% endif %}
-                            {% if not current_user.is_authenticated %}
+                            {% endif %} {% if not current_user.is_authenticated
+                            %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('auth_bp.login') }}">Sign In</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('auth_bp.login') }}"
+                                    >Sign In</a
+                                >
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('auth_bp.register') }}">Register</a>
+                                <a
+                                    class="nav-link"
+                                    href="{{ url_for('auth_bp.register') }}"
+                                    >Register</a
+                                >
                             </li>
                             {% else %}
                             <li class="nav-item">
@@ -231,3 +245,10 @@
         ></script>
     </body>
 </html>
+
+<script>
+    window.addEventListener("load", () => {
+        const el = document.querySelector(".flash-container");
+        if (el) el.classList.add("expand");
+    });
+</script>
