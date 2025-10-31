@@ -18,3 +18,26 @@
     transform: translateY(2px) !important; /* move on press */
     box-shadow: 1px 1px white !important; /* highlight on press */
 }
+
+#login-window {
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+
+    height: 100%;
+    width: 100%;
+
+    /* Add padding between content and window */
+    .sub-window {
+        padding: 15px;
+    }
+
+    /* Add border to input form */
+    .form-control {
+        border: var(--border);
+    }
+
+    #no-account-q {
+        margin-top: 1rem;
+        margin-bottom: 0rem;
+    }
+}
