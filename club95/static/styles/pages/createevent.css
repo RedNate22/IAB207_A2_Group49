@@ -1,0 +1,320 @@
+/* CREATE EVENT PAGE */
+/* The page where a user can create an event by entering all the details. */
+
+/* EVENT NAME */
+#enter-event-name-window {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* EVENT DESCRIPTION */
+/* The description of the event */
+#enter-event-description-window {
+    height: 100%;
+    width: 100%;
+
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    .form-control {
+        padding: 5px;
+    }
+
+    #description-help {
+        color: var(--font-colour-seconday);
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+}
+
+.event-type-field:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px white;
+}
+
+.btn:active {
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
+}
+
+/* EVENT POSTER */
+/* * Users must upload a poster for their event to be used on the event listing page */
+
+#upload-event-poster-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+
+    /* Add padding between content and window */
+    .sub-window {
+        padding: 5px;
+    }
+
+    /* Add border to input form */
+    .form-control {
+        border: var(--border);
+    }
+
+    /* Customise form button */
+    .form-control::file-selector-button {
+        color: var(--font-colour-primary);
+        background-color: var(--button-colour-4);
+        border-right: var(
+            --border
+        ); /* add border between "Browse.." and file upload bar */
+    }
+}
+
+/* EVENT LOCATION */
+/* The location of the event */
+#enter-event-location-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* EVENT DATE */
+/* The date of the event */
+#enter-event-date-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* EVENT START/END TIMES */
+/* The start and end times of the event */
+#enter-event-start-time-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+#enter-event-end-time-window {
+    margin-top: 0rem;
+    margin-bottom: 3rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* EVENT TYPE */
+/* The type of event (e.g. 'Concert', 'DJ Set' etc. */
+#event-type-label {
+    color: var(--font-colour-primary);
+}
+
+.event-type-field {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+}
+
+.event-type-field:hover {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+    box-shadow: 1px 1px white; /* highlight on hover */
+}
+
+.event-type-field:active {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
+}
+
+.event-type-field:focus {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    color: var(--font-colour-primary);
+    background: var(--button-colour-4);
+    box-shadow: 1px 1px white; /* highlight on press */
+}
+
+/* EVENT GENRES */
+/* The genres performed by the artists during the event */
+#enter-event-genres-btn-group {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+#enter-event-genres-btn {
+    color: var(--font-colour-primary);
+    border: var(--border);
+    background-color: var(--button-colour-3);
+}
+
+#new-genre {
+    font: var(--font-colour-primary);
+    border: var(--border);
+
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    width: 100%;
+}
+
+.add-genre-confirm-btn {
+    color: var(--font-colour-primary);
+    background-color: var(--button-colour-3);
+
+    margin-top: 0rem;
+    margin-bottom: 3rem;
+}
+
+.add-genre-confirm-btn:hover {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    border: var(--border);
+    background-color: var(--button-colour-3);
+    color: var(--font-colour-primary);
+    box-shadow: 1px 1px white; /* highlight on hover */
+}
+
+.add-genre-confirm-btn:active {
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
+}
+
+/* ARTIST LINEUP */
+/* The artist lineup for the event */
+#enter-artist-name-window,
+#enter-artist-set-time-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* ADD MORE ARTISTS BUTTON */
+/* A button to add more artists to the lineup */
+#add-more-artists-btn-group {
+    margin-top: 0rem;
+    margin-bottom: 4rem; /* add spacing between add more artists btn and tickets */
+
+    height: 100%;
+    width: 100%;
+}
+
+#add-more-artists-btn {
+    border: var(--border);
+    background-color: var(--button-colour-5);
+}
+
+/* TICKET TIERS, PRICES & QUANTITIES *Purchased TickeMy ts /
+/* Users must enter at least one ticket tier, and the no. (quantity) of
+tickets belonging to that tier. */
+
+/* 
+    * Ticket tier: Can be entered in any format, e.g. "Tier X: VIP", "VIP", "10" etc.
+    * Price: Must be entered in decimal form: xx.xx, e.g. "50.00", "29.99", "01.00" etc.
+    * Quantity: Must be enetered in whole integer form: e.g. "100", "5", "9000" etc.
+    * Perks: Optional field where the user can enter any perks/benefits that come with tier: e.g. "Free Drink"
+*/
+
+#enter-ticket-tier-window,
+#enter-ticket-perks-window,
+#enter-ticket-price-window,
+#enter-ticket-quantity-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+/* ADD MORE TICKET TIERS BUTTON */
+/* A button to add more ticket tiers (& their prices/quantities) */
+/* TODO: future implementation: pressing this button would generate x amount
+of more rows of ticket tier (+ prices/quantities) windows for the user to enter. */
+
+#add-more-ticket-tiers-btn-group {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+#add-more-ticket-tiers-btn {
+    border: var(--border);
+    background-color: var(--button-colour-5);
+    margin-bottom: 4rem;
+}
+
+/* ADDITIONAL MEDIA */
+/* Users may (optionally) upload any additional media to advertise
+their event (or past events). */
+
+#upload-additional-media-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: 100%;
+    width: 100%;
+
+    /* Add padding between content and window */
+    .sub-window {
+        padding: 5px;
+    }
+
+    /* Add border to input form */
+    .form-control {
+        border: var(--border);
+    }
+
+    /* Customise form button */
+    .form-control::file-selector-button {
+        color: var(--font-colour-primary);
+        background-color: var(--button-colour-4);
+        border-right: var(
+            --border
+        ); /* add border between "Browse.." and file upload bar */
+    }
+}
+
+/* POST EVENT BUTTON */
+/* Once the user has finalised all the (non-optional) details for their event,
+they can press this button to post it. */
+
+/* 
+* Certain fields will need to be completed before the user is allowed to post 
+the event (title, desc, poster, location, date, start/end times, genres, 
+at least one artist name, and at least one ticket tier(s) and quantity(ies).  
+*/
+
+#post-event-btn-group {
+    margin-top: 0rem;
+    margin-bottom: 4rem;
+
+    height: 100%;
+    width: 100%;
+}
+
+#post-event-btn {
+    border: var(--border);
+    background-color: var(--button-colour-3);
+}

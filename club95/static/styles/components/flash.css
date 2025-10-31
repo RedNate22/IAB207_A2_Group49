@@ -1,0 +1,79 @@
+.flash-container {
+    border: var(--border);
+    border-radius: 6px;
+
+    color: var(--font-colour-seconday);
+    overflow: hidden;
+
+    max-height: 30px; /* collapsed height */
+    width: 300px;
+
+    transition: max-height 0.3s ease;
+    cursor: pointer;
+}
+
+.flash-hover {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    border-radius: 6px;
+}
+
+.flash-hover:hover .flash-container {
+    /* expand on hover */
+    max-height: 300px;
+}
+
+.flash-hover:hover {
+    box-shadow: 1px 1px white; /* highlight on hover */
+}
+
+.flash-hover:active {
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
+}
+
+.success {
+    height: 100%;
+    width: 100%;
+
+    font-size: large;
+    text-align: center;
+
+    color: var(--font-colour-primary);
+    background-color: var(--accent-colour-3);
+}
+
+.danger {
+    height: 100%;
+    width: 100%;
+
+    font-size: larger;
+    text-align: center;
+
+    color: var(--font-colour-primary);
+    background-color: var(--accent-colour-4);
+}
+
+.error {
+    height: 100%;
+    width: 100%;
+
+    font-size: larger;
+    text-align: center;
+
+    color: var(--font-colour-primary);
+    background-color: var(--accent-colour-4);
+}
+
+.warning {
+    height: 100%;
+    width: 100%;
+
+    font-size: larger;
+    text-align: center;
+
+    color: var(--font-colour-seconday);
+    background-color: var(--button-colour-1);
+}

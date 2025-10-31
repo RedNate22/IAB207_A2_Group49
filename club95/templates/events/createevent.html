@@ -15,8 +15,8 @@
                 <!-- Enter Event Name Section -->
                 <section class="enter-event-name-section">
                     <div class="row align-items-center">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div class="window" id="enter-event-name-window">
                                 <div class="title-bar">
                                     <span class="window-title">Event Name</span>
@@ -50,22 +50,23 @@
                                     {{ form.title(class="form-control form-control-lg", placeholder="Enter the name of the event") }}
                                     {% if form.title.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.title.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.title.errors %}{{
+                                        error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
-                    <div class="col-3"></div>
                 </section>
                 <!-- End of Enter Event Name Section -->
 
                 <!-- Enter Event Description Section -->
                 <section class="enter-event-description-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="window"
                                 id="enter-event-description-window"
@@ -100,17 +101,24 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
+                                    <!-- prettier-ignore -->
                                     <div class="mb-3" id="post-comment-form">
                                         <label
                                             for="description-text"
                                             class="enter-comment"
-                                            >Enter description:</label
-                                        >
-                                        {{ form.description(class="form-control", id="description-text", rows="6") }}
+                                            >Enter description:</label>
+                                        {{ form.description(
+                                            class="form-control",
+                                            id="description-text", 
+                                            rows="6") 
+                                        }} 
                                         {% if form.description.errors %}
-                                        <div class="alert alert-danger mt-2">
-                                            {% for error in form.description.errors %}{{ error }}<br>{% endfor %}
-                                        </div>
+                                            <div class="alert alert-danger mt-2">
+                                                {% for error in form.description.errors %}
+                                                    {{ error }}
+                                                    <br />
+                                                {% endfor %}
+                                            </div>
                                         {% endif %}
                                     </div>
                                     <div
@@ -123,7 +131,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Enter Event Description Section -->
@@ -131,8 +139,8 @@
                 <!-- Upload Event Poster Section -->
                 <section class="upload-event-poster-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div class="window" id="upload-event-poster-window">
                                 <div class="title-bar">
                                     <span class="window-title"
@@ -172,7 +180,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Upload Event Poster Section -->
@@ -180,8 +188,8 @@
                 <!-- Enter Event Location Section -->
                 <section class="enter-event-location-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="window"
                                 id="enter-event-location-window"
@@ -218,21 +226,22 @@
                                     {{ form.location(class="form-control", placeholder="Enter the location of the event") }}
                                     {% if form.location.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.location.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.location.errors
+                                        %}{{ error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Enter Event Location Section -->
 
                 <section class="enter-event-date-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div class="window" id="enter-event-date-window">
                                 <div class="title-bar">
                                     <span class="window-title">Date</span>
@@ -262,16 +271,18 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                                {{ form.date(class="form-control", type="date", placeholder="Enter date", min=min_date) }}
-                                    {% if form.date.errors %}
+                                    {{ form.date(class="form-control",
+                                    type="date", placeholder="Enter date",
+                                    min=min_date) }} {% if form.date.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.date.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.date.errors %}{{
+                                        error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Enter Event Date Section -->
@@ -279,8 +290,8 @@
                 <!-- Enter Event Start End Time Section -->
                 <section class="enter-event-start-end-time-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-3">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-3">
                             <div
                                 class="window"
                                 id="enter-event-start-time-window"
@@ -315,16 +326,19 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.start_time(class="form-control", type="time", step="60", min="00:00", max="23:59", title="Use 24hr format hh:mm") }}
-                                    {% if form.start_time.errors %}
+                                    {{ form.start_time(class="form-control",
+                                    type="time", step="60", min="00:00",
+                                    max="23:59", title="Use 24hr format hh:mm")
+                                    }} {% if form.start_time.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.start_time.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.start_time.errors
+                                        %}{{ error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-sm-12 col-md-4 col-lg-3">
                             <div
                                 class="window"
                                 id="enter-event-end-time-window"
@@ -359,16 +373,19 @@
                                     </div>
                                 </div>
                                 <div class="sub-window">
-                                    {{ form.end_time(class="form-control", type="time", step="60", min="00:00", max="23:59", title="Use 24hr format hh:mm") }}
-                                    {% if form.end_time.errors %}
+                                    {{ form.end_time(class="form-control",
+                                    type="time", step="60", min="00:00",
+                                    max="23:59", title="Use 24hr format hh:mm")
+                                    }} {% if form.end_time.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.end_time.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.end_time.errors
+                                        %}{{ error }}<br />{% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Event Enter Start End Time Section -->
@@ -376,59 +393,30 @@
                 <!-- Enter Event Type Section -->
                 <section class="enter-event-type-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
-                            <div class="window" id="enter-event-type-window">
-                                <div class="title-bar">
-                                    <span class="window-title">Event Type</span>
-                                    <div class="window-controls">
-                                        <button
-                                            type="button"
-                                            class="btn"
-                                            href="#!"
-                                        >
-                                            _
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn"
-                                            href="#!"
-                                        >
-                                            ☐
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn"
-                                            id="closebtn"
-                                            href="#!"
-                                        >
-                                            X
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="sub-window">
-                                    {{ form.type(class="form-control") }}
-                                    {% if form.type.errors %}
-                                    <div class="alert alert-danger mt-2">
-                                        {% for error in form.type.errors %}{{ error }}<br>{% endfor %}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <!-- prettier-ignore -->
+                        <div class="col-sm-12 col-md-8 col-lg-6">
+                            <label id="event-type-label">Select the type of event.</label
+                            >
+                            {{ form.type(class="form-control event-type-field", placeholder="Select the type of event.") }} 
+                            {% if form.type.errors %}
+                                <div class="alert alert-danger mt-2"></div>
+                                {% for error in form.type.errors %} 
+                                    {{ error }}
+                                    <br />
+                                {% endfor %}
+                            {% endif %}
                         </div>
-                        <div class="col-3"></div>
                     </div>
+                    <div class="col-sm-0 col-md-2 col-lg-3"></div>
                 </section>
                 <!-- End of Enter Event Type Section -->
 
                 <!-- Enter Event Genres section -->
                 <section class="enter-event-genres-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div
-                            class="col-6 d-flex align-items-start"
-                            style="gap: 12px"
-                        >
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="btn-group"
                                 id="enter-event-genres-btn-group"
@@ -441,70 +429,74 @@
                                 >
                                     Select Genres For Event
                                 </button>
+                                <!-- prettier-ignore -->
                                 <ul
                                     class="dropdown-menu dropdown-menu-end"
                                     id="dropdown-menu"
                                 >
                                     {% for id, name in form.genres.choices %}
-                                    <li class="d-flex align-items-center">
+                                    <li class="align-items-center">
                                         <input
                                             class="form-check-input mt-0 ms-2"
                                             type="checkbox"
                                             name="genres"
                                             value="{{ id }}"
                                             id="genre-{{ id }}"
-                                            {%
-                                            if
-                                            id
-                                            in
-                                            (form.genres.data
-                                            or
-                                            [])
-                                            %}checked{%
-                                            endif
-                                            %}
+                                            {% if id in (form.genres.data or []) %} 
+                                                checked 
+                                            {% endif %}
                                         />
                                         <span class="dropdown-text">
                                             {{ name }}
                                         </span>
                                     </li>
-                                    {% endfor %}
+                                    {% endfor %} 
                                     {% if form.genres.errors %}
                                     <div class="alert alert-danger mt-2">
-                                        {% for error in form.genres.errors %}{{ error }}<br>{% endfor %}
+                                        {% for error in form.genres.errors %}
+                                            {{ error }} <br />
+                                        {% endfor %}
                                     </div>
                                     {% endif %}
                                 </ul>
                             </div>
-                            <div
-                                class="d-flex align-items-center"
-                                style="gap: 8px"
-                            >
-                                {{
-                                add_genre_form.new_genre(class="form-control",
-                                id="new-genre", placeholder="Add new genre",
-                                form="add-genre-form") }} {{
-                                add_genre_form.selected_genres(
-                                    id="selected-genres-field",
-                                    type="hidden",
-                                    form="add-genre-form"
-                                ) }} {{
-                                add_genre_form.submit(class="btn btn-secondary",
-                                form="add-genre-form") }}
-                            </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                    </div>
+                    <div class="row align-items-start">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <!-- prettier-ignore -->
+                            {{ add_genre_form.new_genre(
+                                    class="form-control", 
+                                    id="new-genre",
+                                    placeholder="Add new genre...",
+                                    form="add-genre-form") 
+                                }}
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-2">
+                            <!-- prettier-ignore -->
+                            {{ add_genre_form.selected_genres(
+                                    id="selected-genres-field",
+                                    type="hidden", 
+                                    form="add-genre-form" )
+                            }} 
+                            {{ add_genre_form.submit( 
+                                class="btn w-100 add-genre-confirm-btn", 
+                                form="add-genre-form")
+                            }}
+                        </div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
-
                 <!-- End of Enter Event Genres section -->
 
                 <!-- Enter Event Artist Lineup Section -->
                 <section class="artist-lineup-section">
                     <div id="artist-lineup-rows">
                         <div class="row align-items-start artist-row">
-                            <div class="col-3"></div>
-                            <div class="col-3">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-artist-name-window"
@@ -548,7 +540,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-artist-set-time-window"
@@ -596,12 +588,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3"></div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
                     </div>
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="btn-group"
                                 id="add-more-artists-btn-group"
@@ -615,17 +607,18 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                     {% if artist_errors %}
                     <div class="row mt-2">
                         <div class="col-3"></div>
                         <div class="col-6">
                             <div class="alert alert-danger">
-                                {% for error in artist_errors %}{{ error }}<br>{% endfor %}
+                                {% for error in artist_errors %}{{ error }}<br />{%
+                                endfor %}
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-2"></div>
                     </div>
                     {% endif %}
                 </section>
@@ -635,8 +628,8 @@
                 <section class="ticket-tiers-section">
                     <div id="ticket-tiers-rows">
                         <div class="row align-items-start ticket-row">
-                            <div class="col-3"></div>
-                            <div class="col-6">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-8 col-lg-6">
                                 <div
                                     class="window"
                                     id="enter-ticket-tier-window"
@@ -680,19 +673,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
 
                         <div class="row align-items-start ticket-row">
-                            <div class="col-3"></div>
-                            <div class="col-6">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-8 col-lg-6">
                                 <div
                                     class="window"
                                     id="enter-ticket-perks-window"
                                 >
                                     <div class="title-bar">
-                                        <span class="window-title"
-                                            >Perks</span
-                                        >
+                                        <span class="window-title">Perks</span>
                                         <div class="window-controls">
                                             <button
                                                 type="button"
@@ -729,11 +721,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
 
                         <div class="row align-items-start ticket-row">
-                            <div class="col-3"></div>
-                            <div class="col-3">
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-ticket-price-window"
@@ -780,7 +773,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-12 col-md-4 col-lg-3">
                                 <div
                                     class="window"
                                     id="enter-ticket-quantity-window"
@@ -829,12 +822,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-3"></div>
+                            <div class="col-sm-0 col-md-2 col-lg-3"></div>
                         </div>
                     </div>
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="btn-group"
                                 id="add-more-ticket-tiers-btn-group"
@@ -848,7 +841,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Ticket Tiers Section -->
@@ -856,8 +849,8 @@
                 <!-- Upload Additional Media Section -->
                 <section class="upload-additional-media-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div
                                 class="window"
                                 id="upload-additional-media-window"
@@ -908,7 +901,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Upload Additional Media Section -->
@@ -916,14 +909,14 @@
                 <!-- Post Event Section -->
                 <section class="post-event-section">
                     <div class="row align-items-start">
-                        <div class="col-3"></div>
-                        <div class="col-6">
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
+                        <div class="col-sm-12 col-md-8 col-lg-6">
                             <div class="btn-group" id="post-event-btn-group">
                                 {{ form.submit(class="btn btn-primary",
                                 id="post-event-btn") }}
                             </div>
                         </div>
-                        <div class="col-3"></div>
+                        <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
                 </section>
                 <!-- End of Post Event Section -->

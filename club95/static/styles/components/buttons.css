@@ -1,0 +1,23 @@
+/* BUTTONS */
+/* Global styling & behaviour for all buttons */
+/* Individual behaviour is defined via id's or classes */
+
+.btn {
+    /* * button borders may need to be defined locally, 
+    otherwise they can run into a glitch where the border is overriden by the hover & active box shadows.
+    */
+
+    border: var(--border);
+    /* Default button colour */
+    background-color: var(--button-colour-3);
+}
+
+.btn:hover {
+    cursor: pointer; /* ensure cursor is showed as pointer on hover */
+    box-shadow: 1px 1px white; /* highlight on hover */
+}
+
+.btn:active {
+    box-shadow: 1px 1px white; /* highlight on press */
+    transform: translateY(2px); /* move on press */
+}

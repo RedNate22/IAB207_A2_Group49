@@ -87,6 +87,45 @@ def create_app():
    # checks for and then creates database
    _ensure_database(app)
    
+ # -------------------------------------------------------------
+   # Context Processor for Dynamic Filter Options
+   # -------------------------------------------------------------
+   # This function runs before every template render and injects
+   # shared data into all templates (similar to a global variable).
+   # In this case, it provides the list of event types, genres,
+   # and statuses directly from the database. 
+   #
+   # This allows dropdown filters in the HTML (e.g. homepage, 
+   # My Events, My Tickets) to display dynamic options 
+   # based on the data actually stored in the database, 
+   # rather than hardcoding them.
+   #
+   # Reference: https://flask.palletsprojects.com/en/3.0.x/templating/#context-processors
+   # -------------------------------------------------------------
+
+   from .models import Genre, EventType  # import models used to fetch data
+
+   @app.context_processor
+   def inject_filter_options():
+       try:
+           # Query all event types and genres from the database
+           event_types = EventType.query.order_by(EventType.typeName).all()
+           genres = Genre.query.order_by(Genre.genreType).all()
+       except Exception:
+           # If tables are missing or database not yet created, avoid errors
+           event_types, genres = [], []
+
+       # Define a static list of possible event statuses for filtering
+       statuses = ['OPEN', 'INACTIVE', 'SOLD OUT', 'CANCELLED']
+
+       # Return these as a dictionary so they are available to every template
+       return {
+           'filter_event_types': event_types,
+           'filter_genres': genres,
+           'filter_statuses': statuses
+       }
+
+
    return app
 
 def _ensure_database(app: Flask) -> None:
@@ -251,7 +290,7 @@ def populate_database(app: Flask) -> None:
             "genres": ["Electronic", "Techno", "Synthwave"],
             "artists": ["DJ Spreadsheet"],
             "tickets": [
-               {"tier": "1", "price": 5.00, "qty": 30}
+               {"tier": "1", "price": 5.00, "perks": "1 unpaid lunch break", "qty": 30}
             ], 
          },
          # Crescent City Players
@@ -271,11 +310,11 @@ def populate_database(app: Flask) -> None:
             "genres": ["Jazz", "Swing", "Fusion"],
             "artists": ["Crescent City Players", "The Walters", "Mojo Webb"],
             "tickets": [
-               {"tier": "1", "price": 0.00, "qty": 30},
-               {"tier": "2", "price": 7.99, "qty": 20},
-               {"tier": "3", "price": 14.99, "qty": 10},
-               {"tier": "4", "price": 24.99, "qty": 5},
-               {"tier": "5", "price": 49.99, "qty": 1},
+               {"tier": "1", "price": 0.00, "perks": "", "qty": 30},
+               {"tier": "2", "price": 7.99, "perks": "1 free drink of choice", "qty": 20},
+               {"tier": "3", "price": 14.99, "perks": "2 free drinks of choice", "qty": 10},
+               {"tier": "4", "price": 24.99, "perks": "2 free drinks of chocie & priority seating", "qty": 5},
+               {"tier": "5", "price": 49.99, "perks": "VIP (unlimited drinks, meet and greet with the bands)", "qty": 1},
             ], 
          },
          # Moonlight Resonance
@@ -294,7 +333,7 @@ def populate_database(app: Flask) -> None:
             "genres": ["Classical", "Contemporary", "Orchestral"],
             "artists": ["Commonwealth Orchestra"],
             "tickets": [
-               {"tier": "Standard", "price": 32.00, "qty": 130}
+               {"tier": "Standard", "price": 32.00, "perks": "", "qty": 130}
             ], 
          },
          # The Overwhelming Festival
@@ -313,8 +352,8 @@ def populate_database(app: Flask) -> None:
             "genres": ["Pop", "Electronic", "Techno", "Indie"],
             "artists": ["Do I really need to list all 600?"],
             "tickets": [
-               {"tier": "Portaloo Enjoyer", "price": 5.05, "qty": 5000},
-               {"tier": "Taco Tuesday (1 free taco!)", "price": 12.05, "qty": 100}
+               {"tier": "Portaloo Enjoyer", "price": 5.05, "perks": "", "qty": 5000},
+               {"tier": "Taco Tuesday", "price": 12.05, "perks": "1 free taco", "qty": 100}
             ], 
          },
          # Optimistic Yeti: Doom Jazz
@@ -334,7 +373,7 @@ def populate_database(app: Flask) -> None:
             "genres": ["Experimental", "Jazz", "Metal"],
             "artists": ["Optimistic Yeti"],
             "tickets": [
-               {"tier": "Yeti fan", "price": 999.999, "qty": 0}
+               {"tier": "Yeti fan", "price": 999.999, "perks": "IGA parking", "qty": 0}
             ], 
          },
          # Sydney Indie Nights: Local Showcase
@@ -354,8 +393,8 @@ def populate_database(app: Flask) -> None:
                "Finlay's Starlights", "Sour Tart", "Dead Gear", "Lead Donkeys",
                "Bitter Sweet's", "and more!"],
             "tickets": [
-               {"tier": "Basic", "price": 10.50, "qty": 100},
-               {"tier": "VIP", "price": 90.50, "qty": 5},
+               {"tier": "Basic", "price": 10.50, "perks": "", "qty": 100},
+               {"tier": "VIP", "price": 90.50, "perks": "VIP meet and greet with the bands", "qty": 5},
             ], 
          },
       ]
@@ -389,7 +428,7 @@ def populate_database(app: Flask) -> None:
 
             # attach tickets
             event.tickets = [
-               Ticket(ticketTier=t["tier"], price=float(t["price"]), availability=int(t["qty"]))
+               Ticket(ticketTier=t["tier"], price=float(t["price"]), perks=t["perks"], availability=int(t["qty"]))
                for t in seed["tickets"]
                if (t.get("tier") or "").strip()
             ]

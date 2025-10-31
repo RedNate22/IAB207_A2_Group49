@@ -1,141 +1,103 @@
 {% macro render_search_filters(search_term='', search_url='home_bp.search', event_types=None, genres=None, statuses=None) %}
-    {% set default_event_types = [
-        'Live Concert',
-        'Music Festival',
-        'Orchestra',
-        'DJ Set',
-        'Solo Artist Performance'
+    {# If the view supplied dynamic objects, use them; otherwise use string fallbacks #}
+    {% set _event_types = event_types if event_types is not none else [
+        'Live Concert','Music Festival','Orchestra','DJ Set','Solo Artist Performance'
     ] %}
-    {% set _event_types = event_types if event_types is not none else default_event_types %}
-
-    {% set default_genres = [
-        'Alternative',
-        'Blues',
-        'Classical',
-        'Contemporary Orchestral',
-        'Electronic',
-        'Experimental',
-        'Funk',
-        'Fusion',
-        'Indie',
-        'Jazz',
-        'Metal',
-        'Pop',
-        'Punk',
-        'Rock',
-        'Swing',
-        'Synthwave',
-        'Techno'
+    {% set _genres = genres if genres is not none else [
+        'Alternative','Blues','Classical','Contemporary Orchestral','Electronic','Experimental','Funk','Fusion','Indie','Jazz','Metal','Pop','Punk','Rock','Swing','Synthwave','Techno'
     ] %}
-    {% set _genres = genres if genres is not none else default_genres %}
-
-    {% set default_statuses = ['Open', 'Inactive', 'Sold Out', 'Cancelled'] %}
-    {% set _statuses = statuses if statuses is not none else default_statuses %}
+    {% set _statuses = statuses if statuses is not none else ['OPEN','INACTIVE','SOLD OUT','CANCELLED'] %}
 
     <section class="search-section">
-        <div class="container" id="search-container">
-            <form
-                class="d-flex"
-                role="search"
-                action="{{ url_for(search_url) }}"
-                method="get"
-            >
-                <input
-                    class="form-control me-2"
-                    type="search"
-                    name="search"
-                    placeholder="Search for events..."
-                    aria-label="Search"
-                    id="search-bar"
-                    value="{{ search_term }}"
-                />
-                <button class="btn" type="submit" id="search-confirm-btn">
-                    Search
-                </button>
-            </form>
+      <div class="container" id="search-container">
 
-            <div class="btn-group" id="filter-btn-group">
-                <div class="filter-btn-wrapper">
-                    <button
-                        class="btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        type="button"
-                        id="event-type-filter-btn"
-                    >
-                        Event Type
-                    </button>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        id="dropdown-menu"
-                    >
-                        {% for event_type in _event_types %}
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="event-type-{{ loop.index }}"
-                                value="{{ event_type }}"
-                            />
-                            <span class="dropdown-text"> {{ event_type }} </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+        <form id="filters-form"
+              class="d-flex flex-column gap-3"
+              role="search"
+              action="{{ url_for(search_url) }}"
+              method="get">
 
-                <div class="filter-btn-wrapper">
-                    <button
-                        class="btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        type="button"
-                        id="genres-filter-btn"
-                    >
-                        Genres
-                    </button>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        id="dropdown-menu"
-                    >
-                        {% for genre in _genres %}
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="genre-{{ loop.index }}"
-                                value="{{ genre }}"
-                            />
-                            <span class="dropdown-text"> {{ genre }} </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+          <div class="d-flex">
+            <input class="form-control me-2"
+                   type="search"
+                   name="search"
+                   placeholder="Search for events..."
+                   aria-label="Search"
+                   id="search-bar"
+                   value="{{ search_term }}" />
+            <button class="btn" type="submit" id="search-confirm-btn">Search</button>
+          </div>
 
-                <div class="filter-btn-wrapper">
-                    <button
-                        class="btn dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        type="button"
-                        id="event-status-filter-btn"
-                    >
-                        Status
-                    </button>
-                    <ul
-                        class="dropdown-menu dropdown-menu-end"
-                        id="dropdown-menu"
-                    >
-                        {% for status in _statuses %}
-                        <li class="d-flex align-items-center">
-                            <input
-                                class="form-check-input mt-0 ms-2"
-                                type="checkbox"
-                                id="status-{{ loop.index }}"
-                                value="{{ status }}"
-                            />
-                            <span class="dropdown-text"> {{ status }} </span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
+          <div class="btn-group" id="filter-btn-group">
+            {# ---------- Event Type ---------- #}
+            <div class="filter-btn-wrapper">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button" id="event-type-filter-btn">
+                Event Type
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                {% set selected_types = request.args.getlist('event_type') %}
+                {% for et in _event_types %}
+                  {% set et_id = (et.id|string) if et.__class__.__name__ != 'str' else et %}
+                  {% set et_label = et.typeName if et.__class__.__name__ != 'str' else et %}
+                  <li class="d-flex align-items-center">
+                    <input class="form-check-input mt-0 ms-2"
+                           type="checkbox"
+                           name="event_type"
+                           id="event-type-{{ loop.index }}"
+                           value="{{ et_id }}"
+                           {% if et_id in selected_types %}checked{% endif %} />
+                    <span class="dropdown-text">{{ et_label }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-        </div>
+
+            {# ---------- Genres ---------- #}
+            <div class="filter-btn-wrapper">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button" id="genres-filter-btn">
+                Genres
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                {% set selected_genres = request.args.getlist('genre') %}
+                {% for g in _genres %}
+                  {% set g_id = (g.id|string) if g.__class__.__name__ != 'str' else g %}
+                  {% set g_label = g.genreType if g.__class__.__name__ != 'str' else g %}
+                  <li class="d-flex align-items-center">
+                    <input class="form-check-input mt-0 ms-2"
+                           type="checkbox"
+                           name="genre"
+                           id="genre-{{ loop.index }}"
+                           value="{{ g_id }}"
+                           {% if g_id in selected_genres %}checked{% endif %} />
+                    <span class="dropdown-text">{{ g_label }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            {# ---------- Status ---------- #}
+            <div class="filter-btn-wrapper">
+              <button class="btn dropdown-toggle" data-bs-toggle="dropdown" type="button" id="event-status-filter-btn">
+                Status
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                {% set selected_statuses = request.args.getlist('status') %}
+                {% for s in _statuses %}
+                  {% set s_val = s %}
+                  <li class="d-flex align-items-center">
+                    <input class="form-check-input mt-0 ms-2"
+                           type="checkbox"
+                           name="status"
+                           id="status-{{ loop.index }}"
+                           value="{{ s_val }}"
+                           {% if s_val in selected_statuses %}checked{% endif %} />
+                    <span class="dropdown-text">{{ s_val }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div>
     </section>
 {% endmacro %}

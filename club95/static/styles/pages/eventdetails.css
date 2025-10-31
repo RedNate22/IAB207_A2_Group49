@@ -1,0 +1,210 @@
+/* EVENT DETAILS PAGE */
+/* The page where a user can view the full details of the event selected. */
+
+/* EVENT POSTER */
+/* Holds the promotional image for the event */
+#event-poster-window {
+    height: 100%;
+    width: 100%;
+
+    margin-top: 1rem;
+    margin-bottom: 3rem; /* space out poster from middle section */
+
+    .sub-window {
+        border-bottom: 0px; /* remove base border on bottom */
+        .img-fit {
+            aspect-ratio: 2 / 1;
+            border-bottom: 0px; /* remove base border */
+        }
+    }
+}
+
+/* DESCRIPTION, VENUE/DATE/TIME & EVENT TAGS */
+/* Consistent styling for first row */
+#event-description-window,
+#event-venue-date-time-window,
+#event-tags-window {
+    max-height: 250px;
+    width: 100%;
+
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    .sub-window {
+        .sub-window-content {
+            overflow: auto;
+            font-size: larger;
+        }
+    }
+}
+
+/* EVENT TAGS */
+/* Holds the tags for the event */
+#event-tags-window {
+    height: auto;
+
+    margin-top: 0rem;
+
+    .window-tags {
+        flex-direction: column;
+        overflow: auto;
+        justify-content: center;
+        margin-bottom: 0rem;
+
+        border-bottom: 0px; /* remove base border on bottom */
+
+        .badge {
+            font-size: 23px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+    }
+}
+
+/* TICKET TIERS */
+/* Notes the tiers of tickets along with their price and benefits */
+#ticket-tiers-window {
+    height: auto;
+    width: 100%;
+
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+
+    .sub-window {
+        .sub-window-content {
+            overflow: auto;
+            font-size: larger;
+        }
+    }
+}
+
+/* VENUE MAP */
+#venue-map-window {
+    margin-top: 0rem;
+    margin-bottom: 1rem;
+
+    height: auto;
+    width: 100%;
+}
+
+/* PURCHASE TICKETS BUTTON */
+/* Users can press this button to purchase a ticket(s) */
+/* TODO: Customise modal to match styling */
+/* ? Future implementation: add a carousel (styled) button to increase/decrease ticket quantity? */
+#purchase-tickets-btn-group {
+    height: 100%;
+    width: 100%;
+
+    margin-top: 0rem;
+}
+
+#purchase-tickets-btn {
+    color: var(--font-colour-primary);
+    border: var(--border);
+    background-color: var(--button-colour-3);
+
+    margin-top: 0rem;
+    margin-bottom: 3rem;
+}
+
+/* Customise content inside modal */
+/* ? Change model itself into 'window'? */
+.modal-content {
+    color: var(--font-colour-primary);
+    background: var(--primary-colour);
+    border: var(--border);
+
+    /* Customise ticket tier labels */
+    #ticket-tier-label {
+        border: var(--border);
+        border-radius: 5px;
+        background: var(--accent-colour-2);
+        padding: 5px;
+    }
+}
+
+/* EVENT MEDIA WINDOW */
+/* Holds all the pictures and/or videos related to the event */
+#event-media-window {
+    margin-top: 0rem;
+    margin-bottom: 3rem; /* add spacing between media and comments section */
+
+    height: 100%;
+    width: 100%;
+
+    .sub-window {
+        border-bottom: 0px; /* remove base border on bottom */
+        background-color: black;
+
+        .img-fit {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-bottom: 0px; /* remove base border */
+        }
+    }
+}
+
+/* COMMENT SECTION */
+/* Window for the user to post a comment(s) on the event */
+#post-comment-window {
+    margin-top: 0rem;
+    margin-bottom: 2rem;
+
+    height: 100%;
+    width: 100%;
+
+    .sub-window {
+        .sub-window-content {
+            font-size: larger;
+        }
+    }
+}
+
+/* Holds the form for the user to enter a comment */
+#post-comment-form {
+    margin: 5px;
+
+    .enter-comment {
+        margin-left: 5px;
+    }
+
+    .form-control {
+        border: var(--border);
+    }
+}
+
+/* Finialises and posts the comment (if any) */
+#post-comment-btn {
+    margin: 5px;
+
+    color: var(--font-colour-primary);
+    border: var(--border);
+    background-color: var(--button-colour-6);
+}
+
+/* Existing comments */
+#event-comments-window {
+    margin-top: 0rem;
+    margin-bottom: 2rem;
+
+    height: 250px;
+    width: 100%;
+
+    .sub-window {
+        .sub-window-content {
+            font-size: larger;
+        }
+    }
+}
+
+/* The button to start replying to a comment */
+#reply-to-comment-btn,
+#post-comment-btn {
+    color: var(--font-colour-primary);
+    border: var(--border);
+    background-color: var(--button-colour-4);
+    margin: 5px;
+}
