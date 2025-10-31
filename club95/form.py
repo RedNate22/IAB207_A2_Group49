@@ -94,6 +94,13 @@ class EventForm(FlaskForm):
         if event_date == date.today() and event_start <= now:
             raise ValidationError('Start time must be later than the current time for events scheduled today.')
 
+    def validate_end_time(self, field):
+        # Ensure the event finishes after it begins
+        if not field.data or not self.start_time.data:
+            return
+        if field.data <= self.start_time.data:
+            raise ValidationError('End time must be after the start time.')
+
 class AddGenreForm(FlaskForm):
     # A simple form that lets users add a new genre to the database
     new_genre = StringField('Add New Genre', validators=[Length(max=50), DataRequired()])
@@ -181,7 +188,7 @@ class CommentForm(FlaskForm):
 class updateEvent(FlaskForm):
     title = StringField('Event Title', validators=[DataRequired()])  # Name of the event
     date = StringField('Event Date', validators=[DataRequired()])  # Date when the event will be held
-    description = StringField('Event Description', validators=[DataRequired()])  # Short description of the event
+    description = TextAreaField('Event Description', validators=[DataRequired(), Length(min=20, max=500)])  # Short description of the event
     location = StringField('Event Location', validators=[DataRequired()])  # Where the event takes place
     start_time = TimeField('Start Time', format='%H:%M', validators=[DataRequired()])  # When the event begins
     end_time = TimeField('End Time', format='%H:%M', validators=[DataRequired()])  # When the event ends
@@ -203,3 +210,10 @@ class updateEvent(FlaskForm):
 
     # Submit button to create the event
     submit = SubmitField('Update Event')
+
+    def validate_end_time(self, field):
+        # Ensure the event finishes after it begins
+        if not field.data or not self.start_time.data:
+            return
+        if field.data <= self.start_time.data:
+            raise ValidationError('End time must be after the start time.')
