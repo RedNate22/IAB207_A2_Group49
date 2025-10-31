@@ -6,15 +6,15 @@ from itertools import zip_longest
 from club95 import db
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
 from club95.home import _extract_price
-from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist, Venue, EventType
+from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist, Venue, EventType, EventImage
 import os
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
 
-
+# helper to build Google Maps embed URL
 def _build_map_embed_url(address: str) -> str:
     ## Return a Google Maps embed URL for a provided address string.
     cleaned = (address or '').strip()
@@ -23,7 +23,7 @@ def _build_map_embed_url(address: str) -> str:
     query = quote_plus(cleaned)
     return f"https://www.google.com/maps?q={query}&output=embed"
 
-
+# Helper to get or create a Venue record
 def _get_or_create_venue(address: str):
     ## Fetch an existing venue or create a new one for the supplied address.
     cleaned = (address or '').strip()
@@ -42,6 +42,43 @@ def _get_or_create_venue(address: str):
         venue.venueMap = embed_url
     # return a venue object
     return venue
+
+# Helper to save additional event media files
+def _save_event_media(event, file_storage_list):
+    # Persist additional media uploads for a given event
+    if not event or not file_storage_list:
+        return
+
+    # set the save folder
+    media_folder = os.path.join('club95', 'static', 'img', 'event_media')
+    os.makedirs(media_folder, exist_ok=True)
+
+    # Get the next order index for the event images
+    current_max = db.session.query(func.max(EventImage.order_index)).filter_by(event_id=event.id).scalar()
+    next_index = (current_max or 0) + 1
+    # Generate a timestamp for unique file naming, so we don't overwrite files
+    timestamp = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
+    # Save each file
+    for storage in file_storage_list:
+        # Skip empty uploads
+        if not storage or not storage.filename:
+            continue
+        # Secure the filename
+        safe_name = secure_filename(storage.filename)
+        if not safe_name:
+            continue
+        # Create a unique filename
+        unique_name = f"event_{event.id}_{timestamp}_{next_index}_{safe_name}"
+        destination = os.path.join(media_folder, unique_name)
+        storage.save(destination)
+
+        db.session.add(EventImage(
+            event_id=event.id,
+            filename=f"event_media/{unique_name}",
+            order_index=next_index
+        ))
+        # Increment the order index for the next file
+        next_index += 1
 
 # Event details page
 @events_bp.route('/events/eventdetails/<int:event_id>', methods=['GET'])
@@ -165,7 +202,7 @@ def update_event(event_id):
     if image_file and image_file.filename:
         image_filename = secure_filename(image_file.filename)
         if image_filename:
-            timestamp = int(datetime.utcnow().timestamp())
+            timestamp = int(datetime.now(timezone.utc).timestamp())
             unique_filename = f"event_{event_id}_{timestamp}_{image_filename}"
             image_path = os.path.join('club95', 'static', 'img', unique_filename)
             os.makedirs(os.path.dirname(image_path), exist_ok=True)
@@ -193,6 +230,9 @@ def update_event(event_id):
             event.genres = updated_genres
         else:
             event.genres = []
+
+    additional_media_files = request.files.getlist('additional_media')
+    _save_event_media(event, additional_media_files)
 
     db.session.commit()
     flash('Event updated successfully.', 'success')
@@ -411,6 +451,9 @@ def createevent():
                     flash(message, "danger")
                 return redirect(url_for('events_bp.createevent'))
 
+            additional_media_files = request.files.getlist('additional_media')
+            _save_event_media(new_event, additional_media_files)
+
             # Persist every validated ticket tier for the new event
             for name_value, price_value, qty_value, perks_value in pending_tickets:
                 ticket = Ticket(
@@ -571,7 +614,7 @@ def purchase_tickets(event_id):
     # to reflect this on  next visit to same modal
     order = Order(
         # ! utcnow is deprecated
-        order_date = datetime.utcnow(),  # * previously datetime.utcnow() but was deprecated
+    order_date = datetime.now(timezone.utc),
         amount = total_amount,
         user_id = current_user.id
     )

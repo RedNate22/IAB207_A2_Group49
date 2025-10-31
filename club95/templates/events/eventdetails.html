@@ -548,10 +548,11 @@
                 </div>
             </div>
 
+            {% set media_items = event.images|sort(attribute='order_index') %}
+            {% if media_items %}
             <div class="row align-items-start">
                 <!-- Media Window -->
                 <!-- Holds images related to the currently selected event -->
-                <!-- (Current images are placeholders) -->
                 <div class="col-12">
                     <div class="window" id="event-media-window">
                         <div class="title-bar">
@@ -582,50 +583,29 @@
                                 class="carousel slide"
                             >
                                 <div class="carousel-indicators">
+                                    {% for media in media_items %}
                                     <button
                                         type="button"
                                         data-bs-target="#event-media-carousel"
-                                        data-bs-slide-to="0"
-                                        class="active"
-                                        aria-current="true"
-                                        aria-label="Slide 1"
+                                        data-bs-slide-to="{{ loop.index0 }}"
+                                        class="{% if loop.first %}active{% endif %}"
+                                        {% if loop.first %}aria-current="true"{% endif %}
+                                        aria-label="Slide {{ loop.index }}"
                                     ></button>
-                                    <button
-                                        type="button"
-                                        data-bs-target="#event-media-carousel"
-                                        data-bs-slide-to="1"
-                                        aria-label="Slide 2"
-                                    ></button>
-                                    <button
-                                        type="button"
-                                        data-bs-target="#event-media-carousel"
-                                        data-bs-slide-to="2"
-                                        aria-label="Slide 3"
-                                    ></button>
+                                    {% endfor %}
                                 </div>
                                 <div class="carousel-inner">
-                                    <div class="carousel-item active">
+                                    {% for media in media_items %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif %}">
                                         <img
-                                            src="{{ url_for('static', filename='img/jazzband1.jpg') }}"
+                                            src="{{ url_for('static', filename='img/' ~ media.filename) }}"
                                             class="d-block w-100 img-fit"
-                                            alt="A saxaphone player in a jazz band performance."
+                                            alt="{{ event.title }} media {{ loop.index }}"
                                         />
                                     </div>
-                                    <div class="carousel-item">
-                                        <img
-                                            src="{{ url_for('static', filename='img/jazzband2.jpg') }}"
-                                            class="d-block w-100 img-fit"
-                                            alt="The instruments of a band."
-                                        />
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img
-                                            src="{{ url_for('static', filename='img/bluesbrothers.jpg') }}"
-                                            class="d-block w-100 img-fit"
-                                            alt="Legendary blues performers, immortalised into statues."
-                                        />
-                                    </div>
+                                    {% endfor %}
                                 </div>
+                                {% if media_items|length > 1 %}
                                 <button
                                     class="carousel-control-prev"
                                     type="button"
@@ -652,11 +632,13 @@
                                     ></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% endif %}
 
             <div class="row align-items-center">
                 <!-- Add column padding -->
