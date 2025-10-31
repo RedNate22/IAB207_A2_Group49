@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import current_user
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from urllib.parse import quote_plus
 from itertools import zip_longest
 from club95 import db
@@ -59,6 +59,7 @@ def eventdetails(event_id):
         comments = comments,
         heading = 'Event Details'
     )
+
 @events_bp.route('/events/myevents', methods=['GET'])
 @login_required
 def myevents():
@@ -66,35 +67,84 @@ def myevents():
 
     term = (request.args.get('search') or '').strip()
 
+    # Helper to read many possible keys (handles [] and non-[] names)
+    def _get_multi(*keys):
+        vals = []
+        for k in keys:
+            vals += request.args.getlist(k)
+        # fall back to single-value params if someone used them
+        for k in keys:
+            v = request.args.get(k)
+            if v:
+                vals.append(v)
+        # clean
+        out = []
+        for v in vals:
+            v = (v or '').strip()
+            if v:
+                out.append(v)
+        return out
+
+    # Read filters no matter how the frontend named them
+    et_raw = _get_multi('event_type[]', 'event_type', 'type[]', 'type')
+    g_raw  = _get_multi('genre[]', 'genre', 'genres[]', 'genres')
+    st_raw = _get_multi('status[]', 'status', 'statuses[]', 'statuses')
+
+    # Split values into ids vs names for types/genres
+    def split_ids_names(items):
+        ids, names = [], []
+        for v in items:
+            if v.isdigit():
+                ids.append(int(v))
+            else:
+                names.append(v)
+        return ids, names
+
+    et_ids, et_names = split_ids_names(et_raw)
+    g_ids,  g_names  = split_ids_names(g_raw)
+    # Normalise statuses to upper for DB comparison; also keep originals for ilike fallback
+    st_norm = [s.upper() for s in st_raw]
+
     # Base query: only the current user's events
     q = db.select(Event).where(Event.user_id == current_user.id)
 
-    # Keyword-based search
+    # Keyword search across several fields
     if term:
-        query = f"%{term}%"
-        q = q.where(db.or_(
-            Event.title.ilike(query),
-            Event.description.ilike(query),
-            Event.date.ilike(query),
-            Event.venue.has(Venue.location.ilike(query)),
-            Event.genres.any(Genre.genreType.ilike(query)),
-            Event.artists.any(Artist.artistName.ilike(query))
+        like = f"%{term}%"
+        q = q.where(or_(
+            Event.title.ilike(like),
+            Event.description.ilike(like),
+            Event.date.ilike(like),
+            Event.venue.has(Venue.location.ilike(like)),
+            Event.genres.any(Genre.genreType.ilike(like)),
+            Event.artists.any(Artist.artistName.ilike(like))
         ))
 
-    # Checkbox filters
-    event_types = request.args.getlist('event_type[]')
-    genres = request.args.getlist('genre[]')
-    statuses = request.args.getlist('status[]')
+    # Event Type filters (by id OR by name, name is case-insensitive)
+    if et_ids:
+        q = q.where(Event.event_type.has(EventType.id.in_(et_ids)))
+    if et_names:
+        # use ilike to be resilient to case/spacing
+        ors = [Event.event_type.has(EventType.typeName.ilike(n)) for n in et_names]
+        q = q.where(or_(*ors))
 
-    if event_types:
-        q = q.where(Event.event_type.has(EventType.typeName.in_(event_types)))
-    if genres:
-        q = q.where(Event.genres.any(Genre.genreType.in_(genres)))
-    if statuses:
-        q = q.where(Event.status.in_(statuses))
+    # Genre filters (by id OR by name)
+    if g_ids:
+        q = q.where(Event.genres.any(Genre.id.in_(g_ids)))
+    if g_names:
+        ors = [Event.genres.any(Genre.genreType.ilike(n)) for n in g_names]
+        q = q.where(or_(*ors))
 
-    # Execute the query
-    events = db.session.scalars(q).all()
+    # Status filters (try exact uppercase; if that yields nothing, ilike fallback)
+    if st_norm:
+        q = q.where(or_(
+            Event.status.in_(st_norm),
+            # fallback: any of the raw values via ilike, in case labels differ
+            *[Event.status.ilike(s) for s in st_raw]
+        ))
+
+    # Order newest first; if date is stored as text it will still be stable enough for now
+    events = db.session.scalars(q.order_by(Event.date.desc())).all()
 
     if not events:
         flash('No events matched your filters. Try a different search term or filter.', 'search_info')
