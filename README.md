@@ -71,6 +71,7 @@ python -m main.py
 ```
 
 #### Creating database steps
+The database is automatically generated and built upon initial run of the app in instance/. To rebuild the database, simply delete the .sqlite db file and rerun the app. Alternatively, manually build the db:
 
 1. Enter python interpreter in terminal. NOTE: use `quit()` to leave
 
