@@ -12,9 +12,7 @@
                 <div class="col-12">
                     <div class="window" id="event-poster-window">
                         <div class="title-bar">
-                            <span class="window-title"
-                                >Crescent City Players</span
-                            >
+                            <span class="window-title">{{ event.title }}</span>
                             <div class="window-controls">
                                 <button type="button" class="btn" href="#!">
                                     _
@@ -35,9 +33,11 @@
 
                         <!-- window content -->
                         <div class="sub-window">
+                            {% set poster_src = url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') %}
                             <img
-                                src="{{ url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
+                                src="{{ poster_src }}"
                                 class="window-img-top img-fit"
+                                alt="{{ event.title }} poster"
                             />
                         </div>
                     </div>
@@ -72,25 +72,49 @@
                         <!-- window content -->
                         <div class="sub-window">
                             <p class="sub-window-content">
-                                An intimate evening of smooth jazz and
-                                improvisation, featuring local hit talent,
-                                Crescent City Players, joined by The Walters and
-                                Mojo Webb. Enjoy classic standards and modern
-                                tunes in a cozy, relaxed setting.
+                                {{ (event.description or "Event details coming soon.") | replace('\n', '<br />') | safe }}
+                                <br />
+                                <br />
+                                {% set min_ticket = event.tickets|min(attribute='price') if event.tickets else None %}
+                                <strong>> PRICE:</strong>
+                                {% if min_ticket %}
+                                    {% if min_ticket.price == 0 %}
+                                        Free Entry
+                                    {% else %}
+                                        Starting at ${{ '%.2f'|format(min_ticket.price) }}
+                                    {% endif %}
+                                {% else %}
+                                    N/A
+                                {% endif %}
                                 <br />
                                 <br />
                                 <strong>> ARTIST LINEUP:</strong>
-                                Crescent City Players, The Walters and Mojo Webb
+                                {% set artist_names = event.artists | map(attribute='artistName') | list %}
+                                {% if artist_names %}
+                                    {{ artist_names | join(', ') }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
                                 <br />
                                 <strong>> GENRES:</strong>
-                                <a href="#!">Jazz</a>, <a href="#!">Swing</a>,
-                                <a href="#!">Fusion</a>,
+                                {% if event.genres %}
+                                    {% for g in event.genres %}
+                                        <a class="genre-search-link" href="{{ url_for('home_bp.search', search=g.genreType) }}">{{ g.genreType }}</a>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <span>N/A</span>
+                                {% endif %}
+                                {% set timed_slots = event.artist_links | selectattr('set_time') | list %}
+                                {% if timed_slots %}
                                 <br />
                                 <strong>> SET TIMES:</strong>
                                 <br />
-                                1pm-1:30pm: The Walters and Mojo Webb
-                                <br />
-                                1:30pm-3pm: Crescent City Players
+                                {% for link in event.artist_links | sort(attribute='set_time') %}
+                                    {% if link.set_time %}
+                                        {{ link.set_time }}: {{ link.artist.artistName if link.artist else 'Artist' }}<br />
+                                    {% endif %}
+                                {% endfor %}
+                                {% endif %}
                             </p>
                         </div>
                     </div>
@@ -123,14 +147,21 @@
                         <div class="sub-window">
                             <p class="sub-window-content">
                                 <strong>> VENUE:</strong>
-                                Royal Mail Hotel (92 Brisbane Terrace Goodna,
-                                QLD)
+                                {% if event.venue %}
+                                    {{ event.venue.location }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
                                 <br />
                                 <strong>> DATE:</strong>
-                                Sept 30, 2025
+                                {{ event.date or 'TBA' }}
                                 <br />
                                 <strong>> TIME:</strong>
-                                1pm-3pm
+                                {% if event.start_time %}
+                                    {{ event.start_time }}{% if event.end_time %}-{{ event.end_time }}{% endif %}
+                                {% else %}
+                                    TBA
+                                {% endif %}
                             </p>
                         </div>
                     </div>
@@ -205,20 +236,20 @@
                         <!-- window content -->
                         <div class="sub-window">
                             <p class="sub-window-content">
-                                <strong>> TIER 1:</strong>
-                                Free Entry
-                                <br />
-                                <strong>> TIER 2:</strong>
-                                $7.99 + 1 drink of choice
-                                <br />
-                                <strong>> TIER 3:</strong>
-                                $14.99 + 2 drinks of choice
-                                <br />
-                                <strong>> TIER 4:</strong>
-                                $24.99 + 2 drinks of choice + priority seating
-                                <br />
-                                <strong>> TIER 5:</strong>
-                                $49.99 VIP (unlimited drinks, meet and greet)
+                                {% if event.tickets %}
+                                    {% for ticket in event.tickets | sort(attribute='price') %}
+                                        <strong>> {{ ticket.ticketTier | upper }}:</strong>
+                                        {% if ticket.price == 0 %}
+                                            Free Entry
+                                        {% else %}
+                                            ${{ '%.2f'|format(ticket.price) }}
+                                        {% endif %}
+                                        {% if ticket.perks %} – {{ ticket.perks }}{% endif %}
+                                        <br />
+                                    {% endfor %}
+                                {% else %}
+                                    Ticket information coming soon.
+                                {% endif %}
                             </p>
                         </div>
                     </div>
