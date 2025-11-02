@@ -163,7 +163,7 @@ def populate_database(app: Flask) -> None:
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
-      from .models import User, Event, Genre, Artist, Ticket, Venue, EventType
+      from .models import User, Event, Genre, Artist, Ticket, Venue, EventType, Comment
 
       # Helper methods
       def get_or_create_type(name: str) -> EventType:
@@ -292,6 +292,25 @@ def populate_database(app: Flask) -> None:
 
          db.session.add(user)
          db.session.flush()
+
+      # Sample comment content for the first three seeded events
+      comment_batches = {
+         "DJ Spreadsheet Live": [
+            "Cannot wait to hear those pivot tables drop!",
+            "Do we need to bring our own spreadsheets?",
+            "Heard last year's closer was a VLOOKUP solo."
+         ],
+         "Crescent City Players": [
+            "Booked a table for four—going to be a great night.",
+            "Love this lineup, especially Mojo Webb!",
+            "If anyone needs a carpool from the city, let me know.",
+            "Do they still do that encore medley?"
+         ],
+         "Moonlight Resonance": [
+            "Perfect excuse for a riverside picnic beforehand.",
+            "Bringing the family—kids are obsessed with the strings."
+         ],
+      }
 
       # Seed events
       events_seed = [
@@ -453,6 +472,20 @@ def populate_database(app: Flask) -> None:
             ]
 
             db.session.add(event)
+            db.session.flush()
+
+            # Attach sample comments for the first three seeded events
+            sample_comments = comment_batches.get(event.title)
+            if sample_comments and not event.comments:
+               base_time = datetime.now()
+               for offset, content in enumerate(sample_comments):
+                  comment = Comment(
+                     content=content,
+                     commentDateTime=base_time - timedelta(minutes=15 * offset),
+                     user=user,
+                     event=event
+                  )
+                  db.session.add(comment)
 
          else:
             # ? This block could be changed to fill in missing data for seeded events
