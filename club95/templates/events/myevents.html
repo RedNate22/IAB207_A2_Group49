@@ -18,685 +18,1686 @@ OUT', 'CANCELLED'] %} {% block body %}
             </div>
             {% endif %} {% endwith %}
 
-            <div class="row align-items-start gy-4">
-                {% for event in events %}
-                <div class="col-sm-12 col-md-6 col-lg-4 event-card-column">
-                    <div class="window event-card" id="event-{{ event.id }}">
-                        <div class="title-bar">
-                            <span class="window-title">{{ event.title }}</span>
-                            <div class="window-controls">
-                                <button type="button" class="btn" href="#!">
-                                    _
-                                </button>
-                                <button type="button" class="btn" href="#!">
-                                    ☐
-                                </button>
-                                <button
-                                    type="button"
-                                    class="btn"
-                                    id="closebtn"
-                                    href="#!"
+            <!-- My events section -->
+            <section class="myevents-section">
+                <div class="row align-items-start gy-4">
+                    {% for event in events %}
+                    <div class="col-sm-12 col-md-6 col-lg-4 event-card-column">
+                        <div
+                            class="window event-card"
+                            id="event-{{ event.id }}"
+                        >
+                            <div class="title-bar">
+                                <span class="window-title"
+                                    >{{ event.title }}</span
                                 >
-                                    X
-                                </button>
-                            </div>
-                        </div>
-                        <div class="sub-window">
-                            <img
-                                src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
-                                alt="{{ event.title }}"
-                                class="window-img-top img-fit"
-                            />
-
-                            <div class="event-display">
-                                <section class="window-tags">
-                                    {% set event_type_label =
-                                    event.event_type.typeName if
-                                    event.event_type else 'Unassigned' %}
-                                    <span class="badge" id="event-type"
-                                        >{{ event_type_label }}</span
+                                <div class="window-controls">
+                                    <button type="button" class="btn" href="#!">
+                                        _
+                                    </button>
+                                    <button type="button" class="btn" href="#!">
+                                        ☐
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn"
+                                        id="closebtn"
+                                        href="#!"
                                     >
-                                    <span
-                                        class="badge"
-                                        id="event-status-{{ event.status|lower|replace(' ', '-') }}"
-                                        >{{ event.status }}</span
-                                    >
-                                </section>
-
-                                <p class="sub-window-content">
-                                    {{ event.description or "Description coming
-                                    soon." }}
-                                    <br /><br />
-
-                                    {% set min_ticket =
-                                    event.tickets|min(attribute='price') if
-                                    event.tickets else None %}
-                                    <strong>> PRICE:</strong>
-                                    {% if min_ticket %} {% if min_ticket.price
-                                    == 0 %} Free Entry {% else %} Starting at
-                                    ${{ '%.2f'|format(min_ticket.price) }} {%
-                                    endif %} {% else %} N/A {% endif %}
-                                    <br />
-
-                                    <strong>> ARTIST LINEUP:</strong>
-                                    {% if event.artists %} {{ event.artists |
-                                    map(attribute='artistName') | join(', ') }}
-                                    {% else %} TBA {% endif %}
-                                    <br />
-
-                                    <strong>> VENUE:</strong> {{
-                                    event.venue.location if event.venue else
-                                    "TBA" }}
-                                    <br />
-
-                                    <strong>> DATE:</strong> {{ event.date or
-                                    "TBA" }}
-                                    <br />
-
-                                    <strong>> TIME:</strong> {{ event.start_time
-                                    or "TBA" }}{% if event.end_time %}-{{
-                                    event.end_time }}{% endif %}
-                                    <br />
-
-                                    <strong>> GENRES:</strong>
-                                    {% if event.genres %} {% for g in
-                                    event.genres %}
-                                    <a
-                                        class="genre-search-link"
-                                        href="{{ url_for('events_bp.myevents', search=g.genreType) }}"
-                                        >{{ g.genreType }}</a
-                                    >{% if not loop.last %}, {% endif %} {%
-                                    endfor %} {% else %}
-                                    <span>N/A</span>
-                                    {% endif %}
-                                </p>
-
-                                <button
-                                    type="button"
-                                    class="btn start-edit-btn"
-                                    data-event-id="{{ event.id }}"
-                                >
-                                    Update Event
-                                </button>
-                            </div>
-
-                            <div class="event-edit-form-wrapper d-none">
-                                <div class="image-edit-hint d-none">
-                                    Click the poster above to upload a new
-                                    image.
+                                        X
+                                    </button>
                                 </div>
-                                <form
-                                    class="event-update-form"
-                                    method="post"
-                                    action="{{ url_for('events_bp.update_event', event_id=event.id) }}"
-                                    enctype="multipart/form-data"
-                                >
-                                    <input
-                                        type="file"
-                                        class="event-image-input d-none"
-                                        name="image"
-                                        accept="image/*"
-                                    />
-                                    {% set media_items =
-                                    event.images|sort(attribute='order_index')
-                                    %} {% if media_items %}
-                                    <div class="event-media-edit-section mb-3">
-                                        <p class="text-muted small mb-2">
-                                            Click an image below to replace it
-                                            or mark it for deletion.
-                                        </p>
-                                        <div
-                                            id="event-media-carousel-{{ event.id }}"
-                                            class="carousel slide media-edit-carousel"
-                                            data-bs-interval="false"
+                            </div>
+                            <div class="sub-window">
+                                <img
+                                    src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
+                                    alt="{{ event.title }}"
+                                    class="window-img-top img-fit"
+                                />
+
+                                <div class="event-display">
+                                    <section class="window-tags">
+                                        {% set event_type_label =
+                                        event.event_type.typeName if
+                                        event.event_type else 'Unassigned' %}
+                                        <span class="badge" id="event-type"
+                                            >{{ event_type_label }}</span
                                         >
-                                            {% if media_items|length > 1 %}
-                                            <div class="carousel-indicators">
-                                                {% for media in media_items %}
-                                                <button
-                                                    type="button"
-                                                    data-bs-target="#event-media-carousel-{{ event.id }}"
-                                                    data-bs-slide-to="{{ loop.index0 }}"
-                                                    class="{% if loop.first %}active{% endif %}"
-                                                    {%
-                                                    if
-                                                    loop.first
-                                                    %}aria-current="true"
-                                                    {%
-                                                    endif
+                                        <span
+                                            class="badge"
+                                            id="event-status-{{ event.status|lower|replace(' ', '-') }}"
+                                            >{{ event.status }}</span
+                                        >
+                                    </section>
+
+                                    <p class="sub-window-content">
+                                        {{ event.description or "Description
+                                        coming soon." }}
+                                        <br /><br />
+
+                                        {% set min_ticket =
+                                        event.tickets|min(attribute='price') if
+                                        event.tickets else None %}
+                                        <strong>> PRICE:</strong>
+                                        {% if min_ticket %} {% if
+                                        min_ticket.price == 0 %} Free Entry {%
+                                        else %} Starting at ${{
+                                        '%.2f'|format(min_ticket.price) }} {%
+                                        endif %} {% else %} N/A {% endif %}
+                                        <br />
+
+                                        <strong>> ARTIST LINEUP:</strong>
+                                        {% if event.artists %} {{ event.artists
+                                        | map(attribute='artistName') | join(',
+                                        ') }} {% else %} TBA {% endif %}
+                                        <br />
+
+                                        <strong>> VENUE:</strong> {{
+                                        event.venue.location if event.venue else
+                                        "TBA" }}
+                                        <br />
+
+                                        <strong>> DATE:</strong> {{ event.date
+                                        or "TBA" }}
+                                        <br />
+
+                                        <strong>> TIME:</strong> {{
+                                        event.start_time or "TBA" }}{% if
+                                        event.end_time %}-{{ event.end_time }}{%
+                                        endif %}
+                                        <br />
+
+                                        <strong>> GENRES:</strong>
+                                        {% if event.genres %} {% for g in
+                                        event.genres %}
+                                        <a
+                                            class="genre-search-link"
+                                            href="{{ url_for('events_bp.myevents', search=g.genreType) }}"
+                                            >{{ g.genreType }}</a
+                                        >{% if not loop.last %}, {% endif %} {%
+                                        endfor %} {% else %}
+                                        <span>N/A</span>
+                                        {% endif %}
+                                    </p>
+
+                                    <button
+                                        type="button"
+                                        class="btn start-edit-btn"
+                                        data-event-id="{{ event.id }}"
+                                    >
+                                        Update Event
+                                    </button>
+                                </div>
+
+                                <div class="event-edit-form-wrapper d-none">
+                                    <form
+                                        class="event-update-form"
+                                        method="post"
+                                        action="{{ url_for('events_bp.update_event', event_id=event.id) }}"
+                                        enctype="multipart/form-data"
+                                    >
+                                        <!-- Upload Event Poster Section -->
+                                        <section
+                                            class="upload-event-poster-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="upload-event-poster-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Event
+                                                                Media</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <div
+                                                                class="image-edit-hint d-none"
+                                                            >
+                                                                Click the poster
+                                                                above to upload
+                                                                a new image.
+                                                            </div>
+
+                                                            <input
+                                                                type="file"
+                                                                class="event-image-input d-none"
+                                                                name="image"
+                                                                accept="image/*"
+                                                            />
+                                                            {% set media_items =
+                                                            event.images|sort(attribute='order_index')
+                                                            %} {% if media_items
+                                                            %}
+                                                            <div
+                                                                class="event-media-edit-section mb-3"
+                                                            >
+                                                                <p
+                                                                    class="text-muted small mb-2"
+                                                                >
+                                                                    Click an
+                                                                    image below
+                                                                    to replace
+                                                                    it or mark
+                                                                    it for
+                                                                    deletion.
+                                                                </p>
+                                                                <div
+                                                                    id="event-media-carousel-{{ event.id }}"
+                                                                    class="carousel slide media-edit-carousel"
+                                                                    data-bs-interval="false"
+                                                                >
+                                                                    {% if
+                                                                    media_items|length
+                                                                    > 1 %}
+                                                                    <div
+                                                                        class="carousel-indicators"
+                                                                    >
+                                                                        {% for
+                                                                        media in
+                                                                        media_items
+                                                                        %}
+                                                                        <button
+                                                                            type="button"
+                                                                            data-bs-target="#event-media-carousel-{{ event.id }}"
+                                                                            data-bs-slide-to="{{ loop.index0 }}"
+                                                                            class="{% if loop.first %}active{% endif %}"
+                                                                            {%
+                                                                            if
+                                                                            loop.first
+                                                                            %}aria-current="true"
+                                                                            {%
+                                                                            endif
+                                                                            %}
+                                                                            aria-label="Slide {{ loop.index }}"
+                                                                        ></button>
+                                                                        {%
+                                                                        endfor
+                                                                        %}
+                                                                    </div>
+                                                                    {% endif %}
+                                                                    <div
+                                                                        class="carousel-inner"
+                                                                    >
+                                                                        {% for
+                                                                        media in
+                                                                        media_items
+                                                                        %}
+                                                                        <div
+                                                                            class="carousel-item {% if loop.first %}active{% endif %}"
+                                                                        >
+                                                                            <div
+                                                                                class="media-edit-item position-relative p-2 border rounded"
+                                                                            >
+                                                                                {%
+                                                                                set
+                                                                                media_src
+                                                                                =
+                                                                                url_for('static',
+                                                                                filename='img/'
+                                                                                ~
+                                                                                media.filename)
+                                                                                if
+                                                                                media.filename
+                                                                                else
+                                                                                url_for('static',
+                                                                                filename='img/fallback.jpg')
+                                                                                %}
+                                                                                <img
+                                                                                    src="{{ media_src }}"
+                                                                                    class="d-block w-100 img-fit edit-media-preview rounded"
+                                                                                    alt="{{ event.title }} media {{ loop.index }}"
+                                                                                    data-original-src="{{ media_src }}"
+                                                                                    data-input-id="replace-image-{{ media.id }}"
+                                                                                />
+                                                                                <div
+                                                                                    class="media-delete-overlay d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-danger bg-opacity-75 text-white fw-semibold rounded"
+                                                                                >
+                                                                                    Marked
+                                                                                    for
+                                                                                    removal
+                                                                                </div>
+                                                                                <div
+                                                                                    class="media-edit-controls mt-2 d-flex gap-2 justify-content-center"
+                                                                                >
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        class="btn btn-outline-secondary btn-sm replace-media-btn"
+                                                                                        data-input-id="replace-image-{{ media.id }}"
+                                                                                    >
+                                                                                        Replace
+                                                                                    </button>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        class="btn btn-outline-danger btn-sm delete-media-btn"
+                                                                                        data-checkbox-id="delete-media-{{ media.id }}"
+                                                                                    >
+                                                                                        Delete
+                                                                                    </button>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="file"
+                                                                                    class="replace-media-input d-none"
+                                                                                    id="replace-image-{{ media.id }}"
+                                                                                    name="replace_image_{{ media.id }}"
+                                                                                    accept="image/*"
+                                                                                />
+                                                                                <input
+                                                                                    type="checkbox"
+                                                                                    class="delete-media-checkbox d-none"
+                                                                                    id="delete-media-{{ media.id }}"
+                                                                                    name="delete_media_ids"
+                                                                                    value="{{ media.id }}"
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+                                                                        {%
+                                                                        endfor
+                                                                        %}
+                                                                    </div>
+                                                                    {% if
+                                                                    media_items|length
+                                                                    > 1 %}
+                                                                    <button
+                                                                        class="carousel-control-prev"
+                                                                        type="button"
+                                                                        data-bs-target="#event-media-carousel-{{ event.id }}"
+                                                                        data-bs-slide="prev"
+                                                                    >
+                                                                        <span
+                                                                            class="carousel-control-prev-icon"
+                                                                            aria-hidden="true"
+                                                                        ></span>
+                                                                        <span
+                                                                            class="visually-hidden"
+                                                                            >Previous</span
+                                                                        >
+                                                                    </button>
+                                                                    <button
+                                                                        class="carousel-control-next"
+                                                                        type="button"
+                                                                        data-bs-target="#event-media-carousel-{{ event.id }}"
+                                                                        data-bs-slide="next"
+                                                                    >
+                                                                        <span
+                                                                            class="carousel-control-next-icon"
+                                                                            aria-hidden="true"
+                                                                        ></span>
+                                                                        <span
+                                                                            class="visually-hidden"
+                                                                            >Next</span
+                                                                        >
+                                                                    </button>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            <div class="mb-3">
+                                                                <label
+                                                                    class="form-label"
+                                                                    for="additional-media-{{ event.id }}"
+                                                                    >Add New
+                                                                    Media</label
+                                                                >
+                                                                <input
+                                                                    class="form-control additional-media-input"
+                                                                    type="file"
+                                                                    id="additional-media-{{ event.id }}"
+                                                                    name="additional_media"
+                                                                    accept="image/*"
+                                                                    multiple
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Upload Event Poster Section -->
+
+                                        <!-- Enter event name section -->
+                                        <section
+                                            class="enter-event-name-section"
+                                        >
+                                            <div class="row align-items-center">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="enter-event-name-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Event
+                                                                Name</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <div class="mb-3">
+                                                                <label
+                                                                    class="form-label"
+                                                                    for="title-{{ event.id }}"
+                                                                    >Title</label
+                                                                >
+                                                                <input
+                                                                    type="text"
+                                                                    class="form-control"
+                                                                    id="title-{{ event.id }}"
+                                                                    name="title"
+                                                                    value="{{ event.title or '' }}"
+                                                                    required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Enter Event Name Section -->
+
+                                        <!-- Enter Event Description Section -->
+                                        <section
+                                            class="enter-event-description-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="enter-event-description-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Description</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <!-- prettier-ignore -->
+                                                            <div class="mb-3" id="post-comment-form">
+                                        <label
+                                            for="description-text"
+                                            class="enter-comment"
+                                            >Enter description:</label>
+                                        {{ form.description(
+                                            class="form-control",
+                                            id="description-text", 
+                                            rows="6") 
+                                        }} 
+                                        {% if form.description.errors %}
+                                            <div class="alert alert-danger mt-2">
+                                                {% for error in form.description.errors %}
+                                                    {{ error }}
+                                                    <br />
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                                            <div
+                                                                id="description-help"
+                                                                class="form-text"
+                                                            >
+                                                                Your description
+                                                                must be at least
+                                                                20 characters
+                                                                long.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Enter Event Description Section -->
+
+                                        <!-- Enter Event Location Section -->
+                                        <section
+                                            class="enter-event-location-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="enter-event-location-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Location</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <!-- prettier-ignore -->
+                                                            <label
+                                        class="form-label"
+                                        for="location-{{ event.id }}"
+                                        >Venue / Location</label
+                                    >
+                                                            <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                id="location-{{ event.id }}"
+                                                                name="location"
+                                                                value="{{ event.venue.location if event.venue else '' }}"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Enter Event Location Section -->
+
+                                        <section
+                                            class="enter-event-date-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="enter-event-date-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Date</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <label
+                                                                class="form-label"
+                                                                for="date-{{ event.id }}"
+                                                                >Date</label
+                                                            >
+                                                            <input
+                                                                type="date"
+                                                                class="form-control"
+                                                                id="date-{{ event.id }}"
+                                                                name="date"
+                                                                value="{{ event.date or '' }}"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Enter Event Date Section -->
+
+                                        <!-- Enter Event Start End Time Section -->
+                                        <section
+                                            class="enter-event-start-end-time-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-4 col-lg-3"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="enter-event-start-time-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Event Start
+                                                                Time</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <label
+                                                                class="form-label"
+                                                                for="start-{{ event.id }}"
+                                                                >Start
+                                                                Time</label
+                                                            >
+                                                            <input
+                                                                type="time"
+                                                                class="form-control"
+                                                                id="start-{{ event.id }}"
+                                                                name="start_time"
+                                                                value="{{ event.start_time or '' }}"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    {% if form.start_time.errors
                                                     %}
-                                                    aria-label="Slide {{ loop.index }}"
-                                                ></button>
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
-                                            <div class="carousel-inner">
-                                                {% for media in media_items %}
+                                                    <div
+                                                        class="alert alert-danger mt-2"
+                                                    >
+                                                        {% for error in
+                                                        form.start_time.errors
+                                                        %}{{ error }}<br />{%
+                                                        endfor %}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
                                                 <div
-                                                    class="carousel-item {% if loop.first %}active{% endif %}"
+                                                    class="col-sm-12 col-md-4 col-lg-3"
                                                 >
                                                     <div
-                                                        class="media-edit-item position-relative p-2 border rounded"
+                                                        class="window"
+                                                        id="enter-event-end-time-window"
                                                     >
-                                                        {% set media_src =
-                                                        url_for('static',
-                                                        filename='img/' ~
-                                                        media.filename) if
-                                                        media.filename else
-                                                        url_for('static',
-                                                        filename='img/fallback.jpg')
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Event End
+                                                                Time</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <label
+                                                                class="form-label"
+                                                                for="end-{{ event.id }}"
+                                                                >End Time</label
+                                                            >
+                                                            <input
+                                                                type="time"
+                                                                class="form-control"
+                                                                id="end-{{ event.id }}"
+                                                                name="end_time"
+                                                                value="{{ event.end_time or '' }}"
+                                                            />
+                                                        </div>
+                                                        {% if
+                                                        form.end_time.errors %}
+                                                        <div
+                                                            class="alert alert-danger mt-2"
+                                                        >
+                                                            {% for error in
+                                                            form.end_time.errors
+                                                            %}{{ error }}<br />{%
+                                                            endfor %}
+                                                        </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Event Enter Start End Time Section -->
+
+                                        <!-- Enter Event Type Section -->
+                                        <section
+                                            class="enter-event-type-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <!-- prettier-ignore -->
+                                                <div class="col-sm-12 col-md-8 col-lg-6">
+                            </div>
+                                                <label
+                                                    class="form-label"
+                                                    for="type-{{ event.id }}"
+                                                    >Type</label
+                                                >
+                                                <select
+                                                    class="form-select"
+                                                    id="type-{{ event.id }}"
+                                                    name="type"
+                                                    required
+                                                >
+                                                    <option
+                                                        value=""
+                                                        disabled
+                                                        {%
+                                                        if
+                                                        not
+                                                        event.event_type_id
+                                                        %}selected{%
+                                                        endif
                                                         %}
-                                                        <img
-                                                            src="{{ media_src }}"
-                                                            class="d-block w-100 img-fit edit-media-preview rounded"
-                                                            alt="{{ event.title }} media {{ loop.index }}"
-                                                            data-original-src="{{ media_src }}"
-                                                            data-input-id="replace-image-{{ media.id }}"
-                                                        />
-                                                        <div
-                                                            class="media-delete-overlay d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-danger bg-opacity-75 text-white fw-semibold rounded"
-                                                        >
-                                                            Marked for removal
-                                                        </div>
-                                                        <div
-                                                            class="media-edit-controls mt-2 d-flex gap-2 justify-content-center"
-                                                        >
-                                                            <button
-                                                                type="button"
-                                                                class="btn btn-outline-secondary btn-sm replace-media-btn"
-                                                                data-input-id="replace-image-{{ media.id }}"
-                                                            >
-                                                                Replace
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                class="btn btn-outline-danger btn-sm delete-media-btn"
-                                                                data-checkbox-id="delete-media-{{ media.id }}"
-                                                            >
-                                                                Delete
-                                                            </button>
-                                                        </div>
-                                                        <input
-                                                            type="file"
-                                                            class="replace-media-input d-none"
-                                                            id="replace-image-{{ media.id }}"
-                                                            name="replace_image_{{ media.id }}"
-                                                            accept="image/*"
-                                                        />
-                                                        <input
-                                                            type="checkbox"
-                                                            class="delete-media-checkbox d-none"
-                                                            id="delete-media-{{ media.id }}"
-                                                            name="delete_media_ids"
-                                                            value="{{ media.id }}"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                {% endfor %}
+                                                    >
+                                                        Select the type of event
+                                                    </option>
+                                                    {% for type_option in
+                                                    event_type_options %} {% set
+                                                    selected = 'selected' if
+                                                    event.event_type_id ==
+                                                    type_option.id else '' %}
+                                                    <option
+                                                        value="{{ type_option.id }}"
+                                                        {{
+                                                        selected
+                                                        }}
+                                                    >
+                                                        {{ type_option.typeName
+                                                        }}
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
                                             </div>
-                                            {% if media_items|length > 1 %}
-                                            <button
-                                                class="carousel-control-prev"
-                                                type="button"
-                                                data-bs-target="#event-media-carousel-{{ event.id }}"
-                                                data-bs-slide="prev"
-                                            >
-                                                <span
-                                                    class="carousel-control-prev-icon"
-                                                    aria-hidden="true"
-                                                ></span>
-                                                <span class="visually-hidden"
-                                                    >Previous</span
-                                                >
-                                            </button>
-                                            <button
-                                                class="carousel-control-next"
-                                                type="button"
-                                                data-bs-target="#event-media-carousel-{{ event.id }}"
-                                                data-bs-slide="next"
-                                            >
-                                                <span
-                                                    class="carousel-control-next-icon"
-                                                    aria-hidden="true"
-                                                ></span>
-                                                <span class="visually-hidden"
-                                                    >Next</span
-                                                >
-                                            </button>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    <div class="mb-3">
-                                        <label
-                                            class="form-label"
-                                            for="additional-media-{{ event.id }}"
-                                            >Add New Media</label
-                                        >
-                                        <input
-                                            class="form-control additional-media-input"
-                                            type="file"
-                                            id="additional-media-{{ event.id }}"
-                                            name="additional_media"
-                                            accept="image/*"
-                                            multiple
-                                        />
-                                    </div>
-                                    <div class="mb-3">
-                                        <label
-                                            class="form-label"
-                                            for="title-{{ event.id }}"
-                                            >Title</label
-                                        >
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="title-{{ event.id }}"
-                                            name="title"
-                                            value="{{ event.title or '' }}"
-                                            required
-                                        />
-                                    </div>
-
-                                    <!-- prettier-ignore -->
-                                    <div class="mb-3">
-                                        <label class="form-label" for="type-{{ event.id }}">Type</label>
-                                        <select class="form-select" id="type-{{ event.id }}" name="type" required>
-                                            <option value="" disabled {% if not event.event_type_id %}selected{% endif %}>Select an event type</option>
-                                            {% for type_option in event_type_options %}
-                                            {% set selected = 'selected' if event.event_type_id == type_option.id else '' %}
-                                                <option value="{{ type_option.id }}" {{ selected }}>{{ type_option.typeName }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Status</label>
-                                        <div class="d-grid gap-2">
-                                            <button
-                                                type="button"
-                                                class="btn btn-danger btn-lg cancel-event-btn"
-                                                data-event-id="{{ event.id }}"
-                                            >
-                                                Cancel This Event
-                                            </button>
-                                        </div>
-                                        <input
-                                            type="hidden"
-                                            class="event-status-input"
-                                            name="status"
-                                            value="{{ event.status }}"
-                                            data-original-status="{{ event.status }}"
-                                        />
-                                    </div>
-
-                                    <!-- prettier-ignore -->
-                                    <div class="mb-3">
-                                        <label class="form-label" for="genres-{{ event.id }}">Genres</label>
-                                        <select
-                                            class="form-select genres-select"
-                                            id="genres-{{ event.id }}"
-                                            name="genres"
-                                            multiple
-                                            size="6"
-                                            data-event-id="{{ event.id }}"
-                                        >
-                                            {% for genre in genre_options %}
-                                                <option value="{{ genre.id }}" {% if genre in event.genres %}selected{% endif %}>{{ genre.genreType }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <div class="form-text">Hold Ctrl (or Cmd on Mac) to select multiple genres.</div>
-                                        <div class="mt-2">
-                                            <button type="button" class="btn add-genre-btn" data-event-id="{{ event.id }}">
-                                                + Add Genre
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Ticket tier editor lives here so I can tweak pricing without leaving the page -->
-                                    <div class="mb-3">
-                                        <label class="form-label"
-                                            >Ticket Tiers</label
-                                        >
-                                        <p class="form-text mb-2">
-                                            Update pricing, quantity, and perks
-                                            for each tier.
-                                        </p>
-                                        <div
-                                            class="ticket-tier-rows"
-                                            data-event-id="{{ event.id }}"
-                                        >
-                                            {% for ticket in event.tickets %}
                                             <div
-                                                class="ticket-tier-row border rounded p-3 mb-3"
-                                                data-ticket-row
-                                                data-existing="true"
-                                                data-has-orders="{{ 'true' if ticket.order_links else 'false' }}"
-                                            >
-                                                <input
-                                                    type="hidden"
-                                                    name="ticket_row_id[]"
-                                                    value="{{ ticket.id }}"
-                                                />
-                                                <input
-                                                    type="hidden"
-                                                    name="ticket_row_delete[]"
-                                                    value="0"
-                                                    class="ticket-row-delete-flag"
-                                                />
+                                                class="col-sm-0 col-md-2 col-lg-3"
+                                            ></div>
+                                        </section>
+                                        <!-- End of Enter Event Type Section -->
+
+                                        <!-- Event genres section -->
+                                        <section
+                                            class="enter-event-description-section"
+                                        >
+                                            <div class="row align-items-start">
                                                 <div
-                                                    class="row g-3 align-items-end"
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
                                                 >
-                                                    <div class="col-lg-4">
-                                                        <label
-                                                            class="form-label"
-                                                            >Tier Name</label
-                                                        >
-                                                        <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            name="ticket_row_name[]"
-                                                            value="{{ ticket.ticketTier }}"
-                                                            maxlength="100"
-                                                            required
-                                                        />
-                                                    </div>
                                                     <div
-                                                        class="col-lg-2 col-md-4"
+                                                        class="window"
+                                                        id="enter-event-description-window"
                                                     >
-                                                        <label
-                                                            class="form-label"
-                                                            >Price ($)</label
-                                                        >
-                                                        <input
-                                                            type="number"
-                                                            class="form-control"
-                                                            name="ticket_row_price[]"
-                                                            value="{{ '%.2f'|format(ticket.price) }}"
-                                                            min="0"
-                                                            step="0.01"
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-2 col-md-4"
-                                                    >
-                                                        <label
-                                                            class="form-label"
-                                                            >Quantity</label
-                                                        >
-                                                        <input
-                                                            type="number"
-                                                            class="form-control"
-                                                            name="ticket_row_quantity[]"
-                                                            value="{{ ticket.availability }}"
-                                                            min="0"
-                                                            step="1"
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-3 col-md-4"
-                                                    >
-                                                        <label
-                                                            class="form-label"
-                                                            >Perks</label
-                                                        >
-                                                        <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            name="ticket_row_perks[]"
-                                                            value="{{ ticket.perks or '' }}"
-                                                            maxlength="50"
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-1 col-md-12"
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            class="btn btn-outline-danger w-100 ticket-tier-remove-btn"
-                                                        >
-                                                            Remove Tier
-                                                        </button>
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Event
+                                                                Genres</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <!-- prettier-ignore -->
+                                                            <label class="form-label" for="genres-{{ event.id }}">Genres</label>
+                                                            <select
+                                                                class="form-select genres-select"
+                                                                id="genres-{{ event.id }}"
+                                                                name="genres"
+                                                                multiple
+                                                                size="6"
+                                                                data-event-id="{{ event.id }}"
+                                                            >
+                                                                {% for genre in
+                                                                genre_options %}
+                                                                <option
+                                                                    value="{{ genre.id }}"
+                                                                    {%
+                                                                    if
+                                                                    genre
+                                                                    in
+                                                                    event.genres
+                                                                    %}selected{%
+                                                                    endif
+                                                                    %}
+                                                                >
+                                                                    {{
+                                                                    genre.genreType
+                                                                    }}
+                                                                </option>
+                                                                {% endfor %}
+                                                            </select>
+                                                            <div
+                                                                class="form-text"
+                                                            >
+                                                                Hold Ctrl (or
+                                                                Cmd on Mac) to
+                                                                select multiple
+                                                                genres.
+                                                            </div>
+                                                            <div class="mt-2">
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn add-genre-btn"
+                                                                    data-event-id="{{ event.id }}"
+                                                                >
+                                                                    + Add Genre
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="ticket-row-removed-note text-danger small mt-2 d-none"
-                                                >
-                                                    This tier will be removed
-                                                    when you save.{% if
-                                                    ticket.order_links %}
-                                                    Existing orders will be
-                                                    refunded automatically.{%
-                                                    endif %}
-                                                </div>
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
                                             </div>
-                                            {% endfor %}
-                                        </div>
-                                        <div
-                                            class="d-flex flex-wrap gap-2 mt-2"
-                                        >
-                                            <button
-                                                type="button"
-                                                class="btn btn-outline-primary add-ticket-tier-btn"
-                                            >
-                                                + Add Ticket Tier
-                                            </button>
-                                        </div>
-                                        <!-- Template row so the JS can clone fresh tiers on demand -->
-                                        <template
-                                            class="ticket-tier-row-template"
-                                            ><div
-                                                class="ticket-tier-row border rounded p-3 mb-3"
-                                                data-ticket-row
-                                                data-existing="false"
-                                                data-has-orders="false"
-                                            >
-                                                <input
-                                                    type="hidden"
-                                                    name="ticket_row_id[]"
-                                                    value=""
-                                                />
-                                                <input
-                                                    type="hidden"
-                                                    name="ticket_row_delete[]"
-                                                    value="0"
-                                                    class="ticket-row-delete-flag"
-                                                />
+                                        </section>
+                                        <!-- End of event genres section -->
+
+                                        <!-- Event status section -->
+                                        <section class="event-status">
+                                            <div class="row align-items-start">
                                                 <div
-                                                    class="row g-3 align-items-end"
-                                                >
-                                                    <div class="col-lg-4">
-                                                        <label
-                                                            class="form-label"
-                                                            >Tier Name</label
-                                                        >
-                                                        <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            name="ticket_row_name[]"
-                                                            maxlength="100"
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-2 col-md-4"
-                                                    >
-                                                        <label
-                                                            class="form-label"
-                                                            >Price ($)</label
-                                                        >
-                                                        <input
-                                                            type="number"
-                                                            class="form-control"
-                                                            name="ticket_row_price[]"
-                                                            min="0"
-                                                            step="0.01"
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-2 col-md-4"
-                                                    >
-                                                        <label
-                                                            class="form-label"
-                                                            >Quantity</label
-                                                        >
-                                                        <input
-                                                            type="number"
-                                                            class="form-control"
-                                                            name="ticket_row_quantity[]"
-                                                            min="0"
-                                                            step="1"
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-3 col-md-4"
-                                                    >
-                                                        <label
-                                                            class="form-label"
-                                                            >Perks</label
-                                                        >
-                                                        <input
-                                                            type="text"
-                                                            class="form-control"
-                                                            name="ticket_row_perks[]"
-                                                            maxlength="50"
-                                                        />
-                                                    </div>
-                                                    <div
-                                                        class="col-lg-1 col-md-12"
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            class="btn btn-outline-danger w-100 ticket-tier-remove-btn"
-                                                        >
-                                                            Remove Tier
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="ticket-row-removed-note text-danger small mt-2 d-none"
-                                                >
-                                                    This tier will be removed
-                                                    when you save.
-                                                </div>
-                                            </div></template
-                                        >
-                                    </div>
-
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label
-                                                class="form-label"
-                                                for="date-{{ event.id }}"
-                                                >Date</label
-                                            >
-                                            <input
-                                                type="date"
-                                                class="form-control"
-                                                id="date-{{ event.id }}"
-                                                name="date"
-                                                value="{{ event.date or '' }}"
-                                            />
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label
-                                                class="form-label"
-                                                for="start-{{ event.id }}"
-                                                >Start Time</label
-                                            >
-                                            <input
-                                                type="time"
-                                                class="form-control"
-                                                id="start-{{ event.id }}"
-                                                name="start_time"
-                                                value="{{ event.start_time or '' }}"
-                                            />
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label
-                                                class="form-label"
-                                                for="end-{{ event.id }}"
-                                                >End Time</label
-                                            >
-                                            <input
-                                                type="time"
-                                                class="form-control"
-                                                id="end-{{ event.id }}"
-                                                name="end_time"
-                                                value="{{ event.end_time or '' }}"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 mt-3">
-                                        <label
-                                            class="form-label"
-                                            for="location-{{ event.id }}"
-                                            >Venue / Location</label
-                                        >
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="location-{{ event.id }}"
-                                            name="location"
-                                            value="{{ event.venue.location if event.venue else '' }}"
-                                        />
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label
-                                            class="form-label"
-                                            for="description-{{ event.id }}"
-                                            >Description</label
-                                        >
-                                        <textarea
-                                            class="form-control"
-                                            id="description-{{ event.id }}"
-                                            name="description"
-                                            rows="4"
-                                        >
-{{ event.description or '' }}</textarea
-                                        >
-                                    </div>
-
-                                    <div class="d-flex gap-2 flex-wrap">
-                                        <button
-                                            type="submit"
-                                            class="btn btn-primary"
-                                        >
-                                            Save Changes
-                                        </button>
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <!-- prettier-ignore -->
+                                                <div class="col-sm-12 col-md-8 col-lg-6">
+                                    <label class="form-label">Status</label>
+                                    <div class="d-grid gap-2">
                                         <button
                                             type="button"
-                                            class="btn btn-secondary cancel-edit-btn"
+                                            class="btn btn-danger btn-lg cancel-event-btn"
                                             data-event-id="{{ event.id }}"
                                         >
-                                            Cancel
+                                            Cancel This Event
                                         </button>
                                     </div>
-                                </form>
+                                    <input
+                                        type="hidden"
+                                        class="event-status-input"
+                                        name="status"
+                                        value="{{ event.status }}"
+                                        data-original-status="{{ event.status }}"
+                                    />
+                                    </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of event status section -->
+
+                                        <!-- Enter Event Artist Lineup Section -->
+                                        <section class="artist-lineup-section">
+                                            <div id="artist-lineup-rows">
+                                                <div
+                                                    class="row align-items-start artist-row"
+                                                >
+                                                    <div
+                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                    ></div>
+                                                    <div
+                                                        class="col-sm-12 col-md-4 col-lg-3"
+                                                    >
+                                                        <div
+                                                            class="window"
+                                                            id="enter-artist-name-window"
+                                                        >
+                                                            <div
+                                                                class="title-bar"
+                                                            >
+                                                                <span
+                                                                    class="window-title"
+                                                                    >Artist
+                                                                    Name</span
+                                                                >
+                                                                <div
+                                                                    class="window-controls"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        href="#!"
+                                                                    >
+                                                                        _
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        href="#!"
+                                                                    >
+                                                                        ☐
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        id="closebtn"
+                                                                        href="#!"
+                                                                    >
+                                                                        X
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="sub-window"
+                                                            >
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="text"
+                                                                    placeholder="Enter artist name"
+                                                                    name="artist_name[]"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="col-sm-12 col-md-4 col-lg-3"
+                                                    >
+                                                        <div
+                                                            class="window"
+                                                            id="enter-artist-set-time-window"
+                                                        >
+                                                            <div
+                                                                class="title-bar"
+                                                            >
+                                                                <span
+                                                                    class="window-title"
+                                                                    >Set
+                                                                    Time</span
+                                                                >
+                                                                <div
+                                                                    class="window-controls"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        href="#!"
+                                                                    >
+                                                                        _
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        href="#!"
+                                                                    >
+                                                                        ☐
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        id="closebtn"
+                                                                        href="#!"
+                                                                    >
+                                                                        X
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="sub-window"
+                                                            >
+                                                                <input
+                                                                    class="form-control"
+                                                                    type="time"
+                                                                    step="60"
+                                                                    min="00:00"
+                                                                    max="23:59"
+                                                                    title="Use 24hr format hh:mm"
+                                                                    placeholder="Enter set start time"
+                                                                    name="artist_set_time[]"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="btn-group"
+                                                        id="add-more-artists-btn-group"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-primary"
+                                                            id="add-more-artists-btn"
+                                                        >
+                                                            Add more artists...
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                            {% if artist_errors %}
+                                            <div class="row mt-2">
+                                                <div class="col-3"></div>
+                                                <div class="col-6">
+                                                    <div
+                                                        class="alert alert-danger"
+                                                    >
+                                                        {% for error in
+                                                        artist_errors %}{{ error
+                                                        }}<br />{% endfor %}
+                                                    </div>
+                                                </div>
+                                                <div class="col-2"></div>
+                                            </div>
+                                            {% endif %}
+                                        </section>
+                                        <!-- End of Artist Lineup Section -->
+
+                                        <!-- Enter Ticket Tiers Section -->
+                                        <section class="ticket-tiers-section">
+                                            <div id="ticket-tiers-rows">
+                                                <div
+                                                    class="row align-items-start ticket-row"
+                                                >
+                                                    <div
+                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                    ></div>
+                                                    <div
+                                                        class="col-sm-12 col-md-8 col-lg-6"
+                                                    >
+                                                        <div
+                                                            class="window"
+                                                            id="enter-ticket-tier-window"
+                                                        >
+                                                            <div
+                                                                class="title-bar"
+                                                            >
+                                                                <span
+                                                                    class="window-title"
+                                                                    >Ticket
+                                                                    Tier</span
+                                                                >
+                                                                <div
+                                                                    class="window-controls"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        href="#!"
+                                                                    >
+                                                                        _
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        href="#!"
+                                                                    >
+                                                                        ☐
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn"
+                                                                        id="closebtn"
+                                                                        href="#!"
+                                                                    >
+                                                                        X
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="sub-window"
+                                                            >
+                                                                <label
+                                                                    class="form-label"
+                                                                    >Ticket
+                                                                    Tiers</label
+                                                                >
+                                                                <p
+                                                                    class="form-text mb-2"
+                                                                >
+                                                                    Update
+                                                                    pricing,
+                                                                    quantity,
+                                                                    and perks
+                                                                    for each
+                                                                    tier.
+                                                                </p>
+                                                                <div
+                                                                    class="ticket-tier-rows"
+                                                                    data-event-id="{{ event.id }}"
+                                                                >
+                                                                    {% for
+                                                                    ticket in
+                                                                    event.tickets
+                                                                    %}
+                                                                    <div
+                                                                        class="ticket-tier-row border rounded p-3 mb-3"
+                                                                        data-ticket-row
+                                                                        data-existing="true"
+                                                                        data-has-orders="{{ 'true' if ticket.order_links else 'false' }}"
+                                                                    >
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name="ticket_row_id[]"
+                                                                            value="{{ ticket.id }}"
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name="ticket_row_delete[]"
+                                                                            value="0"
+                                                                            class="ticket-row-delete-flag"
+                                                                        />
+                                                                        <div
+                                                                            class="row g-3 align-items-end"
+                                                                        >
+                                                                            <div
+                                                                                class="col-lg-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Tier
+                                                                                    Name</label
+                                                                                >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_name[]"
+                                                                                    value="{{ ticket.ticketTier }}"
+                                                                                    maxlength="100"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-2 col-md-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Price
+                                                                                    ($)</label
+                                                                                >
+                                                                                <input
+                                                                                    type="number"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_price[]"
+                                                                                    value="{{ '%.2f'|format(ticket.price) }}"
+                                                                                    min="0"
+                                                                                    step="0.01"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-2 col-md-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Quantity</label
+                                                                                >
+                                                                                <input
+                                                                                    type="number"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_quantity[]"
+                                                                                    value="{{ ticket.availability }}"
+                                                                                    min="0"
+                                                                                    step="1"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-3 col-md-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Perks</label
+                                                                                >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_perks[]"
+                                                                                    value="{{ ticket.perks or '' }}"
+                                                                                    maxlength="50"
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-1 col-md-12"
+                                                                            >
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="btn btn-outline-danger w-100 ticket-tier-remove-btn"
+                                                                                >
+                                                                                    Remove
+                                                                                    Tier
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            class="ticket-row-removed-note text-danger small mt-2 d-none"
+                                                                        >
+                                                                            This
+                                                                            tier
+                                                                            will
+                                                                            be
+                                                                            removed
+                                                                            when
+                                                                            you
+                                                                            save.{%
+                                                                            if
+                                                                            ticket.order_links
+                                                                            %}
+                                                                            Existing
+                                                                            orders
+                                                                            will
+                                                                            be
+                                                                            refunded
+                                                                            automatically.{%
+                                                                            endif
+                                                                            %}
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <div
+                                                                    class="d-flex flex-wrap gap-2 mt-2"
+                                                                >
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-outline-primary add-ticket-tier-btn"
+                                                                    >
+                                                                        + Add
+                                                                        Ticket
+                                                                        Tier
+                                                                    </button>
+                                                                </div>
+                                                                <!-- Template row so the JS can clone fresh tiers on demand -->
+                                                                <template
+                                                                    class="ticket-tier-row-template"
+                                                                    ><div
+                                                                        class="ticket-tier-row border rounded p-3 mb-3"
+                                                                        data-ticket-row
+                                                                        data-existing="false"
+                                                                        data-has-orders="false"
+                                                                    >
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name="ticket_row_id[]"
+                                                                            value=""
+                                                                        />
+                                                                        <input
+                                                                            type="hidden"
+                                                                            name="ticket_row_delete[]"
+                                                                            value="0"
+                                                                            class="ticket-row-delete-flag"
+                                                                        />
+                                                                        <div
+                                                                            class="row g-3 align-items-end"
+                                                                        >
+                                                                            <div
+                                                                                class="col-lg-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Tier
+                                                                                    Name</label
+                                                                                >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_name[]"
+                                                                                    maxlength="100"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-2 col-md-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Price
+                                                                                    ($)</label
+                                                                                >
+                                                                                <input
+                                                                                    type="number"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_price[]"
+                                                                                    min="0"
+                                                                                    step="0.01"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-2 col-md-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Quantity</label
+                                                                                >
+                                                                                <input
+                                                                                    type="number"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_quantity[]"
+                                                                                    min="0"
+                                                                                    step="1"
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-3 col-md-4"
+                                                                            >
+                                                                                <label
+                                                                                    class="form-label"
+                                                                                    >Perks</label
+                                                                                >
+                                                                                <input
+                                                                                    type="text"
+                                                                                    class="form-control"
+                                                                                    name="ticket_row_perks[]"
+                                                                                    maxlength="50"
+                                                                                />
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-lg-1 col-md-12"
+                                                                            >
+                                                                                <button
+                                                                                    type="button"
+                                                                                    class="btn btn-outline-danger w-100 ticket-tier-remove-btn"
+                                                                                >
+                                                                                    Remove
+                                                                                    Tier
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div
+                                                                            class="ticket-row-removed-note text-danger small mt-2 d-none"
+                                                                        >
+                                                                            This
+                                                                            tier
+                                                                            will
+                                                                            be
+                                                                            removed
+                                                                            when
+                                                                            you
+                                                                            save.
+                                                                        </div>
+                                                                    </div></template
+                                                                >
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="btn-group"
+                                                        id="add-more-ticket-tiers-btn-group"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-primary"
+                                                            id="add-more-ticket-tiers-btn"
+                                                        >
+                                                            Add More Ticket
+                                                            Tiers...
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Ticket Tiers Section -->
+
+                                        <!-- Upload Additional Media Section -->
+                                        <section
+                                            class="upload-additional-media-section"
+                                        >
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="window"
+                                                        id="upload-additional-media-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Additional
+                                                                Media</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                            <label
+                                                                for="formFileMultiple"
+                                                                class="form-label"
+                                                                >(Optional)
+                                                                Upload
+                                                                additional media
+                                                                for your
+                                                                event.</label
+                                                            >
+                                                            <input
+                                                                class="form-control"
+                                                                type="file"
+                                                                id="formFileMultiple"
+                                                                name="additional_media"
+                                                                multiple
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Upload Additional Media Section -->
+
+                                        <!-- Post Event Section -->
+                                        <section class="post-event-section">
+                                            <div class="row align-items-start">
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                                <div
+                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                >
+                                                    <div
+                                                        class="btn-group"
+                                                        id="post-event-btn-group"
+                                                    >
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-primary"
+                                                        >
+                                                            Save Changes
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-secondary cancel-edit-btn"
+                                                            data-event-id="{{ event.id }}"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Post Event Section -->
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% else %}
-                <div class="col-12">
-                    <div class="window">
-                        <div class="sub-window">
-                            <p class="sub-window-content">
-                                {% if search_term %}No terms matched your
-                                search.{% else %}You have not created any events
-                                yet.{% endif %}
-                            </p>
+                    {% else %}
+                    <div class="col-12">
+                        <div class="window">
+                            <div class="sub-window">
+                                <p class="sub-window-content">
+                                    {% if search_term %}No terms matched your
+                                    search.{% else %}You have not created any
+                                    events yet.{% endif %}
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
+            </section>
         </div>
     </section>
 </div>
