@@ -180,12 +180,11 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                                                 <img src="{{ media_src }}" class="d-block w-100 img-fit edit-media-preview rounded" alt="{{ event.title }} media {{ loop.index }}" data-original-src="{{ media_src }}" data-input-id="replace-image-{{ media.id }}" />
                                                                                 <div class="media-delete-overlay d-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-danger bg-opacity-75 text-white fw-semibold rounded">Marked for removal</div>
                                                                                 <div class="media-edit-controls mt-2 d-flex gap-2 justify-content-center">
-                                                                                    <button type="button" class="btn btn-outline-secondary btn-sm replace-media-btn" data-input-id="replace-image-{{ media.id }}">Replace</button>
-                                                                                    <button type="button" class="btn btn-outline-danger btn-sm delete-media-btn" data-checkbox-id="delete-media-{{ media.id }}">Delete</button>
                                                                                 </div>
                                                                                 <input type="file" class="replace-media-input d-none" id="replace-image-{{ media.id }}" name="replace_image_{{ media.id }}" accept="image/*" />
                                                                                 <input type="checkbox" class="delete-media-checkbox d-none" id="delete-media-{{ media.id }}" name="delete_media_ids" value="{{ media.id }}" />
                                                                             </div>
+                                                                            <button type="button" class="btn btn-outline-danger btn-sm delete-media-btn" data-checkbox-id="delete-media-{{ media.id }}">Delete</button>
                                                                         </div>
                                                                         {% endfor %}
                                                                     </div>
@@ -635,16 +634,10 @@ OUT', 'CANCELLED'] %} {% block body %}
                                         <!-- End of Enter Event Type Section -->
 
                                         <!-- Event genres section -->
-                                        <section
-                                            class="edit-event-genres-section"
-                                        >
+                                        <section class="edit-event-genres-section">
                                             <div class="row align-items-start">
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
-                                                <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
-                                                >
+                                                <div class="col-1"></div>
+                                                <div class="col-10">
                                                     <div
                                                         class="window"
                                                         id="edit-event-genres-window"
@@ -697,18 +690,10 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                                 genre_options %}
                                                                 <option
                                                                     value="{{ genre.id }}"
-                                                                    {%
-                                                                    if
-                                                                    genre
-                                                                    in
-                                                                    event.genres
-                                                                    %}selected{%
-                                                                    endif
-                                                                    %}
-                                                                >
-                                                                    {{
-                                                                    genre.genreType
-                                                                    }}
+                                                                    {% if genre in event.genres %}
+                                                                        selected
+                                                                    {% endif %} >
+                                                                    {{ genre.genreType }}
                                                                 </option>
                                                                 {% endfor %}
                                                             </select>
@@ -733,7 +718,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                             </div>
                                         </section>
@@ -742,47 +727,41 @@ OUT', 'CANCELLED'] %} {% block body %}
                                         <!-- Event status section -->
                                         <section class="event-status">
                                             <div class="row align-items-start">
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
-                                                <!-- prettier-ignore -->
-                                                <div class="col-sm-12 col-md-8 col-lg-6">
-                                    <label class="form-label">Status</label>
-                                    <div class="d-grid gap-2">
-                                        <button
-                                            type="button"
-                                            class="btn btn-danger btn-lg cancel-event-btn"
-                                            data-event-id="{{ event.id }}"
-                                        >
-                                            Cancel This Event
-                                        </button>
-                                    </div>
-                                    <input
-                                        type="hidden"
-                                        class="event-status-input"
-                                        name="status"
-                                        value="{{ event.status }}"
-                                        data-original-status="{{ event.status }}"
-                                    />
-                                    </div>
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
+                                                <div class="col-1"></div>
+                                                <div class="col-10">
+                                                    <div class="d-grid gap-2">
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-danger btn-lg cancel-event-btn"
+                                                            data-event-id="{{ event.id }}"
+                                                        >
+                                                            Cancel This Event
+                                                        </button>
+                                                    </div>
+                                                    <input
+                                                        type="hidden"
+                                                        class="event-status-input"
+                                                        name="status"
+                                                        value="{{ event.status }}"
+                                                        data-original-status="{{ event.status }}"
+                                                    />
+                                                </div>
+                                                <div class="col-1"></div>
                                             </div>
                                         </section>
                                         <!-- End of event status section -->
 
-                                        <!-- Enter Event Artist Lineup Section -->
-                                        <section class="artist-lineup-section">
+                                        <!-- Edit Event Artist Lineup Section -->
+                                        <section class="edit-artist-lineup-section">
                                             <div id="artist-lineup-rows">
                                                 <div
                                                     class="row align-items-start artist-row"
                                                 >
                                                     <div
-                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                        class="col-1"
                                                     ></div>
                                                     <div
-                                                        class="col-sm-12 col-md-4 col-lg-3"
+                                                        class="col-4"
                                                     >
                                                         <div
                                                             class="window"
@@ -835,8 +814,9 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="col-2"></div>
                                                     <div
-                                                        class="col-sm-12 col-md-4 col-lg-3"
+                                                        class="col-4"
                                                     >
                                                         <div
                                                             class="window"
@@ -894,16 +874,16 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                         </div>
                                                     </div>
                                                     <div
-                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                        class="col-1"
                                                     ></div>
                                                 </div>
                                             </div>
                                             <div class="row align-items-start">
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                                 <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                    class="col-10"
                                                 >
                                                     <div
                                                         class="btn-group"
@@ -919,7 +899,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                             </div>
                                             {% if artist_errors %}
@@ -941,20 +921,20 @@ OUT', 'CANCELLED'] %} {% block body %}
                                         <!-- End of Artist Lineup Section -->
 
                                         <!-- Enter Ticket Tiers Section -->
-                                        <section class="ticket-tiers-section">
+                                        <section class="edit-ticket-tiers-section">
                                             <div id="ticket-tiers-rows">
                                                 <div
                                                     class="row align-items-start ticket-row"
                                                 >
                                                     <div
-                                                        class="col-sm-0 col-md-2 col-lg-3"
+                                                        class="col-1"
                                                     ></div>
                                                     <div
-                                                        class="col-sm-12 col-md-8 col-lg-6"
+                                                        class="col-10"
                                                     >
                                                         <div
                                                             class="window"
-                                                            id="enter-ticket-tier-window"
+                                                            id="edit-ticket-tier-window"
                                                         >
                                                             <div
                                                                 class="title-bar"
@@ -1000,7 +980,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                                     Tiers</label
                                                                 >
                                                                 <p
-                                                                    class="form-text mb-2"
+                                                                    class="form-text mb-2" id="edit-ticket-tiers-description"
                                                                 >
                                                                     Update
                                                                     pricing,
@@ -1245,11 +1225,8 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                                             >
                                                                                 <button
                                                                                     type="button"
-                                                                                    class="btn btn-outline-danger w-100 ticket-tier-remove-btn"
-                                                                                >
-                                                                                    Remove
-                                                                                    Tier
-                                                                                </button>
+                                                                                    class="btn btn-outline-danger ticket-tier-remove-btn"
+                                                                                >Remove <br/> Tier</button>
                                                                             </div>
                                                                         </div>
                                                                         <div
@@ -1269,73 +1246,34 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div
-                                                        class="col-sm-0 col-md-2 col-lg-3"
-                                                    ></div>
                                                 </div>
-                                            </div>
-                                            <div class="row align-items-start">
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
-                                                <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
-                                                >
-                                                    <div
-                                                        class="btn-group"
-                                                        id="add-more-ticket-tiers-btn-group"
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            class="btn btn-primary"
-                                                            id="add-more-ticket-tiers-btn"
-                                                        >
-                                                            Add More Ticket
-                                                            Tiers...
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
                                             </div>
                                         </section>
                                         <!-- End of Ticket Tiers Section -->
 
-                                        <!-- Post Event Section -->
-                                        <section class="post-event-section">
+                                        <!-- Save Event Section -->
+                                        <section class="save-event-section">
                                             <div class="row align-items-start">
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
-                                                <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
-                                                >
-                                                    <div
-                                                        class="btn-group"
-                                                        id="post-event-btn-group"
-                                                    >
-                                                        <button
-                                                            type="submit"
-                                                            class="btn btn-primary"
-                                                        >
-                                                            Save Changes
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            class="btn btn-secondary cancel-edit-btn"
-                                                            data-event-id="{{ event.id }}"
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                    </div>
+                                                <div class="col-1"></div>
+                                                <div class="col-4">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Save Changes
+                                                    </button>
                                                 </div>
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
+                                                <div class="col-2"></div>
+                                                <div class="col-4">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-secondary cancel-edit-btn"
+                                                        data-event-id="{{ event.id }}"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                                <div class="col-1"></div>
                                             </div>
                                         </section>
-                                        <!-- End of Post Event Section -->
+                                        <!-- Save of Post Event Section -->
                                     </form>
                                 </div>
                                 </section>
