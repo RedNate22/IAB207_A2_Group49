@@ -23,14 +23,6 @@ def create_app():
    app.debug = True
    app.secret_key = 'group_49'
 
-   import traceback
-   @app.errorhandler(Exception)
-   def debug_all(e):
-      print("\n=== TRACEBACK START ===")
-      traceback.print_exc()
-      print("=== TRACEBACK END ===\n")
-      raise e
-
    # centralised error handling for HTTP and generic exceptions
    def _render_error_page(error):
       # Render the shared error template for both HTTP and unhandled exceptions.
@@ -43,6 +35,15 @@ def create_app():
          status_code = 500
       # return error details for rendering
       return render_template("error.html", error=handled_error), status_code
+
+   import traceback
+
+   @app.errorhandler(Exception)
+   def debug_all(e):
+      print("\n=== TRACEBACK START ===")
+      traceback.print_exc()
+      print("=== TRACEBACK END ===\n")
+      return _render_error_page(e)
 
    # register error handlers
    # TODO uncomment
