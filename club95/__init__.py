@@ -1,10 +1,11 @@
 # import flask - from 'package' import 'Class'
-from flask import Flask, session 
+from flask import Flask, app, render_template 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
 from sqlalchemy import func
+from werkzeug.exceptions import HTTPException, InternalServerError
 from urllib.parse import quote_plus
 
 DATABASE_FILENAME = 'sitedata.sqlite'
@@ -21,24 +22,27 @@ def create_app():
    app.debug = True
    app.secret_key = 'group_49'
 
-   ##Setting up sessions testing as per week 5 tutorial.
-   # @app.route('/login')
-   # def set_session():
-   #    session['username'] = 'Bryn'
-   #    return 'Session data set'
-   
-   # @app.route('/getsession')
-   # def get_session():
-   #    if 'username' in session:
-   #       return session['username']
-   #    return 'no user logged in'
-   
-   # @app.route('/logout')
-   # def clear_session():
-   #    session.pop('username', None)
-   #    return 'session cleared'
-   ## end of session testing segement as per week 5 tutorial
+   # centralised error handling for HTTP and generic exceptions
+   def _render_error_page(error):
+      # Render the shared error template for both HTTP and unhandled exceptions.
+      if isinstance(error, HTTPException):
+         handled_error = error
+         status_code = error.code
+      # Handle unhandled exceptions
+      else:
+         handled_error = InternalServerError(original_exception=error)
+         status_code = 500
+      # return error details for rendering
+      return render_template("error.html", error=handled_error), status_code
+   # register error handlers
+   app.register_error_handler(HTTPException, _render_error_page)
+   app.register_error_handler(Exception, _render_error_page)
 
+   # Intentional error route for testing
+   @app.route("/force-500")
+   def force_500():
+      raise RuntimeError("Intentional failure for testing.")
+   
    # ensure the instance folder exists for database storage
    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
@@ -60,6 +64,8 @@ def create_app():
    # in our case it is auth.login (blueprintname.viewfunction name)
    # redirect to login page if user tries to access a login_required page without being logged in
    login_manager.login_view = 'auth_bp.login'
+   login_manager.login_message = 'Please log in to continue.'
+   login_manager.login_message_category = 'warning'
    login_manager.init_app(app)
 
    # create a user loader function takes userid and returns User

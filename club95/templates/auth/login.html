@@ -4,6 +4,17 @@
 {% block body %}
 <div class="centered-form">
 
+    {# Warning when login is required before accessing a page #}
+    {% with messages = get_flashed_messages(category_filter=['warning']) %}
+        {% if messages %}
+            <div class="alert alert-warning mt-3">
+                {% for message in messages %}
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     {# Flash message section #}
     {% with messages = get_flashed_messages(category_filter=['login_error']) %}
         {% if messages %}

@@ -1,0 +1,19 @@
+.error-page-container {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.error-code {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.error-message {
+    font-size: 1.5rem;
+    margin: 20px 0;
+}
+
+.error-suggestion {
+    font-size: 1rem;
+    color: #666;
+}

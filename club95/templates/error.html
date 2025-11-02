@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+
+{% block body %}
+    <div class="error-page-container">
+        <h1 class="error-code">Error {{ error.code }}</h1>
+        <p class="error-message">{{ error.description }}</p>
+    {% if error.code == 404 %}
+    <p class="error-suggestion">Please check the URL or return to the home page.</p>
+    {% elif error.code == 500 %}
+    <p class="error-suggestion">An unexpected error occurred. Please try again later.</p>
+    {% elif error.code == 403 %}
+    <p class="error-suggestion">You do not have permission to access this resource.</p>
+    {% elif error.code == 400 %}
+    <p class="error-suggestion">Bad request. Please check your input and try again.</p>
+    {% elif error.code == 401 %}
+    <p class="error-suggestion">Unauthorized access. Please log in and try again.</p>
+    {% elif error.code == 405 %}
+    <p class="error-suggestion">Method not allowed for this resource. Try using a different action.</p>
+    {% elif error.code == 408 %}
+    <p class="error-suggestion">Request timed out. Please try again later.</p>
+    {% elif error.code == 429 %}
+    <p class="error-suggestion">Too many requests. Please wait a moment before trying again.</p>
+    {% elif error.code == 503 %}
+    <p class="error-suggestion">Service unavailable. Please try again later.</p>
+    {% elif error.code == 502 %}
+    <p class="error-suggestion">Bad gateway. The server received an invalid response. Please try again soon.</p>
+    {% elif error.code == 504 %}
+    <p class="error-suggestion">Gateway timeout. The upstream server took too long to respond.</p>
+    {% elif error.code == 415 %}
+    <p class="error-suggestion">Unsupported file type. Please upload a supported format and retry.</p>
+    {% elif error.code == 422 %}
+    <p class="error-suggestion">We could not process the data provided. Please review your input and submit again.</p>
+    {% else %}
+    <p class="error-suggestion">An unexpected error occurred. Please try again later.</p>
+    {% endif %}
+        <a href="{{ url_for('home_bp.index') }}" class="btn btn-primary mt-3">Return to Home Page</a>
+    </div>
+{% endblock %}
