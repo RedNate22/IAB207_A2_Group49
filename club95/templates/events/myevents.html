@@ -6,11 +6,11 @@
 <div class="main-window">
 
   {{ render_search_filters(
-      search_term|default(''),
-      'events_bp.myevents',
-      filter_event_types,
-      filter_genres,
-      filter_statuses
+      search_term=search_term|default(''),
+      search_url='events_bp.myevents',
+      event_types=event_type_options,
+      genres=genre_options,
+      statuses=status_options
   ) }}
 
   <section class="events-list-page">
