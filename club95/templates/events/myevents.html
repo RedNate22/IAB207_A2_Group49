@@ -4,120 +4,20 @@
 {% block body %}
 
 <div class="main-window">
+    {{ render_search_filters(search_term=search_term|default(''), search_url='events_bp.myevents') }}
 
-  {{ render_search_filters(
-      search_term=search_term|default(''),
-      search_url='events_bp.myevents',
-      event_types=event_type_options,
-      genres=genre_options,
-      statuses=status_options
-  ) }}
+    <section class="events-list-page">
+        <div class="container" id="events-page-container">
 
-  <section class="events-list-page">
-    <div class="container" id="events-page-container">
-
-      {% with messages = get_flashed_messages(category_filter=['event_update_success']) %}
-        {% if messages %}
-          <div class="alert alert-info mt-4" role="alert">
-            {% for message in messages %}
-              <span>{{ message }}</span>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
-
-      <div class="row align-items-start gy-4">
-        {% for event in events %}
-          <div class="col-sm-12 col-md-6 col-lg-4 event-card-column">
-            <div class="window event-card" id="event-{{ event.id }}">
-              <div class="title-bar">
-                <span class="window-title">{{ event.title }}</span>
-                <div class="window-controls">
-                  <button type="button" class="btn">_</button>
-                  <button type="button" class="btn">☐</button>
-                  <button type="button" class="btn" id="closebtn">X</button>
-                </div>
-              </div>
-
-              <div class="sub-window">
-                <img
-                  src="{{ url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') }}"
-                  alt="{{ event.title }}"
-                  class="window-img-top img-fit"
-                />
-
-                <div class="event-display">
-                  <section class="window-tags">
-                    {% set event_type_label = event.event_type.typeName if event.event_type else 'Unassigned' %}
-                    <span class="badge" id="event-type">{{ event_type_label }}</span>
-                    <span class="badge" id="event-status-{{ event.status|lower|replace(' ', '-') }}">{{ event.status }}</span>
-                  </section>
-
-                  <p class="sub-window-content">
-                    {{ event.description or "Description coming soon." }}
-                    <br><br>
-
-                    {% set min_ticket = event.tickets|min(attribute='price') if event.tickets else None %}
-                    <strong>> PRICE:</strong>
-                    {% if min_ticket %}
-                      {% if min_ticket.price == 0 %}
-                        Free Entry
-                      {% else %}
-                        Starting at ${{ '%.2f'|format(min_ticket.price) }}
-                      {% endif %}
-                    {% else %} N/A {% endif %}
-                    <br>
-
-                    <strong>> ARTIST LINEUP:</strong>
-                    {% if event.artists %}
-                      {{ event.artists | map(attribute='artistName') | join(', ') }}
-                    {% else %} TBA {% endif %}
-                    <br>
-
-                    <strong>> VENUE:</strong> {{ event.venue.location if event.venue else "TBA" }}
-                    <br>
-
-                    <strong>> DATE:</strong> {{ event.date or "TBA" }}
-                    <br>
-
-                    <strong>> TIME:</strong> {{ event.start_time or "TBA" }}{% if event.end_time %}-{{ event.end_time }}{% endif %}
-                    <br>
-
-                    <strong>> GENRES:</strong>
-                    {% if event.genres %}
-                      {% for g in event.genres %}
-                        <a href="#!">{{ g.genreType }}</a>{% if not loop.last %}, {% endif %}
-                      {% endfor %}
-                    {% else %}
-                      <span>N/A</span>
-                    {% endif %}
-                  </p>
-
-                  <button type="button" class="btn start-edit-btn" data-event-id="{{ event.id }}">
-                    Update Event
-                  </button>
-                </div>
-
-                <!-- inline edit UI kept as-is -->
-                <div class="event-edit-form-wrapper d-none">
-                  <div class="image-edit-hint d-none">Click the poster above to upload a new image.</div>
-                  <form class="event-update-form" method="post" action="{{ url_for('events_bp.update_event', event_id=event.id) }}" enctype="multipart/form-data">
-                    <input type="file" class="event-image-input d-none" name="image" accept="image/*" />
-
-                    <div class="mb-3">
-                      <label class="form-label" for="title-{{ event.id }}">Title</label>
-                      <input type="text" class="form-control" id="title-{{ event.id }}" name="title" value="{{ event.title or '' }}" required />
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label" for="type-{{ event.id }}">Type</label>
-                      <select class="form-select" id="type-{{ event.id }}" name="type" required>
-                        <option value="" disabled {% if not event.event_type_id %}selected{% endif %}>Select an event type</option>
-                        {% for type_option in event_type_options %}
-                          <option value="{{ type_option.id }}" {% if event.event_type_id == type_option.id %}selected{% endif %}>{{ type_option.typeName }}</option>
+            {% with messages = get_flashed_messages(category_filter=['event_update_success']) %}
+                {% if messages %}
+                    <div class="alert alert-info mt-4" role="alert">
+                        {% for message in messages %}
+                            <span>{{ message }}</span>
                         {% endfor %}
-                      </select>
                     </div>
+                {% endif %}
+            {% endwith %}
 
             <div class="row align-items-start gy-4">
                 {% for event in events %}
@@ -396,81 +296,21 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="mb-3 genre-toggle-section">
-                      <span class="form-label d-block mb-2">Genres</span>
-                      <div class="genre-toggle-group" data-event-id="{{ event.id }}">
-                        {% for genre in genre_options %}
-                          {% set toggle_id = 'genre-' ~ event.id ~ '-' ~ loop.index %}
-                          <input
-                            type="checkbox"
-                            class="btn-check"
-                            id="{{ toggle_id }}"
-                            name="genres"
-                            value="{{ genre.id }}"
-                            {% if genre in event.genres %}checked{% endif %}
-                          />
-                          <label class="btn genre-toggle" for="{{ toggle_id }}">
-                            {{ genre.genreType }}
-                          </label>
-                        {% endfor %}
-                      </div>
-                      <div class="genre-toggle-actions">
-                        <button type="button" class="btn add-genre-btn" data-event-id="{{ event.id }}">+ Add Genre</button>
-                      </div>
-                    </div>
-
-                    <div class="row g-3">
-                      <div class="col-md-4">
-                        <label class="form-label" for="date-{{ event.id }}">Date</label>
-                        <input type="date" class="form-control" id="date-{{ event.id }}" name="date" value="{{ event.date or '' }}" />
-                      </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="start-{{ event.id }}">Start Time</label>
-                        <input type="time" class="form-control" id="start-{{ event.id }}" name="start_time" value="{{ event.start_time or '' }}" />
-                      </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="end-{{ event.id }}">End Time</label>
-                        <input type="time" class="form-control" id="end-{{ event.id }}" name="end_time" value="{{ event.end_time or '' }}" />
-                      </div>
-                    </div>
-
-                    <div class="mb-3 mt-3">
-                      <label class="form-label" for="location-{{ event.id }}">Venue / Location</label>
-                      <input type="text" class="form-control" id="location-{{ event.id }}" name="location" value="{{ event.venue.location if event.venue else '' }}" />
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label" for="description-{{ event.id }}">Description</label>
-                      <textarea class="form-control" id="description-{{ event.id }}" name="description" rows="4">{{ event.description or '' }}</textarea>
-                    </div>
-
-                    <div class="d-flex gap-2 flex-wrap">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
-                      <button type="button" class="btn btn-secondary cancel-edit-btn" data-event-id="{{ event.id }}">Cancel</button>
-                    </div>
-                  </form>
                 </div>
-              </div>
+                {% else %}
+                <div class="col-12">
+                    <div class="window">
+                        <div class="sub-window">
+                            <p class="sub-window-content">{% if search_term %}No terms matched your search.{% else %}You have not created any events yet.{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-          </div>
-        {% else %}
-          <div class="col-12">
-            <div class="window">
-              <div class="sub-window">
-                <p class="sub-window-content">
-                  {% if search_term %}No terms matched your search.{% else %}You have not created any events yet.{% endif %}
-                </p>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
 </div>
 
-<!--  JS for inline edit -->
 <script>
 // Main controller so the inline editor actually feels like a proper mini-dashboard
 document.addEventListener('DOMContentLoaded', function () {
@@ -489,26 +329,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Restore the pre-edit layout once I close out of edit mode
     function restoreOriginalOrder() {
-        if (!eventRow) return;
+        if (!eventRow) {
+            return;
+        }
         const sortedColumns = Array.from(eventRow.children)
-            .filter(child => child.classList && child.classList.contains('event-card-column'))
-            .sort((a, b) => Number(a.dataset.originalIndex || 0) - Number(b.dataset.originalIndex || 0));
-        sortedColumns.forEach(col => eventRow.appendChild(col));
+            .filter(function (child) { return child.classList && child.classList.contains('event-card-column'); })
+            .sort(function (a, b) {
+                return Number(a.dataset.originalIndex || 0) - Number(b.dataset.originalIndex || 0);
+            });
+        sortedColumns.forEach(function (column) {
+            eventRow.appendChild(column);
+        });
     }
 
     // Make the currently edited card jump to the top so it’s easier to focus on
     function moveColumnToFirst(column) {
-        if (!eventRow || !column) return;
+        if (!eventRow || !column) {
+            return;
+        }
         eventRow.insertBefore(column, eventRow.firstElementChild);
     }
 
     // Blow away any inline changes when I bail out of edit mode
     function clearEditingState() {
         restoreOriginalOrder();
-        cardColumns.forEach(column => {
+        cardColumns.forEach(function (column) {
             column.classList.remove('editing-active');
             const card = column.querySelector('.event-card');
-            if (!card) return;
+            if (!card) {
+                return;
+            }
             card.classList.remove('editing');
             const display = card.querySelector('.event-display');
             const editWrapper = card.querySelector('.event-edit-form-wrapper');
@@ -517,10 +367,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 editWrapper.classList.add('d-none');
             }
             const hint = column.querySelector('.image-edit-hint');
-            if (hint) hint.classList.add('d-none');
+            if (hint) {
+                hint.classList.add('d-none');
+            }
             const image = column.querySelector('.window-img-top');
             if (image) {
-                if (image.dataset.originalSrc) image.src = image.dataset.originalSrc;
+                if (image.dataset.originalSrc) {
+                    image.src = image.dataset.originalSrc;
+                }
                 image.classList.remove('image-editable-active');
             }
             const imageInput = column.querySelector('.event-image-input');
@@ -600,20 +454,32 @@ document.addEventListener('DOMContentLoaded', function () {
         const input = card.querySelector('.event-image-input');
         const hint = card.querySelector('.image-edit-hint');
 
-        if (!image || !input) return;
-        if (!image.dataset.originalSrc) image.dataset.originalSrc = image.src;
-        if (hint) hint.classList.remove('d-none');
+        if (!image || !input) {
+            return;
+        }
+
+        if (!image.dataset.originalSrc) {
+            image.dataset.originalSrc = image.src;
+        }
+
+        if (hint) {
+            hint.classList.remove('d-none');
+        }
 
         if (!image.dataset.bindImagePicker) {
-            image.addEventListener('click', () => {
-                if (card.classList.contains('editing')) input.click();
+            image.addEventListener('click', function () {
+                if (card.classList.contains('editing')) {
+                    input.click();
+                }
             });
 
-            input.addEventListener('change', e => {
-                const file = e.target.files[0];
+            input.addEventListener('change', function (event) {
+                const file = event.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = ev => image.src = ev.target.result;
+                    reader.onload = function (e) {
+                        image.src = e.target.result;
+                    };
                     reader.readAsDataURL(file);
                     image.classList.add('image-editable-active');
                 } else {
@@ -816,10 +682,14 @@ document.addEventListener('DOMContentLoaded', function () {
             clearEditingState();
             const column = button.closest('.event-card-column');
             const card = button.closest('.event-card');
-            if (!column || !card) return;
+            if (!column || !card) {
+                return;
+            }
             const display = card.querySelector('.event-display');
             const editWrapper = card.querySelector('.event-edit-form-wrapper');
-            if (!display || !editWrapper) return;
+            if (!display || !editWrapper) {
+                return;
+            }
             moveColumnToFirst(column);
             setupImagePicker(card);
             setupMediaCarousel(card);
@@ -830,7 +700,9 @@ document.addEventListener('DOMContentLoaded', function () {
             display.classList.add('d-none');
             editWrapper.classList.remove('d-none');
             const image = card.querySelector('.window-img-top');
-            if (image) image.classList.add('image-editable-active');
+            if (image) {
+                image.classList.add('image-editable-active');
+            }
             column.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
@@ -867,7 +739,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const column = button.closest('.event-card-column');
             const activeSelect = column ? column.querySelector('.genres-select') : null;
             const rawInput = window.prompt('Enter a new genre name:');
-            if (rawInput === null) return;
+
+            if (rawInput === null) {
+                return;
+            }
+
             const genreName = rawInput.trim();
             if (!genreName) {
                 window.alert('Please enter a genre name.');
@@ -877,11 +753,17 @@ document.addEventListener('DOMContentLoaded', function () {
             // Hand the new genre to the server and wait for an ID so every select stays in sync
             fetch(genreCreateUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({ name: genreName }),
             })
-                .then(resp => resp.json().then(data => ({ ok: resp.ok, data })))
-                .then(result => {
+                .then(function (response) {
+                    return response.json().then(function (data) {
+                        return { ok: response.ok, data: data };
+                    });
+                })
+                .then(function (result) {
                     if (!result.ok || !result.data || !result.data.success) {
                         // Flag whatever came back so the user knows why nothing happened
                         const message = (result.data && result.data.message) ? result.data.message : 'Unable to add genre right now.';
@@ -894,7 +776,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         addGenreOptionToSelect(selectEl, String(result.data.id), result.data.name, shouldSelect);
                     });
                 })
-                .catch(() => window.alert('Unable to add genre right now.'));
+                .catch(function () {
+                    window.alert('Unable to add genre right now.');
+                });
         });
     });
 });
@@ -936,5 +820,4 @@ function addGenreOptionToSelect(selectEl, genreId, genreName, shouldSelect) {
     }
 }
 </script>
-
 {% endblock %}

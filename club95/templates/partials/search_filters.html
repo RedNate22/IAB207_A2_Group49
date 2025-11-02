@@ -37,7 +37,7 @@
               <ul class="dropdown-menu dropdown-menu-end">
                 {% set selected_types = request.args.getlist('event_type') %}
                 {% for et in _event_types %}
-                  {% set et_id = (et.id|string) if et.__class__.__name__ != 'str' else et %}
+                  {% set et_id = (et.id ~ '') if et.__class__.__name__ != 'str' else et %}
                   {% set et_label = et.typeName if et.__class__.__name__ != 'str' else et %}
                   <li class="d-flex align-items-center">
                     <input class="form-check-input mt-0 ms-2"
@@ -60,7 +60,7 @@
               <ul class="dropdown-menu dropdown-menu-end">
                 {% set selected_genres = request.args.getlist('genre') %}
                 {% for g in _genres %}
-                  {% set g_id = (g.id|string) if g.__class__.__name__ != 'str' else g %}
+                  {% set g_id = (g.id ~ '') if g.__class__.__name__ != 'str' else g %}
                   {% set g_label = g.genreType if g.__class__.__name__ != 'str' else g %}
                   <li class="d-flex align-items-center">
                     <input class="form-check-input mt-0 ms-2"
