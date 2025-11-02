@@ -87,6 +87,20 @@ render_search_filters %} {% block body %}
                         </div>
                     </div>
                     {% endif %} 
+                {% endwith %}
+                
+                {% with messages = get_flashed_messages(category_filter=['logout-success']) %} 
+                {% if messages %}
+                    <div class="flash-hover">
+                        <div class="flash-container">
+                            <div class="success">
+                                {% for message in messages %}
+                                    <span>{{ message }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %} 
                 {% endwith %} 
 
                 {% with messages = get_flashed_messages(category_filter=['search_info']) %} 
