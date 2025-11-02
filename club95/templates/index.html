@@ -130,7 +130,7 @@ render_search_filters %} {% block body %}
                                 <strong>> GENRES:</strong>
                                 {% if event.genres %} {% for g in event.genres
                                 %}
-                                <a href="#!">{{ g.genreType }}</a>{% if not
+                                <a class="genre-search-link" href="{{ url_for('home_bp.search', search=g.genreType) }}">{{ g.genreType }}</a>{% if not
                                 loop.last %}, {% endif %} {% endfor %} {% else
                                 %}
                                 <span>N/A</span>

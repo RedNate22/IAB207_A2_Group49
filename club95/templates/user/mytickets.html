@@ -422,7 +422,7 @@
                                 <strong>> GENRES:</strong>
                                 {% if event and event.genres %} {% for genre in
                                 event.genres %}
-                                <a href="#!">{{ genre.genreType }}</a>{% if not
+                                <a class="genre-search-link" href="{{ url_for('user_bp.mytickets', search=genre.genreType) }}">{{ genre.genreType }}</a>{% if not
                                 loop.last %}, {% endif %} {% endfor %} {% else
                                 %}
                                 <span>N/A</span>
