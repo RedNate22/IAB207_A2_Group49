@@ -144,6 +144,9 @@ def mytickets():
             od.visible_items = visible_items
             orders_vm.append(od)
 
+    if orders_vm:
+        orders_vm.sort(key=lambda od: getattr(od, "id", 0), reverse=True)
+
     if not orders_vm:
         flash("No tickets matched your filters. Try a different keyword or filter.", "search_info")
 

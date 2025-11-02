@@ -975,5 +975,5 @@ def purchase_tickets(event_id):
     db.session.commit()
     # Confirm successful purchase
     flash("Tickets purchased successfully!", "success")
-    # Return to event details page
-    return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+    # Redirect to the user's tickets page so they can see the new order
+    return redirect(url_for('user_bp.mytickets'))

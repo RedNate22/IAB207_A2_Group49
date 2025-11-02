@@ -57,6 +57,10 @@ def search():
     type_vals = request.args.getlist('event_type[]') + request.args.getlist('event_type')
     genre_vals = request.args.getlist('genre[]') + request.args.getlist('genre')
     status_vals = request.args.getlist('status[]') + request.args.getlist('status')
+    include_inactive = any(
+        (value or '').strip().upper() == 'INACTIVE'
+        for value in status_vals
+    )
 
     upcoming_three = _select_upcoming_events(
         db.session.scalars(
@@ -64,7 +68,9 @@ def search():
         ).all()
     )
 
-    q = db.select(Event).where(_active_event_clause())
+    q = db.select(Event)
+    if not include_inactive:
+        q = q.where(_active_event_clause())
 
     # ---- text & price search (only if term provided) ----
     if term:

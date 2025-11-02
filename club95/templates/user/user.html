@@ -37,8 +37,8 @@
                                 {% endif %}
                             {% else %}
                                 <img
-                                    src="https://picsum.photos/200"
-                                    alt="Profile Picture"
+                                    src="{{ url_for('static', filename='img/cassette.png') }}"
+                                    alt="Default profile picture"
                                     class="img-fluid rounded-circle mt-2 mb-3 profile-img"
                                 />
                             {% endif %}

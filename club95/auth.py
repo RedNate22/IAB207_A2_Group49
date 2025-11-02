@@ -102,7 +102,7 @@ def login():
 @auth_bp.route('/auth/logout')
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'logout-success')
     ## spits user back to homepage
     return redirect(url_for('home_bp.index'))
     

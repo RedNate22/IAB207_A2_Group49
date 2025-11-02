@@ -30,7 +30,7 @@ render_search_filters %} {% block body %}
                                 {% set poster_src = url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') %}
                                 <div class="carousel-item {% if loop.first %}active{% endif %}">
                                     <a href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}" class="d-block position-relative">
-                                        <img src="{{ poster_src }}" class="d-block w-100" alt="{{ event.title }} poster" />
+                                        <img src="{{ poster_src }}" class="d-block w-100 img-fit" alt="{{ event.title }} poster" />
                                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded py-2 px-3">
                                             <h5 class="mb-1">{{ event.title }}</h5>
                                             {% set event_date = event.date or 'Coming Soon' %}
@@ -73,10 +73,29 @@ render_search_filters %} {% block body %}
         <!-- Events Page Container -->
 
         <!-- prettier-ignore -->
-        <div class="container" id="events-page-container">
-                {# Flash message section #} 
+    <div class="container" id="events-page-container">
+        {% if search_term is defined and search_term %}
+        <div class="alert alert-info mt-4" role="alert">
+            Showing results for: <strong>{{ search_term }}</strong>
+        </div>
+        {% endif %}
+        {# Flash message section #} 
                 {% with messages = get_flashed_messages(category_filter=['login_success']) %} 
                     {% if messages %}
+                    <div class="flash-hover">
+                        <div class="flash-container">
+                            <div class="success">
+                                {% for message in messages %}
+                                    <span>{{ message }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %} 
+                {% endwith %}
+                
+                {% with messages = get_flashed_messages(category_filter=['logout-success']) %} 
+                {% if messages %}
                     <div class="flash-hover">
                         <div class="flash-container">
                             <div class="success">
