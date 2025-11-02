@@ -248,8 +248,6 @@ tickets belonging to that tier. */
 
 /* ADD MORE TICKET TIERS BUTTON */
 /* A button to add more ticket tiers (& their prices/quantities) */
-/* TODO: future implementation: pressing this button would generate x amount
-of more rows of ticket tier (+ prices/quantities) windows for the user to enter. */
 
 #add-more-ticket-tiers-btn-group {
     margin-top: 0rem;

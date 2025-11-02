@@ -91,7 +91,6 @@
 
 /* PURCHASE TICKETS BUTTON */
 /* Users can press this button to purchase a ticket(s) */
-/* TODO: Customise modal to match styling */
 /* ? Future implementation: add a carousel (styled) button to increase/decrease ticket quantity? */
 #purchase-tickets-btn-group {
     height: 100%;

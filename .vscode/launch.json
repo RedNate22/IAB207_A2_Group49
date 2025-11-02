@@ -11,12 +11,10 @@
             "module": "flask",
             "env": {
                 "FLASK_APP": "club95:create_app",
-                "FLASK_DEBUG": "1",
+                "FLASK_DEBUG": "0",
                 "FLASK_RUN_PORT": "8080"
             },
-            // TODO
-            // "args": ["run", "--no-debugger", "--no-reload"],
-            "args": ["run", "--debug"],
+            "args": ["run", "--no-debugger", "--no-reload"],
             "jinja": true
         }
     ]

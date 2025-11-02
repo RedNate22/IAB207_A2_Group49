@@ -1,8 +1,3 @@
-## TODO
-## Attach instance of login_manager to the app
-## Create user_loader callback
-## register a seperate "auth" blueprint for authentication routes
-
 import os
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash
