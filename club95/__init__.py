@@ -163,7 +163,18 @@ def populate_database(app: Flask) -> None:
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
-      from .models import User, Event, Genre, Artist, Ticket, Venue, EventType, Comment
+      from .models import (
+         User,
+         Event,
+         Genre,
+         Artist,
+         Ticket,
+         Venue,
+         EventType,
+         Comment,
+         Order,
+         OrderTicket,
+      )
 
       # Helper methods
       def get_or_create_type(name: str) -> EventType:
@@ -311,6 +322,65 @@ def populate_database(app: Flask) -> None:
             "Bringing the family—kids are obsessed with the strings."
          ],
       }
+
+      def seed_sample_orders(event: Event, tickets_by_tier: dict[str, Ticket]) -> None:
+         """Attach example orders to the provided event if it matches seed targets."""
+         if event.title not in {"DJ Spreadsheet Live", "Crescent City Players", "Moonlight Resonance"}:
+            return
+
+         # Avoid duplicate seeding on reruns
+         existing_orders = {
+            ot.order
+            for ticket in event.tickets
+            for ot in ticket.order_links
+         }
+         if existing_orders:
+            return
+
+         order_samples = []
+         if event.title == "DJ Spreadsheet Live":
+            ticket = tickets_by_tier.get("1")
+            if ticket:
+               order_samples.append({"ticket": ticket, "qty": 2})
+         elif event.title == "Crescent City Players":
+            tier_two = tickets_by_tier.get("2")
+            tier_three = tickets_by_tier.get("3")
+            if tier_two:
+               order_samples.append({"ticket": tier_two, "qty": 1})
+            if tier_three:
+               order_samples.append({"ticket": tier_three, "qty": 2})
+         elif event.title == "Moonlight Resonance":
+            ticket = tickets_by_tier.get("Standard")
+            if ticket:
+               order_samples.append({"ticket": ticket, "qty": 3})
+
+         if not order_samples:
+            return
+
+         for index, sample in enumerate(order_samples, start=1):
+            ticket = sample["ticket"]
+            qty = max(1, int(sample["qty"]))
+            total = ticket.price * qty
+            order = Order(
+               order_date=datetime.now() - timedelta(hours=index),
+               amount=total,
+               user=user,
+            )
+            db.session.add(order)
+            db.session.flush()
+
+            # Link order and ticket
+            link = OrderTicket(
+               order_id=order.id,
+               ticket_id=ticket.id,
+               quantity=qty,
+               price_at_purchase=ticket.price,
+            )
+            db.session.add(link)
+
+            # Reduce availability to simulate purchase
+            if ticket.availability is not None:
+               ticket.availability = max(0, ticket.availability - qty)
 
       # Seed events
       events_seed = [
@@ -473,6 +543,10 @@ def populate_database(app: Flask) -> None:
 
             db.session.add(event)
             db.session.flush()
+
+            # Seed sample orders for selected events
+            tickets_by_tier = {ticket.ticketTier: ticket for ticket in event.tickets}
+            seed_sample_orders(event, tickets_by_tier)
 
             # Attach sample comments for the first three seeded events
             sample_comments = comment_batches.get(event.title)

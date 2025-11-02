@@ -6,105 +6,98 @@ filter_statuses ) }}
 <div class="main-window">
     <section class="my-tickets-page">
         <div class="container" id="my-tickets-page-container">
+            {% if orders %}
             <div class="row justify-content-center gy-4">
-                <div class="sub-window">
-                    <img
-                        src="{{ url_for('static', filename='img/' ~ event.image) if event and event.image else url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') }}"
-                        class="window-img-top img-fit"
-                        alt="{{ event.title if event else 'Event poster' }}"
-                    />
-                    <section class="window-tags">
-                        {% set event_type_label = (event.event_type.typeName if
-                        event and event.event_type else 'Event') %}
-                        <span class="badge" id="event-type">
-                            {{ event_type_label }}
-                        </span>
-                        <span class="badge" id="event-status-open">
-                            {{ event.status if event and event.status else
-                            'OPEN' }}
-                        </span>
-                    </section>
-                    <p class="sub-window-content">
-                        <strong>> ORDER DATE:</strong>
-                        {{ order.order_date.strftime('%b %d, %Y') if
-                        order.order_date else 'Pending' }}
-                        <br />
-                        <strong>> PURCHASED TICKET(s):</strong>
-                        <br />
-                        {% for line_item in order.line_items %} {{
-                        line_item.quantity }}x {{ line_item.ticket.ticketTier }}
-                        – ${{ '%.2f'|format(line_item.price_at_purchase) }}
-                        <br />
-                        {% endfor %}
-                        <br />
-                        <strong>> DESCRIPTION: </strong>
-                        {{ event.description if event and event.description else
-                        'No description available.' }}
-                        <br />
-                        <br />
-                        <strong>> ARTIST LINEUP:</strong>
-                        {% if event and event.artist_links %} {% for link in
-                        event.artist_links %} {{ link.artist.artistName }}{% if
-                        link.set_time %} ({{ link.set_time }}){% endif %}{% if
-                        not loop.last %}, {% endif %} {% endfor %} {% elif event
-                        and event.artists %} {% for artist in event.artists %}
-                        {{ artist.artistName }}{% if not loop.last %}, {% endif
-                        %} {% endfor %} {% else %} Not available {% endif %}
-                        <br />
-                        <strong>> VENUE:</strong>
-                        {{ event.venue.location if event and event.venue else
-                        'TBA' }}
-                        <br />
-                        <strong>> DATE:</strong>
-                        {{ event.date if event and event.date else 'TBA' }}
-                        <br />
-                        <strong>> TIME:</strong>
-                        {{ event.start_time if event and event.start_time else
-                        'TBA' }} {% if event and event.end_time %}-{{
-                        event.end_time }}{% endif %}
-                        <br />
-                        <strong>> GENRES:</strong>
-                        {% if event and event.genres %} {% for genre in
-                        event.genres %}
-                        <a
-                            class="genre-search-link"
-                            href="{{ url_for('user_bp.mytickets', search=genre.genreType) }}"
-                            >{{ genre.genreType }}</a
-                        >{% if not loop.last %}, {% endif %} {% endfor %} {%
-                        else %}
-                        <span>N/A</span>
-                        {% endif %}
-                    </p>
-                    <a
-                        class="btn"
-                        id="view-details-btn"
-                        href="{{ url_for('events_bp.eventdetails', event_id=event.id) if event else '#!' }}"
-                    >
-                        View details
-                    </a>
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <div class="col-12 col-lg-8 d-flex">
-            <div class="window" id="no-orders-window">
-                <div class="title-bar">
-                    <span class="window-title">No Orders Yet</span>
-                    <div class="window-controls">
-                        <button type="button" class="btn" href="#!">_</button>
-                        <button type="button" class="btn" href="#!">☐</button>
-                        <button
-                            type="button"
-                            class="btn"
-                            id="closebtn"
-                            href="#!"
-                        >
-                            X
-                        </button>
+                {% for order in orders %}
+                    {% set first_item = order.visible_items[0] if order.visible_items else None %}
+                    {% set ticket = first_item.ticket if first_item else None %}
+                    {% set event = ticket.event if ticket else None %}
+                <div class="col-12 col-lg-8 d-flex">
+                    <div class="window" id="order-{{ order.id }}">
+                        <div class="title-bar">
+                            <span class="window-title">{{ event.title if event and event.title else 'Order #' ~ order.id }}</span>
+                            <div class="window-controls">
+                                <button type="button" class="btn">_</button>
+                                <button type="button" class="btn">☐</button>
+                                <button type="button" class="btn" id="closebtn">X</button>
+                            </div>
+                        </div>
+                        <div class="sub-window">
+                            {% set poster_src = url_for('static', filename='img/' ~ event.image) if event and event.image else url_for('static', filename='img/crescent-city-players-poster-horizontal.jpg') %}
+                            <img
+                                src="{{ poster_src }}"
+                                class="window-img-top img-fit"
+                                alt="{{ event.title if event else 'Event poster' }}"
+                            />
+                            <section class="window-tags">
+                                {% set event_type_label = event.event_type.typeName if event and event.event_type else 'Event' %}
+                                <span class="badge" id="event-type">{{ event_type_label }}</span>
+                                {% set status_label = event.status if event and event.status else 'OPEN' %}
+                                <span class="badge" id="event-status-{{ status_label|lower|replace(' ', '-') }}">{{ status_label }}</span>
+                            </section>
+                            <p class="sub-window-content">
+                                <strong>> ORDER DATE:</strong>
+                                {{ order.order_date.strftime('%b %d, %Y') if order.order_date else 'Pending' }}
+                                <br />
+                                <strong>> PURCHASED TICKET(s):</strong>
+                                <br />
+                                {% for line_item in order.visible_items %}
+                                    {{ line_item.quantity }}x {{ line_item.ticket.ticketTier }} – ${{ '%.2f'|format(line_item.price_at_purchase) }}
+                                    <br />
+                                {% endfor %}
+                                <br />
+                                <strong>> DESCRIPTION:</strong>
+                                {{ event.description if event and event.description else 'No description available.' }}
+                                <br /><br />
+                                <strong>> ARTIST LINEUP:</strong>
+                                {% if event and event.artist_links %}
+                                    {% for link in event.artist_links %}
+                                        {{ link.artist.artistName }}{% if link.set_time %} ({{ link.set_time }}){% endif %}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% elif event and event.artists %}
+                                    {% for artist in event.artists %}
+                                        {{ artist.artistName }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Not available
+                                {% endif %}
+                                <br />
+                                <strong>> VENUE:</strong>
+                                {{ event.venue.location if event and event.venue else 'TBA' }}
+                                <br />
+                                <strong>> DATE:</strong>
+                                {{ event.date if event and event.date else 'TBA' }}
+                                <br />
+                                <strong>> TIME:</strong>
+                                {% if event and event.start_time %}
+                                    {{ event.start_time }}{% if event.end_time %}-{{ event.end_time }}{% endif %}
+                                {% else %}
+                                    TBA
+                                {% endif %}
+                                <br />
+                                <strong>> GENRES:</strong>
+                                {% if event and event.genres %}
+                                    {% for genre in event.genres %}
+                                        <a class="genre-search-link" href="{{ url_for('user_bp.mytickets', search=genre.genreType) }}">{{ genre.genreType }}</a>{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <span>N/A</span>
+                                {% endif %}
+                            </p>
+                            <a
+                                class="btn"
+                                id="view-details-btn"
+                                href="{{ url_for('events_bp.eventdetails', event_id=event.id) if event else '#!' }}"
+                            >
+                                View details
+                            </a>
+                        </div>
                     </div>
                 </div>
-                {% endfor %} {% else %} {# Message shown when there are no
-                orders to display #}
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="row justify-content-center">
                 <div class="col-12 col-lg-8 d-flex">
                     <div class="window" id="no-orders-window">
                         <div class="title-bar">
@@ -112,9 +105,7 @@ filter_statuses ) }}
                             <div class="window-controls">
                                 <button type="button" class="btn">_</button>
                                 <button type="button" class="btn">☐</button>
-                                <button type="button" class="btn" id="closebtn">
-                                    X
-                                </button>
+                                <button type="button" class="btn" id="closebtn">X</button>
                             </div>
                         </div>
                         <div class="sub-window">
@@ -124,14 +115,9 @@ filter_statuses ) }}
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
-            <!-- End of row -->
-
-            <!-- Padding -->
-            <div class="col-sm-0 col-md-3"></div>
+            {% endif %}
         </div>
-        <!-- End of row -->
     </section>
 </div>
 {% endblock %}
