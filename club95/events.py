@@ -617,6 +617,14 @@ def add_comment(event_id):
 def purchase_tickets(event_id):
     # Lookup event by ID, if not found: return 404
     event = Event.query.get_or_404(event_id)
+    event_status = (event.status or '').strip().upper()
+    if event_status == 'CANCELLED':
+        flash('Ticket sales are closed for this event.', 'warning')
+        return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+    if event_status == 'SOLD OUT':
+        flash('This event is sold out.', 'warning')
+        return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+
     form = TicketPurchaseForm(event.tickets, formdata = request.form)
 
     # If form is invalid, redirect back with error message
@@ -649,8 +657,7 @@ def purchase_tickets(event_id):
 
         # Not enough tickets available for quantity entered
         if quantity > ticket.availability:
-            flash(f"Not enough availability for {ticket.ticketTier}. Only {ticket.availability} left.",
-                "warning")
+            flash("Not enough tickets available for your order.", "danger")
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
         
         # Add ticket and quantity to order items and update total amount

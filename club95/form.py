@@ -162,6 +162,8 @@ class TicketPurchaseForm(FlaskForm):
                     "class": "form-control",
                     "min": 0,
                     "max": ticket.availability,
+                    "type": "number",
+                    "step": 1,
                     "id": f"quantity-{ticket.id}",
                     "data-tier": ticket.ticketTier,
                     "data-price": ticket.price,

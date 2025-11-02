@@ -270,18 +270,36 @@
             <div class="row align-items-start">
                 <!-- Purchase Tickets Button -->
                 <div class="col-12">
+                    {% set event_status = (event.status or '')|trim|upper %}
+                    {% set is_event_cancelled = event_status == 'CANCELLED' %}
+                    {% set is_event_sold_out = event_status == 'SOLD OUT' %}
+                    {% set is_event_blocked = is_event_cancelled or is_event_sold_out %}
                     <div class="btn-group" id="purchase-tickets-btn-group">
                         <!-- Button trigger modal -->
                         <button
                             type="button"
-                            class="btn btn-primary"
+                            class="btn btn-primary{% if is_event_blocked %} disabled{% endif %}"
                             id="purchase-tickets-btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#purchase-tickets-modal"
+                            {% if is_event_blocked %}
+                                disabled
+                                aria-disabled="true"
+                            {% else %}
+                                data-bs-toggle="modal"
+                                data-bs-target="#purchase-tickets-modal"
+                            {% endif %}
                         >
-                            Purchase Tickets
+                            {% if is_event_cancelled %}Ticket Sales Closed{% elif is_event_sold_out %}Sold Out{% else %}Purchase Tickets{% endif %}
                         </button>
                     </div>
+                    {% if is_event_blocked %}
+                    <p class="text-muted mt-2">
+                        {% if is_event_cancelled %}
+                            This event is cancelled. Ticket purchases are unavailable.
+                        {% elif is_event_sold_out %}
+                            This event is sold out. Ticket purchases are unavailable.
+                        {% endif %}
+                    </p>
+                    {% endif %}
 
                     <div
                         class="modal fade"
@@ -318,8 +336,9 @@
                                             role="alert"
                                             id="ticket-selection-alert"
                                         >
-                                            Select at least one ticket before
-                                            continuing.
+                                            <span id="ticket-selection-alert-message">
+                                                Select at least one ticket before continuing.
+                                            </span>
                                         </div>
                                         {% for ticket in event.tickets %}
                                         <div class="mb-3">
@@ -444,104 +463,162 @@
                                 const alertBox = document.getElementById(
                                     "ticket-selection-alert"
                                 );
+                                const alertMessage = document.getElementById(
+                                    "ticket-selection-alert-message"
+                                );
                                 const confirmBtn = document.getElementById(
                                     "confirm-purchase-btn"
                                 );
+
                                 if (!selectionForm || !confirmModalEl) {
                                     return;
                                 }
 
+                                const ticketInputs = selectionForm.querySelectorAll(
+                                    'input[type="number"]'
+                                );
+
+                                const showTicketAlert = (message, state = "generic") => {
+                                    if (!alertBox) {
+                                        return;
+                                    }
+                                    if (alertMessage) {
+                                        alertMessage.textContent = message;
+                                    } else {
+                                        alertBox.textContent = message;
+                                    }
+                                    alertBox.dataset.state = state;
+                                    alertBox.classList.remove("d-none");
+                                };
+
+                                const hideTicketAlert = (state) => {
+                                    if (!alertBox) {
+                                        return;
+                                    }
+                                    if (state && alertBox.dataset.state !== state) {
+                                        return;
+                                    }
+                                    delete alertBox.dataset.state;
+                                    alertBox.classList.add("d-none");
+                                };
+
+                                ticketInputs.forEach((input) => {
+                                    input.addEventListener("input", () => {
+                                        const min = parseInt(
+                                            input.getAttribute("min"),
+                                            10
+                                        );
+                                        const max = parseInt(
+                                            input.getAttribute("max"),
+                                            10
+                                        );
+                                        let value = parseInt(input.value, 10);
+
+                                        if (Number.isNaN(value)) {
+                                            value = 0;
+                                        }
+                                        if (!Number.isNaN(min) && value < min) {
+                                            value = min;
+                                        }
+                                        if (!Number.isNaN(max) && value > max) {
+                                            value = max;
+                                            showTicketAlert(
+                                                "Not enough tickets available for your order.",
+                                                "limit"
+                                            );
+                                        } else {
+                                            hideTicketAlert("limit");
+                                        }
+
+                                        input.value = value;
+                                    });
+                                });
+
                                 let confirmModalInstance = null;
 
-                                reviewBtn?.addEventListener(
-                                    "click",
-                                    function () {
-                                        alertBox?.classList.add("d-none");
+                                reviewBtn?.addEventListener("click", () => {
+                                    hideTicketAlert();
 
-                                        const selections = [];
-                                        let orderTotal = 0;
+                                    const selections = [];
+                                    let orderTotal = 0;
+                                    let overLimit = false;
 
-                                        selectionForm
-                                            .querySelectorAll(
-                                                'input[type="number"]'
-                                            )
-                                            .forEach(function (input) {
-                                                const quantity =
-                                                    parseInt(input.value, 10) ||
-                                                    0;
-                                                const price =
-                                                    parseFloat(
-                                                        input.getAttribute(
-                                                            "data-price"
-                                                        )
-                                                    ) || 0;
-                                                const tier =
-                                                    input.getAttribute(
-                                                        "data-tier"
-                                                    ) || "Ticket";
+                                    ticketInputs.forEach((input) => {
+                                        const quantity =
+                                            parseInt(input.value, 10) || 0;
+                                        const price =
+                                            parseFloat(
+                                                input.getAttribute("data-price")
+                                            ) || 0;
+                                        const tier =
+                                            input.getAttribute("data-tier") ||
+                                            "Ticket";
+                                        const max = parseInt(
+                                            input.getAttribute("max"),
+                                            10
+                                        );
 
-                                                if (quantity > 0) {
-                                                    const subtotal =
-                                                        quantity * price;
-                                                    selections.push({
-                                                        tier,
-                                                        quantity,
-                                                        subtotal,
-                                                    });
-                                                    orderTotal += subtotal;
-                                                }
+                                        if (!Number.isNaN(max) && quantity > max) {
+                                            overLimit = true;
+                                        }
+
+                                        if (quantity > 0) {
+                                            const subtotal = quantity * price;
+                                            selections.push({
+                                                tier,
+                                                quantity,
+                                                subtotal,
                                             });
+                                            orderTotal += subtotal;
+                                        }
+                                    });
 
-                                        if (selections.length === 0) {
-                                            alertBox?.classList.remove(
-                                                "d-none"
+                                    if (overLimit) {
+                                        showTicketAlert(
+                                            "Not enough tickets available for your order.",
+                                            "limit"
+                                        );
+                                        return;
+                                    }
+
+                                    if (selections.length === 0) {
+                                        showTicketAlert(
+                                            "Select at least one ticket before continuing.",
+                                            "selection"
+                                        );
+                                        return;
+                                    }
+
+                                    if (summaryList) {
+                                        summaryList.innerHTML = "";
+                                        selections.forEach((item) => {
+                                            const li = document.createElement("li");
+                                            li.className =
+                                                "list-group-item d-flex justify-content-between align-items-center";
+                                            li.innerHTML = `<span>${item.tier} × ${item.quantity}</span><span>$${item.subtotal.toFixed(
+                                                2
+                                            )}</span>`;
+                                            summaryList.appendChild(li);
+                                        });
+                                    }
+
+                                    if (summaryTotalEl) {
+                                        summaryTotalEl.textContent = orderTotal.toFixed(2);
+                                    }
+
+                                    if (typeof bootstrap !== "undefined") {
+                                        if (!confirmModalInstance) {
+                                            confirmModalInstance = new bootstrap.Modal(
+                                                confirmModalEl
                                             );
-                                            return;
                                         }
-
-                                        if (summaryList) {
-                                            summaryList.innerHTML = "";
-                                            selections.forEach(function (item) {
-                                                const li =
-                                                    document.createElement(
-                                                        "li"
-                                                    );
-                                                li.className =
-                                                    "list-group-item d-flex justify-content-between align-items-center";
-                                                li.innerHTML = `<span>${
-                                                    item.tier
-                                                } × ${
-                                                    item.quantity
-                                                }</span><span>$${item.subtotal.toFixed(
-                                                    2
-                                                )}</span>`;
-                                                summaryList.appendChild(li);
-                                            });
-                                        }
-
-                                        if (summaryTotalEl) {
-                                            summaryTotalEl.textContent =
-                                                orderTotal.toFixed(2);
-                                        }
-
-                                        if (typeof bootstrap !== "undefined") {
-                                            if (!confirmModalInstance) {
-                                                confirmModalInstance =
-                                                    new bootstrap.Modal(
-                                                        confirmModalEl
-                                                    );
-                                            }
-                                            confirmModalInstance.show();
-                                        }
+                                        confirmModalInstance.show();
                                     }
-                                );
+                                });
 
-                                confirmBtn?.addEventListener(
-                                    "click",
-                                    function () {
-                                        selectionForm.submit();
-                                    }
-                                );
+                                confirmBtn?.addEventListener("click", () => {
+                                    selectionForm.submit();
+                                });
                             }
                         );
                     </script>

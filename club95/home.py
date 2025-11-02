@@ -6,10 +6,17 @@ from . import db
 
 home_bp = Blueprint('home_bp', __name__, template_folder='templates')
 
+
+def _active_event_clause():
+    # Return a SQL clause that excludes inactive events from public browsing.
+    return db.or_(Event.status.is_(None), func.upper(Event.status) != 'INACTIVE')
+
 # Home page
 @home_bp.route('/')
 def index():
-    event = db.session.scalars(db.select(Event)).all()
+    event = db.session.scalars(
+        db.select(Event).where(_active_event_clause())
+    ).all()
     return render_template('index.html', heading='Browse Events', events=event)
 
 @home_bp.route('/search')
@@ -22,7 +29,7 @@ def search():
     status_vals = request.args.getlist('status[]')     + request.args.getlist('status')
 
     # start with a base selectable
-    q = db.select(Event)
+    q = db.select(Event).where(_active_event_clause())
 
     # ---- text & price search (only if term provided) ----
     if term:
