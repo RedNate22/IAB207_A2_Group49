@@ -36,19 +36,9 @@ def create_app():
       # return error details for rendering
       return render_template("error.html", error=handled_error), status_code
 
-   import traceback
-
-   @app.errorhandler(Exception)
-   def debug_all(e):
-      print("\n=== TRACEBACK START ===")
-      traceback.print_exc()
-      print("=== TRACEBACK END ===\n")
-      return _render_error_page(e)
-
    # register error handlers
-   # TODO uncomment
-   # app.register_error_handler(HTTPException, _render_error_page)
-   # app.register_error_handler(Exception, _render_error_page)
+   app.register_error_handler(HTTPException, _render_error_page)
+   app.register_error_handler(Exception, _render_error_page)
 
    # Intentional error route for testing
    # * uncomment to test
