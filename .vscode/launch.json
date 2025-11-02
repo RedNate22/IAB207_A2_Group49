@@ -14,7 +14,8 @@
                 "FLASK_DEBUG": "1",
                 "FLASK_RUN_PORT": "8080"
             },
-            "args": ["run", "--no-debugger", "--no-reload"],
+            // "args": ["run", "--no-debugger", "--no-reload"],
+            "args": ["run", "--debug"],
             "jinja": true
         }
     ]
