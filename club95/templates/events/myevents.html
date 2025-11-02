@@ -160,12 +160,13 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label" for="status-{{ event.id }}">Status</label>
-                                        <select class="form-select" id="status-{{ event.id }}" name="status" required>
-                                            {% for status_option in status_options %}
-                                                <option value="{{ status_option }}" {% if event.status == status_option %}selected{% endif %}>{{ status_option }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <label class="form-label">Status</label>
+                                        <div class="d-grid gap-2">
+                                            <button type="button" class="btn btn-danger btn-lg cancel-event-btn" data-event-id="{{ event.id }}">
+                                                Cancel This Event
+                                            </button>
+                                        </div>
+                                        <input type="hidden" class="event-status-input" name="status" value="{{ event.status }}" data-original-status="{{ event.status }}" />
                                     </div>
 
                                     <div class="mb-3">
@@ -440,6 +441,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (additionalInput) {
                 additionalInput.value = '';
             }
+            const statusInput = card.querySelector('.event-status-input');
+            if (statusInput && statusInput.dataset.originalStatus !== undefined) {
+                statusInput.value = statusInput.dataset.originalStatus;
+            }
         });
     }
 
@@ -706,6 +711,25 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.cancel-edit-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             clearEditingState();
+        });
+    });
+
+    // Hard cancel button so I can pull the plug with a quick confirm prompt
+    document.querySelectorAll('.cancel-event-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const column = button.closest('.event-card-column');
+            const form = column ? column.querySelector('.event-update-form') : null;
+            const statusInput = form ? form.querySelector('.event-status-input') : null;
+            if (!form || !statusInput) {
+                return;
+            }
+            const confirmed = window.confirm('Are you sure you want to cancel this event? This action cannot be undone.');
+            if (!confirmed) {
+                statusInput.value = statusInput.dataset.originalStatus || statusInput.value;
+                return;
+            }
+            statusInput.value = 'CANCELLED';
+            form.submit();
         });
     });
 
