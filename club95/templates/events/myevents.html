@@ -103,30 +103,26 @@ OUT', 'CANCELLED'] %} {% block body %}
                                 <!-- Editing events section -->
                                 <section class="editing-events-section">
                                 <div class="event-edit-form-wrapper d-none">
-                                    <div class="image-edit-hint d-none">
-                                        Click the poster above to upload a new
-                                        image.
-                                    </div>
+                                        <div class="image-edit-hint d-none">
+                                            Click the poster above to upload a new
+                                            image.
+                                        </div>
                                     <form
                                         class="event-update-form"
                                         method="post"
                                         action="{{ url_for('events_bp.update_event', event_id=event.id) }}"
                                         enctype="multipart/form-data"
                                     >
-                                        <!-- Upload Event Poster Section -->
-                                        <section
-                                            class="upload-event-poster-section"
-                                        >
-                                            <div class="row align-items-start">
+                                        <!-- Event Media Section -->
+                                        <section class="event-media-section">
+                                            <div class="row align-items-center">
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
-                                                <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
-                                                >
+                                                <div class="col-10">
                                                     <div
                                                         class="window"
-                                                        id="upload-event-poster-window"
+                                                        id="edit-event-media-window"
                                                     >
                                                         <div class="title-bar">
                                                             <span
@@ -214,26 +210,24 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                             </div>
                                         </section>
-                                        <!-- End of Upload Event Poster Section -->
+                                        <!-- End of Media Section -->
 
-                                        <!-- Enter event name section -->
-                                        <section
-                                            class="enter-event-name-section"
-                                        >
+                                        <!-- Edit Event name section -->
+                                        <section class="edit-event-name-section">
                                             <div class="row align-items-center">
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                                 <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                    class="col-10"
                                                 >
                                                     <div
                                                         class="window"
-                                                        id="enter-event-name-window"
+                                                        id="edit-event-name-window"
                                                     >
                                                         <div class="title-bar">
                                                             <span
@@ -269,45 +263,90 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                             </div>
                                                         </div>
                                                         <div class="sub-window">
-                                                            <div class="mb-3">
-                                                                <label
-                                                                    class="form-label"
-                                                                    for="title-{{ event.id }}"
-                                                                    >Title</label
-                                                                >
                                                                 <input
                                                                     type="text"
-                                                                    class="form-control"
+                                                                    class="form-control form-control-lg"
                                                                     id="title-{{ event.id }}"
                                                                     name="title"
                                                                     value="{{ event.title or '' }}"
                                                                     required
                                                                 />
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                             </div>
                                         </section>
-                                        <!-- End of Enter Event Name Section -->
+                                        <!-- End of Edit Event name section -->
 
-                                        <!-- Enter Event Location Section -->
-                                        <section
-                                            class="enter-event-location-section"
-                                        >
-                                            <div class="row align-items-start">
+                                        <!-- Edit Event description section -->
+                                        <section class="edit-event-description-section">
+                                            <div class="row align-items-center">
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                                 <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                    class="col-10"
                                                 >
                                                     <div
                                                         class="window"
-                                                        id="enter-event-location-window"
+                                                        id="edit-event-description-window"
+                                                    >
+                                                        <div class="title-bar">
+                                                            <span
+                                                                class="window-title"
+                                                                >Description</span
+                                                            >
+                                                            <div
+                                                                class="window-controls"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    _
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    href="#!"
+                                                                >
+                                                                    ☐
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn"
+                                                                    id="closebtn"
+                                                                    href="#!"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="sub-window">
+                                                                <label class="form-label" for="description-{{ event.id }}">Description</label>
+                                                                <textarea class="form-control" id="description-{{ event.id }}" name="description" rows="4">{{ event.description or '' }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="col-1"
+                                                ></div>
+                                            </div>
+                                        </section>
+                                        <!-- End of Edit Event description section -->
+
+                                        <!-- Edit Event Location Date Section -->
+                                        <section class="edit-event-location-date-section">
+                                            <div class="row align-items-center">
+                                                <div class="col-1"></div>
+                                                <div class="col-4">
+                                                    <div
+                                                        class="window"
+                                                        id="edit-event-location-window"
                                                     >
                                                         <div class="title-bar">
                                                             <span
@@ -342,12 +381,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                             </div>
                                                         </div>
                                                         <div class="sub-window">
-                                                            <!-- prettier-ignore -->
-                                                            <label
-                                        class="form-label"
-                                        for="location-{{ event.id }}"
-                                        >Venue / Location</label
-                                    >
+                                                            <label class="form-label" for="location-{{ event.id }}">Venue / Location</label>
                                                             <input
                                                                 type="text"
                                                                 class="form-control"
@@ -358,96 +392,80 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
-                                            </div>
-                                        </section>
-                                        <!-- End of Enter Event Location Section -->
+                                                <div class="col-2"></div>
 
-                                        <section
-                                            class="enter-event-date-section"
-                                        >
-                                            <div class="row align-items-start">
+                                            <div class="col-4">
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
-                                                <div
-                                                    class="col-sm-12 col-md-8 col-lg-6"
+                                                    class="window"
+                                                    id="edit-event-date-window"
                                                 >
-                                                    <div
-                                                        class="window"
-                                                        id="enter-event-date-window"
-                                                    >
-                                                        <div class="title-bar">
-                                                            <span
-                                                                class="window-title"
-                                                                >Date</span
+                                                    <div class="title-bar">
+                                                        <span
+                                                            class="window-title"
+                                                            >Date</span
+                                                        >
+                                                        <div
+                                                            class="window-controls"
+                                                        >
+                                                            <button
+                                                                type="button"
+                                                                class="btn"
+                                                                href="#!"
                                                             >
-                                                            <div
-                                                                class="window-controls"
+                                                                _
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                class="btn"
+                                                                href="#!"
                                                             >
-                                                                <button
-                                                                    type="button"
-                                                                    class="btn"
-                                                                    href="#!"
-                                                                >
-                                                                    _
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    class="btn"
-                                                                    href="#!"
-                                                                >
-                                                                    ☐
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    class="btn"
-                                                                    id="closebtn"
-                                                                    href="#!"
-                                                                >
-                                                                    X
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="sub-window">
-                                                            <label
-                                                                class="form-label"
-                                                                for="date-{{ event.id }}"
-                                                                >Date</label
+                                                                ☐
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                class="btn"
+                                                                id="closebtn"
+                                                                href="#!"
                                                             >
-                                                            <input
-                                                                type="date"
-                                                                class="form-control"
-                                                                id="date-{{ event.id }}"
-                                                                name="date"
-                                                                value="{{ event.date or '' }}"
-                                                            />
+                                                                X
+                                                            </button>
                                                         </div>
                                                     </div>
+                                                    <div class="sub-window">
+                                                        <label
+                                                            class="form-label"
+                                                            for="date-{{ event.id }}"
+                                                            >Date</label
+                                                        >
+                                                        <input
+                                                            type="date"
+                                                            class="form-control"
+                                                            id="date-{{ event.id }}"
+                                                            name="date"
+                                                            value="{{ event.date or '' }}"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
                                             </div>
+                                            <div class="col-1"></div>
+                                        </div>
                                         </section>
-                                        <!-- End of Enter Event Date Section -->
+                                        <!-- End of Edit Event Location Date Section -->
 
-                                        <!-- Enter Event Start End Time Section -->
+                                        <!-- Edit Event Start End Time Section -->
                                         <section
-                                            class="enter-event-start-end-time-section"
+                                            class="edit-event-start-end-time-section"
                                         >
                                             <div class="row align-items-start">
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                                 <div
-                                                    class="col-sm-12 col-md-4 col-lg-3"
+                                                    class="col-4"
                                                 >
                                                     <div
                                                         class="window"
-                                                        id="enter-event-start-time-window"
+                                                        id="edit-event-start-time-window"
                                                     >
                                                         <div class="title-bar">
                                                             <span
@@ -511,12 +529,13 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                     </div>
                                                     {% endif %}
                                                 </div>
+                                                <div class="col-2"></div>
                                                 <div
-                                                    class="col-sm-12 col-md-4 col-lg-3"
+                                                    class="col-4"
                                                 >
                                                     <div
                                                         class="window"
-                                                        id="enter-event-end-time-window"
+                                                        id="edit-event-end-time-window"
                                                     >
                                                         <div class="title-bar">
                                                             <span
@@ -580,73 +599,44 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                     </div>
                                                 </div>
                                                 <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
+                                                    class="col-1"
                                                 ></div>
                                             </div>
                                         </section>
                                         <!-- End of Event Enter Start End Time Section -->
 
-                                        <!-- Enter Event Type Section -->
-                                        <section
-                                            class="enter-event-type-section"
-                                        >
+                                        <!-- Edit Event Type Section -->
+                                        <section class="edit-event-type-section">
                                             <div class="row align-items-start">
-                                                <div
-                                                    class="col-sm-0 col-md-2 col-lg-3"
-                                                ></div>
+                                                <div class="col-1"></div>
                                                 <!-- prettier-ignore -->
-                                                <div class="col-sm-12 col-md-8 col-lg-6">
-                            </div>
-                                                <label
-                                                    class="form-label"
-                                                    for="type-{{ event.id }}"
-                                                    >Type</label
-                                                >
-                                                <select
-                                                    class="form-select"
-                                                    id="type-{{ event.id }}"
-                                                    name="type"
-                                                    required
-                                                >
-                                                    <option
-                                                        value=""
-                                                        disabled
-                                                        {%
-                                                        if
-                                                        not
-                                                        event.event_type_id
-                                                        %}selected{%
-                                                        endif
-                                                        %}
+                                                <div class="col-10">
+                                                    <label class="form-label" for="type-{{ event.id }}">Select the type of event.</label>
+                                                    <select
+                                                        class="form-select"
+                                                        id="type-{{ event.id }}"
+                                                        name="type"
+                                                        required
                                                     >
-                                                        Select the type of event
-                                                    </option>
-                                                    {% for type_option in
-                                                    event_type_options %} {% set
-                                                    selected = 'selected' if
-                                                    event.event_type_id ==
-                                                    type_option.id else '' %}
-                                                    <option
-                                                        value="{{ type_option.id }}"
-                                                        {{
-                                                        selected
-                                                        }}
-                                                    >
-                                                        {{ type_option.typeName
-                                                        }}
-                                                    </option>
-                                                    {% endfor %}
-                                                </select>
+                                                        <option value="" disabled {% if not event.event_type_id %}selected{% endif %}>
+                                                            Select the type of event
+                                                        </option>
+                                                        {% for type_option in event_type_options %} 
+                                                            {% set selected = 'selected' if event.event_type_id == type_option.id else '' %}
+                                                            <option value="{{ type_option.id }}" {{ selected }}>
+                                                            {{ type_option.typeName }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div
-                                                class="col-sm-0 col-md-2 col-lg-3"
-                                            ></div>
+                                            <div class="col-1"></div>
                                         </section>
                                         <!-- End of Enter Event Type Section -->
 
                                         <!-- Event genres section -->
                                         <section
-                                            class="enter-event-description-section"
+                                            class="edit-event-genres-section"
                                         >
                                             <div class="row align-items-start">
                                                 <div
@@ -657,7 +647,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                 >
                                                     <div
                                                         class="window"
-                                                        id="enter-event-description-window"
+                                                        id="edit-event-genres-window"
                                                     >
                                                         <div class="title-bar">
                                                             <span
