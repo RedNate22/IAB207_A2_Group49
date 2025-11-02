@@ -196,7 +196,7 @@
                                         <p class="form-text mb-2">Update pricing, quantity, and perks for each tier.</p>
                                         <div class="ticket-tier-rows" data-event-id="{{ event.id }}">
                                             {% for ticket in event.tickets %}
-                                            <div class="ticket-tier-row border rounded p-3 mb-3" data-ticket-row data-existing="true">
+                                            <div class="ticket-tier-row border rounded p-3 mb-3" data-ticket-row data-existing="true" data-has-orders="{{ 'true' if ticket.order_links else 'false' }}">
                                                 <input type="hidden" name="ticket_row_id[]" value="{{ ticket.id }}" />
                                                 <input type="hidden" name="ticket_row_delete[]" value="0" class="ticket-row-delete-flag" />
                                                 <div class="row g-3 align-items-end">
@@ -221,7 +221,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="ticket-row-removed-note text-danger small mt-2 d-none">
-                                                    This tier will be removed when you save.
+                                                    This tier will be removed when you save.{% if ticket.order_links %} Existing orders will be refunded automatically.{% endif %}
                                                 </div>
                                             </div>
                                             {% endfor %}
@@ -232,7 +232,7 @@
                                             </button>
                                         </div>
                                         <!-- Template row so the JS can clone fresh tiers on demand -->
-                                        <template class="ticket-tier-row-template"><div class="ticket-tier-row border rounded p-3 mb-3" data-ticket-row data-existing="false">
+                                        <template class="ticket-tier-row-template"><div class="ticket-tier-row border rounded p-3 mb-3" data-ticket-row data-existing="false" data-has-orders="false">
                                                 <input type="hidden" name="ticket_row_id[]" value="" />
                                                 <input type="hidden" name="ticket_row_delete[]" value="0" class="ticket-row-delete-flag" />
                                                 <div class="row g-3 align-items-end">
@@ -417,6 +417,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                         row.classList.remove('ticket-row-deleted', 'opacity-50');
                         if (removalNote) {
+                            if (removalNote.dataset.defaultText) {
+                                removalNote.textContent = removalNote.dataset.defaultText;
+                            }
                             removalNote.classList.add('d-none');
                         }
                         if (removeBtn) {
@@ -594,6 +597,13 @@ document.addEventListener('DOMContentLoaded', function () {
             row.classList.toggle('ticket-row-deleted', shouldDelete);
             row.classList.toggle('opacity-50', shouldDelete);
             if (removalNote) {
+                const defaultText = removalNote.dataset.defaultText || removalNote.textContent.trim();
+                removalNote.dataset.defaultText = defaultText;
+                if (shouldDelete && row.dataset.hasOrders === 'true') {
+                    removalNote.textContent = 'This tier will be removed when you save. Existing orders will be refunded automatically.';
+                } else {
+                    removalNote.textContent = defaultText;
+                }
                 removalNote.classList.toggle('d-none', !shouldDelete);
             }
             if (removeBtn) {
@@ -617,11 +627,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             const removeBtn = row.querySelector('.ticket-tier-remove-btn');
+            const removalNote = row.querySelector('.ticket-row-removed-note');
+            if (removalNote && !removalNote.dataset.defaultText) {
+                removalNote.dataset.defaultText = removalNote.textContent.trim();
+            }
             if (removeBtn) {
                 removeBtn.addEventListener('click', function () {
                     const isExisting = row.dataset.existing === 'true';
+                    const hasOrders = row.dataset.hasOrders === 'true';
                     if (isExisting) {
                         const currentlyDeleted = row.classList.contains('ticket-row-deleted');
+                        if (!currentlyDeleted && hasOrders) {
+                            // Give myself a heads-up before nuking a tier that's already sold tickets
+                            const confirmed = window.confirm('Removing this tier will trigger refunds for existing orders. Continue?');
+                            if (!confirmed) {
+                                return;
+                            }
+                        }
                         setRowDeletedState(row, !currentlyDeleted);
                     } else {
                         row.remove();

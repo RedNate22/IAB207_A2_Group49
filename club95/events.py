@@ -80,10 +80,47 @@ def _save_event_media(event, file_storage_list):
         # Increment the order index for the next file
         next_index += 1
 
+
+def _sync_event_status(event: Event) -> None:
+    # Automatically shift event status based on ticket pool and schedule
+    if not event:
+        return
+
+    today = date.today()
+
+    event_date = None
+    if event.date:
+        try:
+            event_date = datetime.strptime(event.date, "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            event_date = None
+
+    current_status = (event.status or '').strip().upper()
+
+    if event_date and event_date < today:
+        if current_status != 'INACTIVE':
+            event.status = 'INACTIVE'
+        return
+
+    total_remaining = sum(max(0, (ticket.availability or 0)) for ticket in event.tickets)
+
+    if current_status == 'CANCELLED':
+        return
+
+    if total_remaining <= 0:
+        if current_status != 'SOLD OUT':
+            event.status = 'SOLD OUT'
+    elif current_status == 'SOLD OUT':
+        event.status = 'OPEN'
+
 # Event details page
 @events_bp.route('/events/eventdetails/<int:event_id>', methods=['GET'])
 def eventdetails(event_id):
     event = Event.query.get_or_404(event_id)
+    original_status = event.status
+    _sync_event_status(event)
+    if event.status != original_status:
+        db.session.commit()
     purchase_form = TicketPurchaseForm(event.tickets)
     comment_form = CommentForm()
     comments = Comment.query.filter_by(event_id=event.id).order_by(Comment.commentDateTime.desc()).all()
@@ -132,6 +169,16 @@ def myevents():
 
     # Execute the query
     events = db.session.scalars(q).all()
+
+    status_changed = False
+    for event in events:
+        original_status = event.status
+        _sync_event_status(event)
+        if event.status != original_status:
+            status_changed = True
+
+    if status_changed:
+        db.session.commit()
 
     if not events:
         flash('No events matched your filters. Try a different search term or filter.', 'search_info')
@@ -341,15 +388,43 @@ def update_event(event_id):
                 flash(message, 'danger')
             return redirect(url_for('events_bp.myevents'))
 
-        blocked_deletes = []
+        refunded_tiers = []
+        removed_tiers = []
         for row_id in tickets_to_delete:
-            ticket_obj = existing_ticket_map.get(row_id)
+            ticket_obj = existing_ticket_map.pop(row_id, None)
             if not ticket_obj:
                 continue
-            # If someone already purchased this tier we can't nuke it entirely
+
+            refund_total = 0.0
             if ticket_obj.order_links:
-                blocked_deletes.append(ticket_obj.ticketTier)
-                continue
+                affected_orders = set()
+                for order_link in list(ticket_obj.order_links):
+                    quantity = order_link.quantity or 0
+                    line_refund = (order_link.price_at_purchase or 0.0) * quantity
+                    refund_total += line_refund
+
+                    order = order_link.order
+                    if order:
+                        order.amount = max(0.0, (order.amount or 0.0) - line_refund)
+                        affected_orders.add(order)
+                        if order_link in order.line_items:
+                            order.line_items.remove(order_link)
+
+                    if order_link in ticket_obj.order_links:
+                        ticket_obj.order_links.remove(order_link)
+
+                    db.session.delete(order_link)
+
+                for order in affected_orders:
+                    if not order.line_items:
+                        db.session.delete(order)
+                    elif order.amount is None or order.amount < 0:
+                        order.amount = 0.0
+
+                refunded_tiers.append((ticket_obj.ticketTier, refund_total))
+            else:
+                removed_tiers.append(ticket_obj.ticketTier)
+
             db.session.delete(ticket_obj)
 
         for row_id, tier_name, price_value, quantity_value, perks_value in tickets_to_update:
@@ -372,10 +447,17 @@ def update_event(event_id):
                 event=event
             ))
 
-        if blocked_deletes:
-            # Let the organiser know which tiers stayed because they're already tied to orders
-            blocked_list = ', '.join(blocked_deletes)
-            flash(f'Could not remove ticket tiers that already have orders: {blocked_list}', 'warning')
+        if refunded_tiers:
+            refund_summary = ', '.join(
+                f"{tier_name} (${refund_amount:.2f})" for tier_name, refund_amount in refunded_tiers
+            )
+            flash(f'Refunds will be issued for removed ticket tiers: {refund_summary}', 'warning')
+
+        if removed_tiers:
+            removed_list = ', '.join(removed_tiers)
+            flash(f'Removed ticket tiers: {removed_list}', 'info')
+
+    _sync_event_status(event)
 
     # Prepare to replace or remove existing carousel media before adding new files
     media_folder = os.path.join('club95', 'static', 'img', 'event_media')
@@ -836,6 +918,8 @@ def purchase_tickets(event_id):
         )
         # Update ticket availability
         ticket.availability -= quantity
+
+    _sync_event_status(event)
 
     # Commit all changes to database
     db.session.commit()
