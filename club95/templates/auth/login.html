@@ -48,13 +48,24 @@
                         {% endif %} 
                     {% endwith %}
 
+                    {# Warning when login is required before accessing a page #}
+                    {% with messages = get_flashed_messages(category_filter=['warning']) %}
+                        {% if messages %}
+                            <div class="alert alert-warning mt-3">
+                                {% for message in messages %}
+                                    <span>{{ message }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
                     {{ render_form(form, method="POST", button_map={"submit": "primary"}) }}
 
                     <p id="no-account-q">Don't have an account? <a href="{{ url_for('auth_bp.register') }}">Register here</a>.</p>
                 </div>
             </div>
+            <div class="col-sm-0 col-md-2 col-lg-3"></div>
         </div>
-        <div class="col-sm-0 col-md-2 col-lg-3"></div>
     </div>
 </div>
 {% endblock %}

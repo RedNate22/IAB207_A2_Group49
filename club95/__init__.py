@@ -1,10 +1,12 @@
 # import flask - from 'package' import 'Class'
-from flask import Flask, session 
+from datetime import datetime, timedelta
+from flask import Flask, app, render_template 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from pathlib import Path
 from sqlalchemy import func
+from werkzeug.exceptions import HTTPException, InternalServerError
 from urllib.parse import quote_plus
 
 DATABASE_FILENAME = 'sitedata.sqlite'
@@ -21,24 +23,29 @@ def create_app():
    app.debug = True
    app.secret_key = 'group_49'
 
-   ##Setting up sessions testing as per week 5 tutorial.
-   # @app.route('/login')
-   # def set_session():
-   #    session['username'] = 'Bryn'
-   #    return 'Session data set'
-   
-   # @app.route('/getsession')
-   # def get_session():
-   #    if 'username' in session:
-   #       return session['username']
-   #    return 'no user logged in'
-   
-   # @app.route('/logout')
-   # def clear_session():
-   #    session.pop('username', None)
-   #    return 'session cleared'
-   ## end of session testing segement as per week 5 tutorial
+   # centralised error handling for HTTP and generic exceptions
+   def _render_error_page(error):
+      # Render the shared error template for both HTTP and unhandled exceptions.
+      if isinstance(error, HTTPException):
+         handled_error = error
+         status_code = error.code
+      # Handle unhandled exceptions
+      else:
+         handled_error = InternalServerError(original_exception=error)
+         status_code = 500
+      # return error details for rendering
+      return render_template("error.html", error=handled_error), status_code
 
+   # register error handlers
+   app.register_error_handler(HTTPException, _render_error_page)
+   app.register_error_handler(Exception, _render_error_page)
+
+   # Intentional error route for testing
+   # * uncomment to test
+   # @app.route("/force-500")
+   # def force_500():
+   #    raise RuntimeError("Intentional failure for testing.")
+   
    # ensure the instance folder exists for database storage
    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
@@ -60,6 +67,8 @@ def create_app():
    # in our case it is auth.login (blueprintname.viewfunction name)
    # redirect to login page if user tries to access a login_required page without being logged in
    login_manager.login_view = 'auth_bp.login'
+   login_manager.login_message = 'Please log in to continue.'
+   login_manager.login_message_category = 'warning'
    login_manager.init_app(app)
 
    # create a user loader function takes userid and returns User
@@ -129,7 +138,7 @@ def create_app():
    return app
 
 def _ensure_database(app: Flask) -> None:
-   """Create the SQLite database on first launch if it doesn't exist."""
+   # Create the SQLite database on first launch if it doesn't exist.
    database_path = Path(app.instance_path) / DATABASE_FILENAME
    if database_path.exists():
       return
@@ -140,7 +149,7 @@ def _ensure_database(app: Flask) -> None:
 
 # Populate db with sample events
 def populate_database(app: Flask) -> None:
-   """Seed database with a sample user, events, artists, genres, venues, tickets and event types."""
+   # Seed database with a sample user, events, artists, genres, venues, tickets and event types.
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
@@ -148,7 +157,7 @@ def populate_database(app: Flask) -> None:
 
       # Helper methods
       def get_or_create_type(name: str) -> EventType:
-         """Return an existing event type by name or create a new one if not found."""
+         # Return an existing event type by name or create a new one if not found.
          # Remove trailing/leading whitespace 
          cleaned = (name or "").strip()
          if not cleaned:
@@ -175,7 +184,7 @@ def populate_database(app: Flask) -> None:
          get_or_create_type(typeName)
 
       def get_or_create_genres(name: str) -> Genre:
-         """Return an existing genre by name or create a new one if not found."""
+         # Return an existing genre by name or create a new one if not found.
          genre = Genre.query.filter_by(genreType=name).first()
          if not genre: 
             genre = Genre(genreType=name)
@@ -209,7 +218,7 @@ def populate_database(app: Flask) -> None:
          get_or_create_genres(genreName)
 
       def get_or_create_artists(name: str) -> Artist:
-         """Return an existing artist by name or create a new one if not found."""
+         # Return an existing artist by name or create a new one if not found.
          artist = Artist.query.filter_by(artistName=name).first()
          if not artist:
             artist = Artist(artistName=name)
@@ -224,7 +233,7 @@ def populate_database(app: Flask) -> None:
          return f"https://www.google.com/maps?q={quote_plus(cleaned)}&output=embed"
 
       def get_or_create_venue(name: str, location: str) -> Venue:
-         """Return an existing venue for the supplied name/location, creating one if needed."""
+         # Return an existing venue for the supplied name/location, creating one if needed.
          primary_location = (location or "").strip()
          fallback_name = (name or "").strip()
          lookup_value = primary_location or fallback_name
@@ -241,7 +250,7 @@ def populate_database(app: Flask) -> None:
          return venue
 
       def normalise_unique(values):
-         """Strip empty strings and return unique names preserving order."""
+         # Strip empty strings and return unique names preserving order.
          seen = set()
          results = []
          for value in values or []:
@@ -281,7 +290,7 @@ def populate_database(app: Flask) -> None:
             "title": "DJ Spreadsheet Live",
             "type": "DJ Set",
             "status": "CANCELLED",
-            "date": "15/03/2025",
+            "date": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
             "description": "Watch DJ Spreadsheet seamlessly mix quarterly reports into smooth beats. Free Wi-Fi included.",
             "start_time": "09:00",
             "end_time": "17:00",
@@ -298,7 +307,7 @@ def populate_database(app: Flask) -> None:
             "title": "Crescent City Players",
             "type": "Live Concert",
             "status": "OPEN",
-            "date": "29/12/2025",
+            "date": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
             "description": 
                "An intimate evening of smooth jazz and improvisation, featuring local hit talent, " + 
                "Crescent City Players, joined by The Walters and Mojo Webb. Enjoy classic standards and modern tunes " + 
@@ -313,7 +322,7 @@ def populate_database(app: Flask) -> None:
                {"tier": "1", "price": 0.00, "perks": "", "qty": 30},
                {"tier": "2", "price": 7.99, "perks": "1 free drink of choice", "qty": 20},
                {"tier": "3", "price": 14.99, "perks": "2 free drinks of choice", "qty": 10},
-               {"tier": "4", "price": 24.99, "perks": "2 free drinks of chocie & priority seating", "qty": 5},
+               {"tier": "4", "price": 24.99, "perks": "2 free drinks of choice & priority seating", "qty": 5},
                {"tier": "5", "price": 49.99, "perks": "VIP (unlimited drinks, meet and greet with the bands)", "qty": 1},
             ], 
          },
@@ -322,7 +331,7 @@ def populate_database(app: Flask) -> None:
             "title": "Moonlight Resonance",
             "type": "Orchestra",
             "status": "OPEN",
-            "date": "15/11/25",
+            "date": (datetime.now() + timedelta(days=15)).strftime("%Y-%m-%d"),
             "description": 
                "A riverside orchestral showcase blending timeless symphonies " +
                "with modern composition.",
@@ -341,7 +350,7 @@ def populate_database(app: Flask) -> None:
             "title": "The Overwhelming Festival",
             "type": "Music Festival",
             "status": "OPEN",
-            "date": "20/01/2026",
+            "date": (datetime.now() + timedelta(days=10)).strftime("%Y-%m-%d"),
             "description": 
                "Three stages, 600 bands, 30 taco trucks, 1 working portaloo. " +
                "An afternoon to remember (or forget).",
@@ -361,7 +370,7 @@ def populate_database(app: Flask) -> None:
             "title": "Optimistic Yeti: Doom Jazz",
             "type": "Solo Artist Performance",
             "status": "SOLD OUT",
-            "date": "21/06/2026",
+            "date": (datetime.now() + timedelta(days=5)).strftime("%Y-%m-%d"),
             "description": 
                "The elusive Optimistic Yeti descends from the Blue Mountains once a year to " +
                "perform a doom jazz set that critics describe as \"The kind of music you hear " +
@@ -381,7 +390,7 @@ def populate_database(app: Flask) -> None:
             "title": "Sydney Indie Nights: Local Showcase",
             "type": "Live Concert",
             "status": "INACTIVE",
-            "date": "05/01/2025",
+            "date": (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d"),
             "description": "A lineup of Sydney's top emerging indie and alternative bands, " +
             "offerning an energetic night of original music and live performances.",
             "start_time": "20:00",
@@ -439,54 +448,5 @@ def populate_database(app: Flask) -> None:
             # ? This block could be changed to fill in missing data for seeded events
             # to be more defensive
             print(f"{event.title} already exists!")
-
-      ## ! deprecated
-      # # Create or reuse a sample genre/artist/venue
-      # genre = Genre.query.filter_by(genreType="Sample").first()
-      # if not genre:
-      #    genre = Genre(genreType="Sample")
-      #    db.session.add(genre)
-      #    db.session.flush()
-
-      # artist = Artist.query.filter_by(artistName="Sample Artist").first()
-      # if not artist:
-      #    artist = Artist(artistName="Sample Artist")
-      #    db.session.add(artist)
-      #    db.session.flush()
-
-      # venue = Venue.query.filter_by(venueName="Sample Venue").first()
-      # if not venue:
-      #    venue = Venue(venueName="Sample Venue", location="Sample Location")
-      #    db.session.add(venue)
-      #    db.session.flush()
-
-      # # Create event (only if it doesn't exist yet)
-      # if not Event.query.filter_by(title="Event Test").first():
-      #    new_event = Event(
-      #       title = "Event Test",
-      #       description = "Test description",
-      #       date = "01-01-2026",
-      #       location = "Test location",
-      #       start_time = "00:00",
-      #       end_time = "24:00",
-      #       type = "Concert",
-      #       status = "OPEN",
-      #       image = "dj-1.jpg",
-      #       user=user,
-      #       venue=venue,
-      #       genres=[genre],
-      #       artists=[artist]
-      #    )
-
-      #    # Create tickets
-      #    new_event.tickets = [
-      #       Ticket(ticketTier="Basic", price=25.0, availability=100, event=new_event),
-      #       Ticket(ticketTier="Fan", price=50.0, availability=50, event=new_event),
-      #       Ticket(ticketTier="VIP", price=100, availability=5, event=new_event)
-      #    ]
-
-      #    # Add sample events to db
-      #    db.session.add(new_event)  # stage event(s)
-      #    db.session.flush()         # update/insert etc.
 
       db.session.commit()        # commit to dbng static images and dummy data provided by Nate

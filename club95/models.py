@@ -158,7 +158,7 @@ class Ticket(db.Model):
     ticketTier = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
     availability = db.Column(db.Integer, default=1, nullable=False)
-    perks = db.Column(db.String(50), nullable=True)
+    perks = db.Column(db.String(120), nullable=True)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
     orders = db.relationship(
         'Order',
