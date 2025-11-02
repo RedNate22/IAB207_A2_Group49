@@ -1,5 +1,7 @@
 # IAB207_A2_Group49
 
+See the deployed application: https://nathanpithie.pythonanywhere.com/
+
 This repository contains a group assignment for IAB207, "Fully Developed Solution". This is work is intended for educational purposes only
 and **must not be reused by other students** except for personal projects outside of coursework.
 
@@ -71,6 +73,7 @@ python -m main.py
 ```
 
 #### Creating database steps
+
 The database is automatically generated and built upon initial run of the app in instance/. To rebuild the database, simply delete the .sqlite db file and rerun the app. Alternatively, manually build the db:
 
 1. Enter python interpreter in terminal. NOTE: use `quit()` to leave
