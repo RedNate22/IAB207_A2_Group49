@@ -99,7 +99,7 @@ def eventdetails(event_id):
 @events_bp.route('/events/myevents', methods=['GET'])
 @login_required
 def myevents():
-    """Display and filter events created by the logged-in user."""
+    # Display and filter events created by the logged-in user.
 
     term = (request.args.get('search') or '').strip()
 

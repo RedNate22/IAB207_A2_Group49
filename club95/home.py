@@ -99,8 +99,26 @@ def search():
     )
 
 
+@home_bp.route('/help/faq')
+def faq():
+    # Render the Frequently Asked Questions page.
+    return render_template('help/faq.html', heading='FAQ')
+
+
+@home_bp.route('/help/contact')
+def contact():
+    # Render the Contact Us page.
+    return render_template('help/contactUs.html', heading='Contact Us')
+
+
+@home_bp.route('/help/privacy')
+def privacy():
+    # Render the Privacy Policy page.
+    return render_template('help/privacypolicy.html', heading='Privacy Policy')
+
+
 def _extract_price(raw_term: str):
-    """Return a float price if the search term describes a ticket price."""
+    # Return a float price if the search term describes a ticket price.
     if not raw_term:
         return None
 

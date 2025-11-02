@@ -135,7 +135,7 @@ def create_app():
    return app
 
 def _ensure_database(app: Flask) -> None:
-   """Create the SQLite database on first launch if it doesn't exist."""
+   # Create the SQLite database on first launch if it doesn't exist.
    database_path = Path(app.instance_path) / DATABASE_FILENAME
    if database_path.exists():
       return
@@ -146,7 +146,7 @@ def _ensure_database(app: Flask) -> None:
 
 # Populate db with sample events
 def populate_database(app: Flask) -> None:
-   """Seed database with a sample user, events, artists, genres, venues, tickets and event types."""
+   # Seed database with a sample user, events, artists, genres, venues, tickets and event types.
    from werkzeug.security import generate_password_hash
 
    with app.app_context():
@@ -154,7 +154,7 @@ def populate_database(app: Flask) -> None:
 
       # Helper methods
       def get_or_create_type(name: str) -> EventType:
-         """Return an existing event type by name or create a new one if not found."""
+         # Return an existing event type by name or create a new one if not found.
          # Remove trailing/leading whitespace 
          cleaned = (name or "").strip()
          if not cleaned:
@@ -181,7 +181,7 @@ def populate_database(app: Flask) -> None:
          get_or_create_type(typeName)
 
       def get_or_create_genres(name: str) -> Genre:
-         """Return an existing genre by name or create a new one if not found."""
+         # Return an existing genre by name or create a new one if not found.
          genre = Genre.query.filter_by(genreType=name).first()
          if not genre: 
             genre = Genre(genreType=name)
@@ -215,7 +215,7 @@ def populate_database(app: Flask) -> None:
          get_or_create_genres(genreName)
 
       def get_or_create_artists(name: str) -> Artist:
-         """Return an existing artist by name or create a new one if not found."""
+         # Return an existing artist by name or create a new one if not found.
          artist = Artist.query.filter_by(artistName=name).first()
          if not artist:
             artist = Artist(artistName=name)
@@ -230,7 +230,7 @@ def populate_database(app: Flask) -> None:
          return f"https://www.google.com/maps?q={quote_plus(cleaned)}&output=embed"
 
       def get_or_create_venue(name: str, location: str) -> Venue:
-         """Return an existing venue for the supplied name/location, creating one if needed."""
+         # Return an existing venue for the supplied name/location, creating one if needed.
          primary_location = (location or "").strip()
          fallback_name = (name or "").strip()
          lookup_value = primary_location or fallback_name
@@ -247,7 +247,7 @@ def populate_database(app: Flask) -> None:
          return venue
 
       def normalise_unique(values):
-         """Strip empty strings and return unique names preserving order."""
+         # Strip empty strings and return unique names preserving order.
          seen = set()
          results = []
          for value in values or []:

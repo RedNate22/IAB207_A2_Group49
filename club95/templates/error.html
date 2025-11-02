@@ -31,7 +31,7 @@
     <p class="error-suggestion">Unsupported file type. Please upload a supported format and retry.</p>
     {% elif error.code == 422 %}
     <p class="error-suggestion">We could not process the data provided. Please review your input and submit again.</p>
-    {% else %}
+    {% elif error.code is none or error.code is undefined %}
     <p class="error-suggestion">An unexpected error occurred. Please try again later.</p>
     {% endif %}
         <a href="{{ url_for('home_bp.index') }}" class="btn btn-primary mt-3">Return to Home Page</a>
