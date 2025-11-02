@@ -30,7 +30,7 @@ render_search_filters %} {% block body %}
                                 {% set poster_src = url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') %}
                                 <div class="carousel-item {% if loop.first %}active{% endif %}">
                                     <a href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}" class="d-block position-relative">
-                                        <img src="{{ poster_src }}" class="d-block w-100" alt="{{ event.title }} poster" />
+                                        <img src="{{ poster_src }}" class="d-block w-100 img-fit" alt="{{ event.title }} poster" />
                                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded py-2 px-3">
                                             <h5 class="mb-1">{{ event.title }}</h5>
                                             {% set event_date = event.date or 'Coming Soon' %}
