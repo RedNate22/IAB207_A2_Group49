@@ -670,8 +670,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                             />
                                                         </div>
                                                     </div>
-                                                    {% if form.start_time.errors
-                                                    %}
+                                                    {% if form is defined and form.start_time and form.start_time.errors %}
                                                     <div
                                                         class="alert alert-danger mt-2"
                                                     >
@@ -736,8 +735,7 @@ OUT', 'CANCELLED'] %} {% block body %}
                                                                 value="{{ event.end_time or '' }}"
                                                             />
                                                         </div>
-                                                        {% if
-                                                        form.end_time.errors %}
+                                                        {% if form is defined and form.end_time and form.end_time.errors %}
                                                         <div
                                                             class="alert alert-danger mt-2"
                                                         >
