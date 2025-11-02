@@ -168,29 +168,98 @@
                                         </select>
                                     </div>
 
-                                    <div class="mb-3 genre-toggle-section">
-                                        <span class="form-label d-block mb-2">Genres</span>
-                                        <div class="genre-toggle-group" data-event-id="{{ event.id }}">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="genres-{{ event.id }}">Genres</label>
+                                        <select
+                                            class="form-select genres-select"
+                                            id="genres-{{ event.id }}"
+                                            name="genres"
+                                            multiple
+                                            size="6"
+                                            data-event-id="{{ event.id }}"
+                                        >
                                             {% for genre in genre_options %}
-                                                {% set toggle_id = 'genre-' ~ event.id ~ '-' ~ loop.index %}
-                                                <input
-                                                    type="checkbox"
-                                                    class="btn-check"
-                                                    id="{{ toggle_id }}"
-                                                    name="genres"
-                                                    value="{{ genre.id }}"
-                                                    {% if genre in event.genres %}checked{% endif %}
-                                                />
-                                                <label class="btn genre-toggle" for="{{ toggle_id }}">
-                                                    {{ genre.genreType }}
-                                                </label>
+                                                <option value="{{ genre.id }}" {% if genre in event.genres %}selected{% endif %}>{{ genre.genreType }}</option>
                                             {% endfor %}
-                                        </div>
-                                        <div class="genre-toggle-actions">
+                                        </select>
+                                        <div class="form-text">Hold Ctrl (or Cmd on Mac) to select multiple genres.</div>
+                                        <div class="mt-2">
                                             <button type="button" class="btn add-genre-btn" data-event-id="{{ event.id }}">
                                                 + Add Genre
                                             </button>
                                         </div>
+                                    </div>
+
+                                    <!-- Ticket tier editor lives here so I can tweak pricing without leaving the page -->
+                                    <div class="mb-3">
+                                        <label class="form-label">Ticket Tiers</label>
+                                        <p class="form-text mb-2">Update pricing, quantity, and perks for each tier.</p>
+                                        <div class="ticket-tier-rows" data-event-id="{{ event.id }}">
+                                            {% for ticket in event.tickets %}
+                                            <div class="ticket-tier-row border rounded p-3 mb-3" data-ticket-row data-existing="true">
+                                                <input type="hidden" name="ticket_row_id[]" value="{{ ticket.id }}" />
+                                                <input type="hidden" name="ticket_row_delete[]" value="0" class="ticket-row-delete-flag" />
+                                                <div class="row g-3 align-items-end">
+                                                    <div class="col-lg-4">
+                                                        <label class="form-label">Tier Name</label>
+                                                        <input type="text" class="form-control" name="ticket_row_name[]" value="{{ ticket.ticketTier }}" maxlength="100" required />
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-4">
+                                                        <label class="form-label">Price ($)</label>
+                                                        <input type="number" class="form-control" name="ticket_row_price[]" value="{{ '%.2f'|format(ticket.price) }}" min="0" step="0.01" required />
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-4">
+                                                        <label class="form-label">Quantity</label>
+                                                        <input type="number" class="form-control" name="ticket_row_quantity[]" value="{{ ticket.availability }}" min="0" step="1" required />
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-4">
+                                                        <label class="form-label">Perks</label>
+                                                        <input type="text" class="form-control" name="ticket_row_perks[]" value="{{ ticket.perks or '' }}" maxlength="50" />
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-12">
+                                                        <button type="button" class="btn btn-outline-danger w-100 ticket-tier-remove-btn">Remove Tier</button>
+                                                    </div>
+                                                </div>
+                                                <div class="ticket-row-removed-note text-danger small mt-2 d-none">
+                                                    This tier will be removed when you save.
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-2 mt-2">
+                                            <button type="button" class="btn btn-outline-primary add-ticket-tier-btn">
+                                                + Add Ticket Tier
+                                            </button>
+                                        </div>
+                                        <!-- Template row so the JS can clone fresh tiers on demand -->
+                                        <template class="ticket-tier-row-template"><div class="ticket-tier-row border rounded p-3 mb-3" data-ticket-row data-existing="false">
+                                                <input type="hidden" name="ticket_row_id[]" value="" />
+                                                <input type="hidden" name="ticket_row_delete[]" value="0" class="ticket-row-delete-flag" />
+                                                <div class="row g-3 align-items-end">
+                                                    <div class="col-lg-4">
+                                                        <label class="form-label">Tier Name</label>
+                                                        <input type="text" class="form-control" name="ticket_row_name[]" maxlength="100" required />
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-4">
+                                                        <label class="form-label">Price ($)</label>
+                                                        <input type="number" class="form-control" name="ticket_row_price[]" min="0" step="0.01" required />
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-4">
+                                                        <label class="form-label">Quantity</label>
+                                                        <input type="number" class="form-control" name="ticket_row_quantity[]" min="0" step="1" required />
+                                                    </div>
+                                                    <div class="col-lg-3 col-md-4">
+                                                        <label class="form-label">Perks</label>
+                                                        <input type="text" class="form-control" name="ticket_row_perks[]" maxlength="50" />
+                                                    </div>
+                                                    <div class="col-lg-1 col-md-12">
+                                                        <button type="button" class="btn btn-outline-danger w-100 ticket-tier-remove-btn">Remove Tier</button>
+                                                    </div>
+                                                </div>
+                                                <div class="ticket-row-removed-note text-danger small mt-2 d-none">
+                                                    This tier will be removed when you save.
+                                                </div>
+                                            </div></template>
                                     </div>
 
                                     <div class="row g-3">
@@ -242,13 +311,13 @@
 </div>
 
 <script>
-// Main controller for handling the inline edit state on My Events cards
+// Main controller so the inline editor actually feels like a proper mini-dashboard
 document.addEventListener('DOMContentLoaded', function () {
     const genreCreateUrl = "{{ url_for('events_bp.create_genre') }}";
     const cardColumns = document.querySelectorAll('.event-card-column');
     const eventRow = document.querySelector('.events-list-page .row.align-items-start');
 
-    // Cache starting column order so edit mode can preserve layout on exit
+    // Hang on to the starting order so I can snap cards back into place after edits
     if (eventRow) {
         Array.from(eventRow.children).forEach(function (column, index) {
             if (column.classList.contains('event-card-column')) {
@@ -257,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Restore cards to their initial ordering after edits finish
+    // Restore the pre-edit layout once I close out of edit mode
     function restoreOriginalOrder() {
         if (!eventRow) {
             return;
@@ -272,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Surface the active edit card at the top of the grid
+    // Make the currently edited card jump to the top so it’s easier to focus on
     function moveColumnToFirst(column) {
         if (!eventRow || !column) {
             return;
@@ -280,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventRow.insertBefore(column, eventRow.firstElementChild);
     }
 
-    // Reset all controls and previews when leaving edit mode
+    // Blow away any inline changes when I bail out of edit mode
     function clearEditingState() {
         restoreOriginalOrder();
         cardColumns.forEach(function (column) {
@@ -334,6 +403,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 item.classList.remove('marked-for-deletion');
             });
+            const ticketRowsContainer = card.querySelector('.ticket-tier-rows');
+            if (ticketRowsContainer) {
+                // Undo any soft deletes and throw away unsaved rows so the card looks clean next time
+                ticketRowsContainer.querySelectorAll('[data-ticket-row]').forEach(function (row) {
+                    const deleteFlag = row.querySelector('.ticket-row-delete-flag');
+                    const removeBtn = row.querySelector('.ticket-tier-remove-btn');
+                    const removalNote = row.querySelector('.ticket-row-removed-note');
+                    const isExisting = row.dataset.existing === 'true';
+                    if (isExisting) {
+                        if (deleteFlag) {
+                            deleteFlag.value = '0';
+                        }
+                        row.classList.remove('ticket-row-deleted', 'opacity-50');
+                        if (removalNote) {
+                            removalNote.classList.add('d-none');
+                        }
+                        if (removeBtn) {
+                            removeBtn.textContent = 'Remove Tier';
+                        }
+                        row.querySelectorAll('input, textarea').forEach(function (input) {
+                            if (input.classList.contains('ticket-row-delete-flag') || input.type === 'hidden' || input.name === 'ticket_row_id[]') {
+                                return;
+                            }
+                            input.removeAttribute('readonly');
+                        });
+                    } else {
+                        row.remove();
+                    }
+                });
+            }
             const additionalInput = column.querySelector('.additional-media-input');
             if (additionalInput) {
                 additionalInput.value = '';
@@ -341,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Hook the main poster image up to the hidden file input
+    // Hook the poster image up so clicking it opens the hidden file picker
     function setupImagePicker(card) {
         const image = card.querySelector('.window-img-top');
         const input = card.querySelector('.event-image-input');
@@ -386,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Attach replace/delete behavior to each carousel image slide
+    // Wire up the carousel thumbnails with replace/delete actions so media edits stick
     function setupMediaCarousel(card) {
         if (card.dataset.mediaBound === 'true') {
             return;
@@ -469,6 +568,87 @@ document.addEventListener('DOMContentLoaded', function () {
         card.dataset.mediaBound = 'true';
     }
 
+    // Glue that keeps the ticket tier mini-form feeling snappy and undo-friendly
+    function setupTicketRows(card) {
+        if (!card || card.dataset.ticketRowsBound === 'true') {
+            return;
+        }
+
+        const rowsContainer = card.querySelector('.ticket-tier-rows');
+        const addButton = card.querySelector('.add-ticket-tier-btn');
+        const template = card.querySelector('.ticket-tier-row-template');
+
+        if (!rowsContainer) {
+            card.dataset.ticketRowsBound = 'true';
+            return;
+        }
+
+        // Toggle the deleted state so I can undo without losing whatever was typed
+        function setRowDeletedState(row, shouldDelete) {
+            const deleteFlag = row.querySelector('.ticket-row-delete-flag');
+            const removeBtn = row.querySelector('.ticket-tier-remove-btn');
+            const removalNote = row.querySelector('.ticket-row-removed-note');
+            if (deleteFlag) {
+                deleteFlag.value = shouldDelete ? '1' : '0';
+            }
+            row.classList.toggle('ticket-row-deleted', shouldDelete);
+            row.classList.toggle('opacity-50', shouldDelete);
+            if (removalNote) {
+                removalNote.classList.toggle('d-none', !shouldDelete);
+            }
+            if (removeBtn) {
+                removeBtn.textContent = shouldDelete ? 'Undo Remove' : 'Remove Tier';
+            }
+            row.querySelectorAll('input, textarea').forEach(function (input) {
+                if (input.classList.contains('ticket-row-delete-flag') || input.type === 'hidden' || input.name === 'ticket_row_id[]') {
+                    return;
+                }
+                if (shouldDelete) {
+                    input.setAttribute('readonly', 'readonly');
+                } else {
+                    input.removeAttribute('readonly');
+                }
+            });
+        }
+
+        // Bind a single row (existing or freshly cloned) with the remove button behavior
+        function bindRow(row) {
+            if (!row || row.dataset.ticketRowBound === 'true') {
+                return;
+            }
+            const removeBtn = row.querySelector('.ticket-tier-remove-btn');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function () {
+                    const isExisting = row.dataset.existing === 'true';
+                    if (isExisting) {
+                        const currentlyDeleted = row.classList.contains('ticket-row-deleted');
+                        setRowDeletedState(row, !currentlyDeleted);
+                    } else {
+                        row.remove();
+                    }
+                });
+            }
+            row.dataset.ticketRowBound = 'true';
+        }
+
+        rowsContainer.querySelectorAll('[data-ticket-row]').forEach(bindRow);
+
+        if (addButton && template) {
+            // Clone the template whenever I need a brand new tier row
+            addButton.addEventListener('click', function () {
+                const fragment = template.content.cloneNode(true);
+                const newRow = fragment.querySelector('[data-ticket-row]');
+                if (!newRow) {
+                    return;
+                }
+                rowsContainer.appendChild(newRow);
+                bindRow(newRow);
+            });
+        }
+
+        card.dataset.ticketRowsBound = 'true';
+    }
+
     // Kick off edit mode when the Update Event button is pressed
     document.querySelectorAll('.start-edit-btn').forEach(function (button) {
         button.addEventListener('click', function () {
@@ -486,6 +666,8 @@ document.addEventListener('DOMContentLoaded', function () {
             moveColumnToFirst(column);
             setupImagePicker(card);
             setupMediaCarousel(card);
+            // Make sure the ticket tier widgets are interactive the moment edit mode loads
+            setupTicketRows(card);
             column.classList.add('editing-active');
             card.classList.add('editing');
             display.classList.add('d-none');
@@ -498,52 +680,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // If I panic halfway through edits, this flips everything back to display mode
     document.querySelectorAll('.cancel-edit-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             clearEditingState();
         });
     });
 
-    function addGenreToggleToGroup(group, genreId, genreName, shouldSelect) {
-        if (!group) {
-            return;
-        }
-
-        const existingInput = group.querySelector('.btn-check[value="' + genreId + '"]');
-        if (existingInput) {
-            if (shouldSelect) {
-                existingInput.checked = true;
-            }
-            return;
-        }
-
-        const toggleCount = group.querySelectorAll('.btn-check').length + 1;
-        const eventId = group.dataset.eventId || 'global';
-        const toggleId = 'genre-' + eventId + '-' + genreId + '-' + toggleCount;
-
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.className = 'btn-check';
-        input.id = toggleId;
-        input.name = 'genres';
-        input.value = genreId;
-        if (shouldSelect) {
-            input.checked = true;
-        }
-
-        const label = document.createElement('label');
-        label.className = 'btn genre-toggle';
-        label.setAttribute('for', toggleId);
-        label.textContent = genreName;
-
-        group.appendChild(input);
-        group.appendChild(label);
-    }
-
+    // Inline genre creator so I can slot in new tags without leaving the page
     document.querySelectorAll('.add-genre-btn').forEach(function (button) {
         button.addEventListener('click', function () {
             const column = button.closest('.event-card-column');
-            const activeGroup = column ? column.querySelector('.genre-toggle-group') : null;
+            const activeSelect = column ? column.querySelector('.genres-select') : null;
             const rawInput = window.prompt('Enter a new genre name:');
 
             if (rawInput === null) {
@@ -556,6 +704,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // Hand the new genre to the server and wait for an ID so every select stays in sync
             fetch(genreCreateUrl, {
                 method: 'POST',
                 headers: {
@@ -570,14 +719,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then(function (result) {
                     if (!result.ok || !result.data || !result.data.success) {
+                        // Flag whatever came back so the user knows why nothing happened
                         const message = (result.data && result.data.message) ? result.data.message : 'Unable to add genre right now.';
                         window.alert(message);
                         return;
                     }
 
-                    document.querySelectorAll('.genre-toggle-group').forEach(function (group) {
-                        const shouldSelect = group === activeGroup;
-                        addGenreToggleToGroup(group, result.data.id, result.data.name, shouldSelect);
+                    document.querySelectorAll('.genres-select').forEach(function (selectEl) {
+                        const shouldSelect = selectEl === activeSelect;
+                        addGenreOptionToSelect(selectEl, String(result.data.id), result.data.name, shouldSelect);
                     });
                 })
                 .catch(function () {
@@ -586,5 +736,42 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+// Utility that drops a new genre option into any select and sorts it like I manually would
+function addGenreOptionToSelect(selectEl, genreId, genreName, shouldSelect) {
+    if (!selectEl) {
+        return;
+    }
+
+    const existingOption = Array.from(selectEl.options).find(function (option) {
+        return option.value === genreId;
+    });
+
+    if (existingOption) {
+        if (shouldSelect) {
+            existingOption.selected = true;
+        }
+        return;
+    }
+
+    const newOption = document.createElement('option');
+    newOption.value = genreId;
+    newOption.textContent = genreName;
+    if (shouldSelect) {
+        newOption.selected = true;
+    }
+
+    const options = Array.from(selectEl.options);
+    // Keep the list alphabetical so it doesn’t feel random across different events
+    const insertIndex = options.findIndex(function (option) {
+        return option.text.localeCompare(genreName, undefined, { sensitivity: 'base' }) > 0;
+    });
+
+    if (insertIndex >= 0) {
+        selectEl.add(newOption, options[insertIndex]);
+    } else {
+        selectEl.add(newOption);
+    }
+}
 </script>
 {% endblock %}

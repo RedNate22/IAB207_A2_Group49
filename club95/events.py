@@ -236,6 +236,147 @@ def update_event(event_id):
         else:
             event.genres = []
 
+    # Ticket editor pushes parallel arrays (ids, names, prices, etc.) so grab them up front
+    ticket_ids = request.form.getlist('ticket_row_id[]')
+    ticket_names = request.form.getlist('ticket_row_name[]')
+    ticket_prices = request.form.getlist('ticket_row_price[]')
+    ticket_quantities = request.form.getlist('ticket_row_quantity[]')
+    ticket_perks_values = request.form.getlist('ticket_row_perks[]')
+    ticket_delete_flags = request.form.getlist('ticket_row_delete[]')
+
+    if ticket_ids or ticket_names or ticket_prices or ticket_quantities or ticket_perks_values or ticket_delete_flags:
+        # Map existing tickets by id so we can tell updates from new rows in O(1)
+        existing_ticket_map = {str(ticket.id): ticket for ticket in event.tickets}
+        tickets_to_delete = []
+        tickets_to_update = []
+        tickets_to_create = []
+        ticket_errors = []
+
+        for row_id_raw, name_raw, price_raw, qty_raw, perks_raw, delete_raw in zip_longest(
+            ticket_ids,
+            ticket_names,
+            ticket_prices,
+            ticket_quantities,
+            ticket_perks_values,
+            ticket_delete_flags,
+            fillvalue=''
+        ):
+            row_id = (row_id_raw or '').strip()
+            tier_name = (name_raw or '').strip()
+            price_input = (price_raw or '').strip()
+            quantity_input = (qty_raw or '').strip()
+            perks_input = (perks_raw or '').strip()
+            delete_requested = (delete_raw or '').strip() == '1'
+
+            # Ignore stray empty rows that the browser may submit
+            if not row_id and not tier_name and not price_input and not quantity_input and not perks_input:
+                continue
+
+            # Deletion requests are flagged separately so we honour them later
+            if delete_requested:
+                if row_id:
+                    tickets_to_delete.append(row_id)
+                continue
+
+            invalid_entry = False
+            if not tier_name:
+                ticket_errors.append('Ticket tier name cannot be blank.')
+                invalid_entry = True
+
+            price_value = None
+            quantity_value = None
+            # Price needs to be a decimal value we can store as float
+            if price_input:
+                try:
+                    price_value = float(price_input)
+                except (TypeError, ValueError):
+                    ticket_errors.append(f"Ticket price for tier '{tier_name or 'New Tier'}' must be a valid number.")
+                    invalid_entry = True
+            else:
+                ticket_errors.append(f"Ticket price for tier '{tier_name or 'New Tier'}' must be provided.")
+                invalid_entry = True
+
+            # Availability must be a whole number and cannot be skipped
+            if quantity_input:
+                try:
+                    quantity_value = int(quantity_input)
+                except (TypeError, ValueError):
+                    ticket_errors.append(f"Ticket quantity for tier '{tier_name or 'New Tier'}' must be a whole number.")
+                    invalid_entry = True
+            else:
+                ticket_errors.append(f"Ticket quantity for tier '{tier_name or 'New Tier'}' must be provided.")
+                invalid_entry = True
+
+            if not invalid_entry:
+                # Guard against nonsense values before we queue an update
+                if price_value is not None and price_value < 0:
+                    ticket_errors.append(f"Ticket price for tier '{tier_name}' cannot be negative.")
+                    invalid_entry = True
+                if quantity_value is not None and quantity_value < 0:
+                    ticket_errors.append(f"Ticket quantity for tier '{tier_name}' cannot be negative.")
+                    invalid_entry = True
+                if perks_input and len(perks_input) > 50:
+                    ticket_errors.append(f"Ticket perks for tier '{tier_name}' must be 50 characters or fewer.")
+                    invalid_entry = True
+                if row_id and row_id not in existing_ticket_map:
+                    ticket_errors.append('One of the ticket tiers could not be matched to this event.')
+                    invalid_entry = True
+
+            if invalid_entry:
+                continue
+
+            # Normalise data so we don't double-handle rounding or empty perks
+            rounded_price = round(price_value or 0.0, 2)
+            normalized_perks = perks_input or None
+
+            if row_id:
+                tickets_to_update.append((row_id, tier_name, rounded_price, quantity_value, normalized_perks))
+            else:
+                tickets_to_create.append((tier_name, rounded_price, quantity_value, normalized_perks))
+
+        if ticket_errors:
+            # One bad row spoils the bunch, so roll back and surface everything to the user
+            db.session.rollback()
+            for message in ticket_errors:
+                flash(message, 'danger')
+            return redirect(url_for('events_bp.myevents'))
+
+        blocked_deletes = []
+        for row_id in tickets_to_delete:
+            ticket_obj = existing_ticket_map.get(row_id)
+            if not ticket_obj:
+                continue
+            # If someone already purchased this tier we can't nuke it entirely
+            if ticket_obj.order_links:
+                blocked_deletes.append(ticket_obj.ticketTier)
+                continue
+            db.session.delete(ticket_obj)
+
+        for row_id, tier_name, price_value, quantity_value, perks_value in tickets_to_update:
+            ticket_obj = existing_ticket_map.get(row_id)
+            if not ticket_obj:
+                continue
+            # Straightforward field updates for any tier that survived validation
+            ticket_obj.ticketTier = tier_name
+            ticket_obj.price = price_value
+            ticket_obj.availability = quantity_value
+            ticket_obj.perks = perks_value
+
+        for tier_name, price_value, quantity_value, perks_value in tickets_to_create:
+            # New tiers are attached to the current event and will be picked up on commit
+            db.session.add(Ticket(
+                ticketTier=tier_name,
+                price=price_value,
+                availability=quantity_value,
+                perks=perks_value,
+                event=event
+            ))
+
+        if blocked_deletes:
+            # Let the organiser know which tiers stayed because they're already tied to orders
+            blocked_list = ', '.join(blocked_deletes)
+            flash(f'Could not remove ticket tiers that already have orders: {blocked_list}', 'warning')
+
     # Prepare to replace or remove existing carousel media before adding new files
     media_folder = os.path.join('club95', 'static', 'img', 'event_media')
 
