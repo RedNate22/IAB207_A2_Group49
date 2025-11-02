@@ -329,15 +329,15 @@
                                     {{ form.start_time(class="form-control",
                                     type="time", step="60", min="00:00",
                                     max="23:59", title="Use 24hr format hh:mm")
-                                    }} 
+                                    }}
                                 </div>
                             </div>
                             {% if form.start_time.errors %}
-                                    <div class="alert alert-danger mt-2">
-                                        {% for error in form.start_time.errors
-                                        %}{{ error }}<br />{% endfor %}
-                                    </div>
-                                    {% endif %}
+                            <div class="alert alert-danger mt-2">
+                                {% for error in form.start_time.errors %}{{
+                                error }}<br />{% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="col-sm-12 col-md-4 col-lg-3">
                             <div
@@ -377,16 +377,15 @@
                                     {{ form.end_time(class="form-control",
                                     type="time", step="60", min="00:00",
                                     max="23:59", title="Use 24hr format hh:mm")
-                                    }} 
+                                    }}
                                 </div>
-                                                            {% if form.end_time.errors %}
-                                    <div class="alert alert-danger mt-2">
-                                        {% for error in form.end_time.errors
-                                        %}{{ error }}<br />{% endfor %}
-                                    </div>
-                                    {% endif %}
+                                {% if form.end_time.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {% for error in form.end_time.errors %}{{
+                                    error }}<br />{% endfor %}
+                                </div>
+                                {% endif %}
                             </div>
-
                         </div>
                         <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
@@ -457,13 +456,13 @@
 
                                 </ul>
                             </div>
-                                    {% if form.genres.errors %}
-                                    <div class="alert alert-danger mt-2">
-                                        {% for error in form.genres.errors %}
-                                            {{ error }} <br />
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
+                            {% if form.genres.errors %}
+                            <div class="alert alert-danger mt-2">
+                                {% for error in form.genres.errors %} {{ error
+                                }} <br />
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="col-sm-0 col-md-2 col-lg-3"></div>
                     </div>
@@ -715,13 +714,13 @@
                                         </div>
                                     </div>
                                     <div class="sub-window">
-                                            <input
-                                                class="form-control"
-                                                type="text"
-                                                name="ticket_perks[]"
-                                                placeholder="Water, Wi-Fi, Pizza, etc."
-                                                maxlength="120"
-                                            />
+                                        <input
+                                            class="form-control"
+                                            type="text"
+                                            name="ticket_perks[]"
+                                            placeholder="Water, Wi-Fi, Pizza, etc."
+                                            maxlength="120"
+                                        />
                                     </div>
                                 </div>
                             </div>
