@@ -39,9 +39,10 @@ def create_app():
    app.register_error_handler(Exception, _render_error_page)
 
    # Intentional error route for testing
-   @app.route("/force-500")
-   def force_500():
-      raise RuntimeError("Intentional failure for testing.")
+   # * uncomment to test
+   # @app.route("/force-500")
+   # def force_500():
+   #    raise RuntimeError("Intentional failure for testing.")
    
    # ensure the instance folder exists for database storage
    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
