@@ -12,10 +12,16 @@ filter_statuses ) }}
                     {% set first_item = order.visible_items[0] if order.visible_items else None %}
                     {% set ticket = first_item.ticket if first_item else None %}
                     {% set event = ticket.event if ticket else None %}
-                <div class="col-12 col-lg-8 d-flex">
+                <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="window" id="order-{{ order.id }}">
                         <div class="title-bar">
-                            <span class="window-title">{{ event.title if event and event.title else 'Order #' ~ order.id }}</span>
+                            <span class="window-title">
+                                {% if event and event.title %}
+                                    {{ event.title }} – Order #{{ order.id }}
+                                {% else %}
+                                    Order #{{ order.id }}
+                                {% endif %}
+                            </span>
                             <div class="window-controls">
                                 <button type="button" class="btn">_</button>
                                 <button type="button" class="btn">☐</button>
@@ -84,13 +90,67 @@ filter_statuses ) }}
                                     <span>N/A</span>
                                 {% endif %}
                             </p>
-                            <a
+                            <button
                                 class="btn"
                                 id="view-details-btn"
-                                href="{{ url_for('events_bp.eventdetails', event_id=event.id) if event else '#!' }}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#order-details-{{ order.id }}"
+                                aria-expanded="false"
+                                aria-controls="order-details-{{ order.id }}"
                             >
-                                View details
-                            </a>
+                                View Ticket
+                            </button>
+                            <div class="collapse ticket-details mt-3" id="order-details-{{ order.id }}">
+                                <div class="sub-window ticket-summary">
+                                    <p class="sub-window-content">
+                                        <strong>Booking confirmed!</strong>
+                                        <br />
+                                        Your order reference is <strong>#{{ order.id }}</strong>.
+                                        <br />
+                                        Please have this confirmation ready when you arrive.
+                                        <br />
+                                        <br />
+                                        <strong>Booked on:</strong>
+                                        {{ order.order_date.strftime('%A, %d %B %Y %I:%M %p') if order.order_date else 'Pending confirmation' }}
+                                        <br />
+                                        <strong>Total paid:</strong>
+                                        ${{ '%.2f'|format(order.amount) if order.amount is not none else 'TBA' }}
+                                    </p>
+                                    {% for line_item in order.visible_items %}
+                                        {% set line_ticket = line_item.ticket %}
+                                        {% set line_event = line_ticket.event if line_ticket else None %}
+                                        <div class="ticket-item mb-3">
+                                            <p class="sub-window-content">
+                                                <strong>{{ line_event.title if line_event and line_event.title else 'Event' }}</strong>
+                                                <br />
+                                                <strong>Ticket tier:</strong> {{ line_ticket.ticketTier if line_ticket else 'TBA' }}
+                                                <br />
+                                                <strong>Quantity:</strong> {{ line_item.quantity }}
+                                                <br />
+                                                <strong>Entry price:</strong> ${{ '%.2f'|format(line_item.price_at_purchase) }}
+                                                <br />
+                                                <strong>Venue:</strong> {{ line_event.venue.location if line_event and line_event.venue else 'TBA' }}
+                                                <br />
+                                                <strong>Date:</strong> {{ line_event.date if line_event and line_event.date else 'TBA' }}
+                                                <br />
+                                                <strong>Time:</strong>
+                                                {% if line_event and line_event.start_time %}
+                                                    {{ line_event.start_time }}{% if line_event.end_time %}-{{ line_event.end_time }}{% endif %}
+                                                {% else %}
+                                                    TBA
+                                                {% endif %}
+                                                <br />
+                                                <strong>Need to check event info?</strong>
+                                                <a class="genre-search-link" href="{{ url_for('events_bp.eventdetails', event_id=line_event.id) if line_event else '#!' }}">View event page</a>
+                                            </p>
+                                        </div>
+                                    {% endfor %}
+                                    <p class="sub-window-content mb-0">
+                                        We look forward to seeing you there! If you have any questions, contact the organiser with your order reference.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,7 +158,7 @@ filter_statuses ) }}
             </div>
             {% else %}
             <div class="row justify-content-center">
-                <div class="col-12 col-lg-8 d-flex">
+                <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="window" id="no-orders-window">
                         <div class="title-bar">
                             <span class="window-title">No Orders Yet</span>
