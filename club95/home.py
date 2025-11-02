@@ -1,6 +1,7 @@
 import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from sqlalchemy import func
+from datetime import date, datetime
 from .models import Artist, Event, Genre, Ticket, Venue
 from . import db
 
@@ -11,24 +12,58 @@ def _active_event_clause():
     # Return a SQL clause that excludes inactive events from public browsing.
     return db.or_(Event.status.is_(None), func.upper(Event.status) != 'INACTIVE')
 
+def _parse_event_date(raw_value: str):
+    # Attempt to convert a stored event date string into a real date object.
+    if not raw_value:
+        return None
+    try:
+        return datetime.strptime(raw_value, "%Y-%m-%d").date()
+    except (TypeError, ValueError):
+        return None
+
+def _select_upcoming_events(events, limit=3):
+    # Extract the nearest upcoming OPEN events from an iterable of Event objects.
+    today = date.today()
+    upcoming = []
+    # simple sorting
+    for ev in events:
+        parsed_date = _parse_event_date(ev.date)
+        status = (ev.status or '').strip().upper()
+        if parsed_date and parsed_date >= today and status == 'OPEN':
+            upcoming.append((parsed_date, ev))
+
+    upcoming.sort(key=lambda item: item[0])
+    return [ev for _, ev in upcoming[:limit]]
 # Home page
 @home_bp.route('/')
 def index():
-    event = db.session.scalars(
+    events = db.session.scalars(
         db.select(Event).where(_active_event_clause())
     ).all()
-    return render_template('index.html', heading='Browse Events', events=event)
+
+    top_three = _select_upcoming_events(events)
+    return render_template(
+        'index.html',
+        heading='Browse Events',
+        events=events,
+        upcoming_events=top_three
+    )
 
 @home_bp.route('/search')
 def search():
     term = (request.args.get('search') or '').strip()
 
     # accept both [] and non-[] parameter names
-    type_vals   = request.args.getlist('event_type[]') + request.args.getlist('event_type')
-    genre_vals  = request.args.getlist('genre[]')      + request.args.getlist('genre')
-    status_vals = request.args.getlist('status[]')     + request.args.getlist('status')
+    type_vals = request.args.getlist('event_type[]') + request.args.getlist('event_type')
+    genre_vals = request.args.getlist('genre[]') + request.args.getlist('genre')
+    status_vals = request.args.getlist('status[]') + request.args.getlist('status')
 
-    # start with a base selectable
+    upcoming_three = _select_upcoming_events(
+        db.session.scalars(
+            db.select(Event).where(_active_event_clause())
+        ).all()
+    )
+
     q = db.select(Event).where(_active_event_clause())
 
     # ---- text & price search (only if term provided) ----
@@ -102,7 +137,8 @@ def search():
         'index.html',
         heading='Browse Events',
         events=events,
-        search_term=term
+        search_term=term,
+        upcoming_events=upcoming_three
     )
 
 

@@ -3,6 +3,61 @@ render_search_filters %} {% block body %}
 
 <!-- prettier-ignore -->
 <div class="main-window">
+    {% if upcoming_events %}
+    <div class="container mb-4" id="upcoming-events-window-container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="window" id="upcoming-events-window">
+                    <div class="title-bar">
+                        <span class="window-title">Upcoming Events</span>
+                        <div class="window-controls">
+                            <button type="button" class="btn" href="#!">_</button>
+                            <button type="button" class="btn" href="#!">☐</button>
+                            <button type="button" class="btn" id="closebtn" href="#!">X</button>
+                        </div>
+                    </div>
+                    <div class="sub-window">
+                        <div id="upcomingEventsCarousel" class="carousel slide" data-bs-ride="carousel">
+                            {% if upcoming_events|length > 1 %}
+                            <div class="carousel-indicators">
+                                {% for event in upcoming_events %}
+                                <button type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide-to="{{ loop.index0 }}" class="{% if loop.first %}active{% endif %}" {% if loop.first %}aria-current="true"{% endif %} aria-label="Slide {{ loop.index }}"></button>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <div class="carousel-inner">
+                                {% for event in upcoming_events %}
+                                {% set poster_src = url_for('static', filename='img/' ~ event.image) if event.image else url_for('static', filename='img/fallback.jpg') %}
+                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                    <a href="{{ url_for('events_bp.eventdetails', event_id=event.id) }}" class="d-block position-relative">
+                                        <img src="{{ poster_src }}" class="d-block w-100" alt="{{ event.title }} poster" />
+                                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded py-2 px-3">
+                                            <h5 class="mb-1">{{ event.title }}</h5>
+                                            {% set event_date = event.date or 'Coming Soon' %}
+                                            <p class="mb-0">{{ event_date }}</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if upcoming_events|length > 1 %}
+                            <button class="carousel-control-prev" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#upcomingEventsCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {{ render_search_filters(
     search_term=search_term|default(''),
     search_url='home_bp.search',

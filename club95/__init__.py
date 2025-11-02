@@ -1,4 +1,5 @@
 # import flask - from 'package' import 'Class'
+from datetime import datetime, timedelta
 from flask import Flask, app, render_template 
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
@@ -298,7 +299,7 @@ def populate_database(app: Flask) -> None:
             "title": "DJ Spreadsheet Live",
             "type": "DJ Set",
             "status": "CANCELLED",
-            "date": "15/03/2025",
+            "date": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
             "description": "Watch DJ Spreadsheet seamlessly mix quarterly reports into smooth beats. Free Wi-Fi included.",
             "start_time": "09:00",
             "end_time": "17:00",
@@ -315,7 +316,7 @@ def populate_database(app: Flask) -> None:
             "title": "Crescent City Players",
             "type": "Live Concert",
             "status": "OPEN",
-            "date": "29/12/2025",
+            "date": (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d"),
             "description": 
                "An intimate evening of smooth jazz and improvisation, featuring local hit talent, " + 
                "Crescent City Players, joined by The Walters and Mojo Webb. Enjoy classic standards and modern tunes " + 
@@ -330,7 +331,7 @@ def populate_database(app: Flask) -> None:
                {"tier": "1", "price": 0.00, "perks": "", "qty": 30},
                {"tier": "2", "price": 7.99, "perks": "1 free drink of choice", "qty": 20},
                {"tier": "3", "price": 14.99, "perks": "2 free drinks of choice", "qty": 10},
-               {"tier": "4", "price": 24.99, "perks": "2 free drinks of chocie & priority seating", "qty": 5},
+               {"tier": "4", "price": 24.99, "perks": "2 free drinks of choice & priority seating", "qty": 5},
                {"tier": "5", "price": 49.99, "perks": "VIP (unlimited drinks, meet and greet with the bands)", "qty": 1},
             ], 
          },
@@ -339,7 +340,7 @@ def populate_database(app: Flask) -> None:
             "title": "Moonlight Resonance",
             "type": "Orchestra",
             "status": "OPEN",
-            "date": "15/11/25",
+            "date": (datetime.now() + timedelta(days=15)).strftime("%Y-%m-%d"),
             "description": 
                "A riverside orchestral showcase blending timeless symphonies " +
                "with modern composition.",
@@ -358,7 +359,7 @@ def populate_database(app: Flask) -> None:
             "title": "The Overwhelming Festival",
             "type": "Music Festival",
             "status": "OPEN",
-            "date": "20/01/2026",
+            "date": (datetime.now() + timedelta(days=10)).strftime("%Y-%m-%d"),
             "description": 
                "Three stages, 600 bands, 30 taco trucks, 1 working portaloo. " +
                "An afternoon to remember (or forget).",
@@ -378,7 +379,7 @@ def populate_database(app: Flask) -> None:
             "title": "Optimistic Yeti: Doom Jazz",
             "type": "Solo Artist Performance",
             "status": "SOLD OUT",
-            "date": "21/06/2026",
+            "date": (datetime.now() + timedelta(days=5)).strftime("%Y-%m-%d"),
             "description": 
                "The elusive Optimistic Yeti descends from the Blue Mountains once a year to " +
                "perform a doom jazz set that critics describe as \"The kind of music you hear " +
@@ -398,7 +399,7 @@ def populate_database(app: Flask) -> None:
             "title": "Sydney Indie Nights: Local Showcase",
             "type": "Live Concert",
             "status": "INACTIVE",
-            "date": "05/01/2025",
+            "date": (datetime.now() + timedelta(days=3)).strftime("%Y-%m-%d"),
             "description": "A lineup of Sydney's top emerging indie and alternative bands, " +
             "offerning an energetic night of original music and live performances.",
             "start_time": "20:00",

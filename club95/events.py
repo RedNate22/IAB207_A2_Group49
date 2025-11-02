@@ -412,8 +412,8 @@ def update_event(event_id):
                 if quantity_value is not None and quantity_value < 0:
                     ticket_errors.append(f"Ticket quantity for tier '{tier_name}' cannot be negative.")
                     invalid_entry = True
-                if perks_input and len(perks_input) > 50:
-                    ticket_errors.append(f"Ticket perks for tier '{tier_name}' must be 50 characters or fewer.")
+                if perks_input and len(perks_input) > 120:
+                    ticket_errors.append(f"Ticket perks for tier '{tier_name}' must be 120 characters or fewer.")
                     invalid_entry = True
                 if row_id and row_id not in existing_ticket_map:
                     ticket_errors.append('One of the ticket tiers could not be matched to this event.')
@@ -761,8 +761,8 @@ def createevent():
                 if qty_value < 1:
                     ticket_errors.append(f"Ticket quantity for tier '{name_value}' must be at least 1.")
                     invalid_entry = True
-                if perks_value and len(perks_value) > 50:
-                    ticket_errors.append(f"Ticket perks for tier '{name_value}' must be 50 characters or fewer.")
+                if perks_value and len(perks_value) > 120:
+                    ticket_errors.append(f"Ticket perks for tier '{name_value}' must be 120 characters or fewer.")
                     invalid_entry = True
                 # Only queue valid rows for insertion
                 if not invalid_entry:
