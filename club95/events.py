@@ -6,15 +6,15 @@ from itertools import zip_longest
 from club95 import db
 from club95.form import EventForm, AddGenreForm, TicketPurchaseForm, CommentForm
 from club95.home import _extract_price
-from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist, Venue, EventType
+from .models import Event, Genre, Artist, Ticket, Order, OrderTicket, Comment, EventArtist, Venue, EventType, EventImage
 import os
 from werkzeug.utils import secure_filename
 from flask_login import current_user, login_required
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 
 events_bp = Blueprint('events_bp', __name__, template_folder='templates')
 
-
+# helper to build Google Maps embed URL
 def _build_map_embed_url(address: str) -> str:
     ## Return a Google Maps embed URL for a provided address string.
     cleaned = (address or '').strip()
@@ -23,7 +23,7 @@ def _build_map_embed_url(address: str) -> str:
     query = quote_plus(cleaned)
     return f"https://www.google.com/maps?q={query}&output=embed"
 
-
+# Helper to get or create a Venue record
 def _get_or_create_venue(address: str):
     ## Fetch an existing venue or create a new one for the supplied address.
     cleaned = (address or '').strip()
@@ -43,10 +43,84 @@ def _get_or_create_venue(address: str):
     # return a venue object
     return venue
 
+# Helper to save additional event media files
+def _save_event_media(event, file_storage_list):
+    # Persist additional media uploads for a given event
+    if not event or not file_storage_list:
+        return
+
+    # set the save folder
+    media_folder = os.path.join('club95', 'static', 'img', 'event_media')
+    os.makedirs(media_folder, exist_ok=True)
+
+    # Get the next order index for the event images
+    current_max = db.session.query(func.max(EventImage.order_index)).filter_by(event_id=event.id).scalar()
+    next_index = (current_max or 0) + 1
+    # Generate a timestamp for unique file naming, so we don't overwrite files
+    timestamp = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
+    # Save each file
+    for storage in file_storage_list:
+        # Skip empty uploads
+        if not storage or not storage.filename:
+            continue
+        # Secure the filename
+        safe_name = secure_filename(storage.filename)
+        if not safe_name:
+            continue
+        # Create a unique filename
+        unique_name = f"event_{event.id}_{timestamp}_{next_index}_{safe_name}"
+        destination = os.path.join(media_folder, unique_name)
+        storage.save(destination)
+
+        db.session.add(EventImage(
+            event_id=event.id,
+            filename=f"event_media/{unique_name}",
+            order_index=next_index
+        ))
+        # Increment the order index for the next file
+        next_index += 1
+
+
+def _sync_event_status(event: Event) -> None:
+    # Automatically shift event status based on ticket pool and schedule
+    if not event:
+        return
+
+    today = date.today()
+
+    event_date = None
+    if event.date:
+        try:
+            event_date = datetime.strptime(event.date, "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            event_date = None
+
+    current_status = (event.status or '').strip().upper()
+
+    if event_date and event_date < today:
+        if current_status != 'INACTIVE':
+            event.status = 'INACTIVE'
+        return
+
+    total_remaining = sum(max(0, (ticket.availability or 0)) for ticket in event.tickets)
+
+    if current_status == 'CANCELLED':
+        return
+
+    if total_remaining <= 0:
+        if current_status != 'SOLD OUT':
+            event.status = 'SOLD OUT'
+    elif current_status == 'SOLD OUT':
+        event.status = 'OPEN'
+
 # Event details page
 @events_bp.route('/events/eventdetails/<int:event_id>', methods=['GET'])
 def eventdetails(event_id):
     event = Event.query.get_or_404(event_id)
+    original_status = event.status
+    _sync_event_status(event)
+    if event.status != original_status:
+        db.session.commit()
     purchase_form = TicketPurchaseForm(event.tickets)
     comment_form = CommentForm()
     comments = Comment.query.filter_by(event_id=event.id).order_by(Comment.commentDateTime.desc()).all()
@@ -63,7 +137,7 @@ def eventdetails(event_id):
 @events_bp.route('/events/myevents', methods=['GET'])
 @login_required
 def myevents():
-    """Display and filter events created by the logged-in user."""
+    # Display and filter events created by the logged-in user.
 
     term = (request.args.get('search') or '').strip()
 
@@ -146,14 +220,29 @@ def myevents():
     # Order newest first; if date is stored as text it will still be stable enough for now
     events = db.session.scalars(q.order_by(Event.date.desc())).all()
 
+    status_changed = False
+    for event in events:
+        original_status = event.status
+        _sync_event_status(event)
+        if event.status != original_status:
+            status_changed = True
+
+    if status_changed:
+        db.session.commit()
+
     if not events:
         flash('No events matched your filters. Try a different search term or filter.', 'search_info')
+
+    event_type_options = EventType.query.order_by(EventType.typeName).all()
+    genre_options = Genre.query.order_by(Genre.genreType).all()
 
     return render_template(
         'events/myevents.html',
         heading='My Events',
         events=events,
-        search_term=term
+        search_term=term,
+        event_type_options=event_type_options,
+        genre_options=genre_options
     )
 
 # Update event endpoint
@@ -215,7 +304,7 @@ def update_event(event_id):
     if image_file and image_file.filename:
         image_filename = secure_filename(image_file.filename)
         if image_filename:
-            timestamp = int(datetime.utcnow().timestamp())
+            timestamp = int(datetime.now(timezone.utc).timestamp())
             unique_filename = f"event_{event_id}_{timestamp}_{image_filename}"
             image_path = os.path.join('club95', 'static', 'img', unique_filename)
             os.makedirs(os.path.dirname(image_path), exist_ok=True)
@@ -243,6 +332,232 @@ def update_event(event_id):
             event.genres = updated_genres
         else:
             event.genres = []
+
+    # Ticket editor pushes parallel arrays (ids, names, prices, etc.) so grab them up front
+    ticket_ids = request.form.getlist('ticket_row_id[]')
+    ticket_names = request.form.getlist('ticket_row_name[]')
+    ticket_prices = request.form.getlist('ticket_row_price[]')
+    ticket_quantities = request.form.getlist('ticket_row_quantity[]')
+    ticket_perks_values = request.form.getlist('ticket_row_perks[]')
+    ticket_delete_flags = request.form.getlist('ticket_row_delete[]')
+
+    if ticket_ids or ticket_names or ticket_prices or ticket_quantities or ticket_perks_values or ticket_delete_flags:
+        # Map existing tickets by id so we can tell updates from new rows in O(1)
+        existing_ticket_map = {str(ticket.id): ticket for ticket in event.tickets}
+        tickets_to_delete = []
+        tickets_to_update = []
+        tickets_to_create = []
+        ticket_errors = []
+
+        for row_id_raw, name_raw, price_raw, qty_raw, perks_raw, delete_raw in zip_longest(
+            ticket_ids,
+            ticket_names,
+            ticket_prices,
+            ticket_quantities,
+            ticket_perks_values,
+            ticket_delete_flags,
+            fillvalue=''
+        ):
+            row_id = (row_id_raw or '').strip()
+            tier_name = (name_raw or '').strip()
+            price_input = (price_raw or '').strip()
+            quantity_input = (qty_raw or '').strip()
+            perks_input = (perks_raw or '').strip()
+            delete_requested = (delete_raw or '').strip() == '1'
+
+            # Ignore stray empty rows that the browser may submit
+            if not row_id and not tier_name and not price_input and not quantity_input and not perks_input:
+                continue
+
+            # Deletion requests are flagged separately so we honour them later
+            if delete_requested:
+                if row_id:
+                    tickets_to_delete.append(row_id)
+                continue
+
+            invalid_entry = False
+            if not tier_name:
+                ticket_errors.append('Ticket tier name cannot be blank.')
+                invalid_entry = True
+
+            price_value = None
+            quantity_value = None
+            # Price needs to be a decimal value we can store as float
+            if price_input:
+                try:
+                    price_value = float(price_input)
+                except (TypeError, ValueError):
+                    ticket_errors.append(f"Ticket price for tier '{tier_name or 'New Tier'}' must be a valid number.")
+                    invalid_entry = True
+            else:
+                ticket_errors.append(f"Ticket price for tier '{tier_name or 'New Tier'}' must be provided.")
+                invalid_entry = True
+
+            # Availability must be a whole number and cannot be skipped
+            if quantity_input:
+                try:
+                    quantity_value = int(quantity_input)
+                except (TypeError, ValueError):
+                    ticket_errors.append(f"Ticket quantity for tier '{tier_name or 'New Tier'}' must be a whole number.")
+                    invalid_entry = True
+            else:
+                ticket_errors.append(f"Ticket quantity for tier '{tier_name or 'New Tier'}' must be provided.")
+                invalid_entry = True
+
+            if not invalid_entry:
+                # Guard against nonsense values before we queue an update
+                if price_value is not None and price_value < 0:
+                    ticket_errors.append(f"Ticket price for tier '{tier_name}' cannot be negative.")
+                    invalid_entry = True
+                if quantity_value is not None and quantity_value < 0:
+                    ticket_errors.append(f"Ticket quantity for tier '{tier_name}' cannot be negative.")
+                    invalid_entry = True
+                if perks_input and len(perks_input) > 50:
+                    ticket_errors.append(f"Ticket perks for tier '{tier_name}' must be 50 characters or fewer.")
+                    invalid_entry = True
+                if row_id and row_id not in existing_ticket_map:
+                    ticket_errors.append('One of the ticket tiers could not be matched to this event.')
+                    invalid_entry = True
+
+            if invalid_entry:
+                continue
+
+            # Normalise data so we don't double-handle rounding or empty perks
+            rounded_price = round(price_value or 0.0, 2)
+            normalized_perks = perks_input or None
+
+            if row_id:
+                tickets_to_update.append((row_id, tier_name, rounded_price, quantity_value, normalized_perks))
+            else:
+                tickets_to_create.append((tier_name, rounded_price, quantity_value, normalized_perks))
+
+        if ticket_errors:
+            # One bad row spoils the bunch, so roll back and surface everything to the user
+            db.session.rollback()
+            for message in ticket_errors:
+                flash(message, 'danger')
+            return redirect(url_for('events_bp.myevents'))
+
+        refunded_tiers = []
+        removed_tiers = []
+        for row_id in tickets_to_delete:
+            ticket_obj = existing_ticket_map.pop(row_id, None)
+            if not ticket_obj:
+                continue
+
+            refund_total = 0.0
+            if ticket_obj.order_links:
+                affected_orders = set()
+                for order_link in list(ticket_obj.order_links):
+                    quantity = order_link.quantity or 0
+                    line_refund = (order_link.price_at_purchase or 0.0) * quantity
+                    refund_total += line_refund
+
+                    order = order_link.order
+                    if order:
+                        order.amount = max(0.0, (order.amount or 0.0) - line_refund)
+                        affected_orders.add(order)
+                        if order_link in order.line_items:
+                            order.line_items.remove(order_link)
+
+                    if order_link in ticket_obj.order_links:
+                        ticket_obj.order_links.remove(order_link)
+
+                    db.session.delete(order_link)
+
+                for order in affected_orders:
+                    if not order.line_items:
+                        db.session.delete(order)
+                    elif order.amount is None or order.amount < 0:
+                        order.amount = 0.0
+
+                refunded_tiers.append((ticket_obj.ticketTier, refund_total))
+            else:
+                removed_tiers.append(ticket_obj.ticketTier)
+
+            db.session.delete(ticket_obj)
+
+        for row_id, tier_name, price_value, quantity_value, perks_value in tickets_to_update:
+            ticket_obj = existing_ticket_map.get(row_id)
+            if not ticket_obj:
+                continue
+            # Straightforward field updates for any tier that survived validation
+            ticket_obj.ticketTier = tier_name
+            ticket_obj.price = price_value
+            ticket_obj.availability = quantity_value
+            ticket_obj.perks = perks_value
+
+        for tier_name, price_value, quantity_value, perks_value in tickets_to_create:
+            # New tiers are attached to the current event and will be picked up on commit
+            db.session.add(Ticket(
+                ticketTier=tier_name,
+                price=price_value,
+                availability=quantity_value,
+                perks=perks_value,
+                event=event
+            ))
+
+        if refunded_tiers:
+            refund_summary = ', '.join(
+                f"{tier_name} (${refund_amount:.2f})" for tier_name, refund_amount in refunded_tiers
+            )
+            flash(f'Refunds will be issued for removed ticket tiers: {refund_summary}', 'warning')
+
+        if removed_tiers:
+            removed_list = ', '.join(removed_tiers)
+            flash(f'Removed ticket tiers: {removed_list}', 'info')
+
+    _sync_event_status(event)
+
+    # Prepare to replace or remove existing carousel media before adding new files
+    media_folder = os.path.join('club95', 'static', 'img', 'event_media')
+
+    for media in list(event.images):
+        # Replace an existing event media image if the user supplied a new file
+        replacement_file = request.files.get(f'replace_image_{media.id}')
+        if replacement_file and replacement_file.filename:
+            safe_name = secure_filename(replacement_file.filename)
+            if safe_name:
+                os.makedirs(media_folder, exist_ok=True)
+                timestamp = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
+                unique_name = f"event_{event.id}_{timestamp}_{media.id}_{safe_name}"
+                destination = os.path.join(media_folder, unique_name)
+                replacement_file.save(destination)
+
+                if media.filename:
+                    # Remove the obsolete file from disk when possible
+                    old_path = os.path.join('club95', 'static', 'img', media.filename)
+                    if os.path.exists(old_path):
+                        try:
+                            os.remove(old_path)
+                        except OSError:
+                            pass
+
+                media.filename = f"event_media/{unique_name}"
+
+    # Gather any media IDs flagged for deletion from the form submission
+    delete_ids_raw = request.form.getlist('delete_media_ids')
+    delete_ids = []
+    for raw_id in delete_ids_raw:
+        try:
+            delete_ids.append(int(raw_id))
+        except (TypeError, ValueError):
+            continue
+
+    if delete_ids:
+        images_to_delete = EventImage.query.filter(EventImage.event_id == event.id, EventImage.id.in_(delete_ids)).all()
+        for media in images_to_delete:
+            if media.filename:
+                media_path = os.path.join('club95', 'static', 'img', media.filename)
+                if os.path.exists(media_path):
+                    try:
+                        os.remove(media_path)
+                    except OSError:
+                        pass
+            db.session.delete(media)
+
+    additional_media_files = request.files.getlist('additional_media')
+    _save_event_media(event, additional_media_files)
 
     db.session.commit()
     flash('Event updated successfully.', 'success')
@@ -461,6 +776,9 @@ def createevent():
                     flash(message, "danger")
                 return redirect(url_for('events_bp.createevent'))
 
+            additional_media_files = request.files.getlist('additional_media')
+            _save_event_media(new_event, additional_media_files)
+
             # Persist every validated ticket tier for the new event
             for name_value, price_value, qty_value, perks_value in pending_tickets:
                 ticket = Ticket(
@@ -572,6 +890,14 @@ def add_comment(event_id):
 def purchase_tickets(event_id):
     # Lookup event by ID, if not found: return 404
     event = Event.query.get_or_404(event_id)
+    event_status = (event.status or '').strip().upper()
+    if event_status == 'CANCELLED':
+        flash('Ticket sales are closed for this event.', 'warning')
+        return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+    if event_status == 'SOLD OUT':
+        flash('This event is sold out.', 'warning')
+        return redirect(url_for('events_bp.eventdetails', event_id = event.id))
+
     form = TicketPurchaseForm(event.tickets, formdata = request.form)
 
     # If form is invalid, redirect back with error message
@@ -604,8 +930,7 @@ def purchase_tickets(event_id):
 
         # Not enough tickets available for quantity entered
         if quantity > ticket.availability:
-            flash(f"Not enough availability for {ticket.ticketTier}. Only {ticket.availability} left.",
-                "warning")
+            flash("Not enough tickets available for your order.", "danger")
             return redirect(url_for('events_bp.eventdetails', event_id = event.id))
         
         # Add ticket and quantity to order items and update total amount
@@ -621,7 +946,7 @@ def purchase_tickets(event_id):
     # to reflect this on  next visit to same modal
     order = Order(
         # ! utcnow is deprecated
-        order_date = datetime.utcnow(),  # * previously datetime.utcnow() but was deprecated
+    order_date = datetime.now(timezone.utc),
         amount = total_amount,
         user_id = current_user.id
     )
@@ -643,6 +968,8 @@ def purchase_tickets(event_id):
         )
         # Update ticket availability
         ticket.availability -= quantity
+
+    _sync_event_status(event)
 
     # Commit all changes to database
     db.session.commit()
