@@ -1,7 +1,5 @@
 # IAB207_A2_Group49
 
-See the deployed application: https://nathanpithie.pythonanywhere.com/
-
 This repository contains a group assignment for IAB207, "Fully Developed Solution". This is work is intended for educational purposes only
 and **must not be reused by other students** except for personal projects outside of coursework.
 
